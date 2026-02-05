@@ -6,6 +6,7 @@
  * 左侧图标导航栏 + 主内容区
  */
 import { computed, ref } from 'vue';
+import DefinitionStudio from './modules/DefinitionStudio.vue';
 
 type ModuleKey = 'data' | 'definitions' | 'styles' | 'layout' | 'config';
 
@@ -95,7 +96,11 @@ function handleClose() {
 
       <!-- 模块内容区 -->
       <main class="manager__content">
-        <div class="manager__placeholder">
+        <!-- 定义工坊 -->
+        <DefinitionStudio v-if="activeModule === 'definitions'" />
+
+        <!-- 占位符 (其他模块开发中) -->
+        <div v-else class="manager__placeholder">
           <svg class="manager__placeholder-icon" viewBox="0 0 24 24" width="64" height="64">
             <path :d="iconPaths[currentModule?.icon || 'database']" fill="currentColor" />
           </svg>

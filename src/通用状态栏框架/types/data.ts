@@ -1,102 +1,119 @@
 /**
  * TavernHelper Remastered Core Types
- * v6.0 Refactor: Split Categories & Item Definitions
+ * v7.0 Refactor: entry_type (Single/List) + data_type validation
  *
  * 这是状态栏框架的核心数据类型定义
  */
 import type { LayoutNode } from './layout';
 
-// 1. 分类定义 (容器)
+// ==================== 基础类型 ====================
+
+/** 基础数据类型 - 用于 parts 的值验证 */
+export type DataType = 'string' | 'number' | 'boolean';
+
+/** 条目类型 - 根据总纲要求改名 */
+export type EntryType = 'Single' | 'List';
+
+/** 分类作用域 */
+export type CategoryScope = 'shared' | 'character';
+
+// ==================== 1. 分类定义 ====================
+
 export interface CategoryDefinition {
   key: string; // "CP", "CV"
   name: string; // "角色档案"
   icon: string; // Lucide icon name
   order: number; // 排序权重
-  scope?: 'shared' | 'character';
-  layout_mode?: 'list' | 'grid' | 'tags'; // v6.1 布局模式
-  grid_columns?: number; // v6.1 网格列数 (1-4)
+  scope: CategoryScope; // 'shared' = 共享数据, 'character' = 角色数据
 }
 
-// 2. 条目定义 (具体数据的规则)
+// ==================== 2. 条目定义 ====================
+
+/** 条目结构的单个部分 */
 export interface ItemDefinitionPart {
-  key: string;
-  label: string;
-}
-
-export interface ItemDefinition {
-  key: string; // "HP", "Name" (唯一标识符)
-  name?: string; // "生命值" (显示名) - v6.5 新增
-  icon?: string; // 图标 - v6.5 新增
-  type: 'text' | 'numeric' | 'array' | 'list-of-objects';
-  description?: string; // 给 AI 看的描述
-  defaultCategory?: string; // 默认归属分类 (UI辅助用)
-  separator?: string; // v6.2: 对于 'array' 是值分隔符, 对于 'list-of-objects' 是对象分隔符
-  partSeparator?: string; // v7.1: 'list-of-objects' 内部的对象属性分隔符 (e.g., '@')
-  structure?: {
-    // v6.6 结构定义 (Definition-Driven Core)
-    parts: ItemDefinitionPart[]; // e.g. [{key: 'current', label: '当前'}, {key: 'max', label: '最大'}]
+  key: string; // 唯一键，如 "current", "max"
+  label: string; // UI 显示标签，如 "当前值", "最大值"
+  data_type: DataType; // 基础类型
+  validation?: {
+    min?: number; // 数字最小值
+    max?: number; // 数字最大值
+    pattern?: string; // 正则验证（字符串）
   };
-  styleId?: string; // v7.0: 关联的样式定义ID
 }
 
-// 3. 状态栏单个数据条目
+/** 条目定义 - 描述一个数据条目的结构 */
+export interface ItemDefinition {
+  key: string; // 唯一键，如 "HP", "背包"
+  name: string; // 显示名，如 "生命值"
+  icon?: string; // Lucide 图标名
+  category: string; // 所属分类 key
+  entry_type: EntryType; // Single = 单体, List = 列表
+  parts: ItemDefinitionPart[]; // 结构定义
+  separator: string; // 主分隔符（List 时分隔各项）
+  secondary_separator?: string; // 次分隔符（List 多 parts 时分隔属性）
+  ui_type?: string; // 默认渲染样式 ID
+  interaction_type?: 'none' | 'fill_input' | 'send_chat' | 'custom_script';
+  format?: string; // 自动生成的格式字符串，供 AI 识别
+  description?: string; // 给 AI 的描述说明
+}
+
+// ==================== 3. 状态栏数据条目 ====================
+
+/** 运行时的数据条目 */
 export interface StatusBarItem {
   key: string;
-  values: string[] | Array<Record<string, string>>;
-  source_id: number;
-  user_modified: boolean;
-  originalLine?: string;
+  /** Single: Record<string, any>, List: Array<Record<string, any>> */
+  value: Record<string, unknown> | Array<Record<string, unknown>>;
+  source_id: number; // 来源消息楼层 ID
+  user_modified: boolean; // 用户是否手动修改过
   category: string;
-  _uuid: string; // v6.7: UUID is now required for robust drag-and-drop
+  _uuid: string; // 用于拖拽等操作的唯一标识
 }
 
-// 4. 角色数据容器
+// ==================== 4. 角色数据 ====================
+
 export interface CharacterData {
   [category: string]: StatusBarItem[];
 }
 
-// 5. 角色 ID 映射表
 export interface CharacterMap {
   [id: string]: string; // char_id -> character_name
 }
 
-// 6. 全局状态栏数据结构 (权威数据源 SST)
+export interface CharacterMeta {
+  isPresent: boolean;
+}
+
+// ==================== 5. SST 主数据结构 ====================
+
 export interface StatusBarData {
-  // v6.0: 分类注册表
-  categories: {
-    [key: string]: CategoryDefinition;
-  };
+  /** 分类注册表 */
+  categories: Record<string, CategoryDefinition>;
 
-  // v6.0: 条目定义注册表 (Key -> Definition)
-  item_definitions: {
-    [key: string]: ItemDefinition;
-  };
+  /** 条目定义注册表 */
+  item_definitions: Record<string, ItemDefinition>;
 
+  /** 角色 ID 到名称的映射 */
   id_map: CharacterMap;
 
-  // v6.2: 角色元数据 (IsPresent 等)
-  character_meta?: {
-    [charId: string]: {
-      isPresent: boolean;
-    };
-  };
+  /** 角色元数据 */
+  character_meta: Record<string, CharacterMeta>;
 
-  shared: {
-    [category: string]: StatusBarItem[];
-  };
+  /** 共享数据 */
+  shared: Record<string, StatusBarItem[]>;
 
-  characters: {
-    [charId: string]: CharacterData;
-  };
+  /** 角色数据 */
+  characters: Record<string, CharacterData>;
 
-  // v9.7: 布局数据 (Grid-Stack)
-  layout?: LayoutNode[]; // 此处添加1行
+  /** 布局数据 */
+  layout?: LayoutNode[];
 
-  _meta?: {
-    message_count?: number;
-    last_updated?: string;
-    version?: number;
-    activePresetIds?: string[]; // v8.0: 主题应用器
+  /** 元数据 */
+  _meta: {
+    message_count: number;
+    last_updated: string;
+    version: number;
+    activePresetIds?: string[];
   };
 }
 
