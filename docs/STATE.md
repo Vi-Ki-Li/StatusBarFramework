@@ -25,7 +25,7 @@
 - ✅ 基础样式 (`styles/base.css` - 重置/排版/工具类)
 - ✅ 管理器样式 (`styles/manager.css` - 浮窗/导航/响应式)
 - ✅ 管理器浮窗壳 (`manager/shell.ts` + `manager/App.vue`)
-- ✅ extensionMenu + 脚本按钮注册
+- ✅ extensionsMenu + 脚本按钮注册
 - ✅ 构建验证通过
 
 ## 进行中

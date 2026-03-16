@@ -35,34 +35,22 @@ $(() => {
   // 2. 注册安全模式
   cleanupSafeMode = registerSafeMode();
 
-  // 3. 在 #extensionMenu 添加管理器入口按钮
-  const $extensionMenu = $('#extensionMenu');
-  if ($extensionMenu.length) {
-    // 尝试多种可能的 DOM 结构
-    const $target = $extensionMenu.find('.list-group').first();
-    if ($target.length) {
-      $('<a>')
-        .attr('data-omg-ext-btn', 'true')
-        .addClass('list-group-item')
-        .css('cursor', 'pointer')
-        .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
-        .on('click', (e) => {
-          e.preventDefault();
-          openManager();
-        })
-        .appendTo($target);
-    } else {
-      // 如果没有 .list-group, 直接 append 到 extensionMenu
-      $('<div>')
-        .attr('data-omg-ext-btn', 'true')
-        .css({ cursor: 'pointer', padding: '5px 10px' })
-        .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
-        .on('click', () => openManager())
-        .appendTo(#extensionsMenu);
-    }
-    console.info(`[${SCRIPT_TITLE}] extensionMenu 按钮已添加`);
+  // 3. 在 #extensionsMenu 添加管理器入口按钮
+  const $extMenu = $('#extensionsMenu');
+  if ($extMenu.length) {
+    $('<a>')
+      .attr('data-omg-ext-btn', 'true')
+      .addClass('list-group-item')
+      .css('cursor', 'pointer')
+      .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
+      .on('click', (e) => {
+        e.preventDefault();
+        openManager();
+      })
+      .appendTo($extMenu);
+    console.info(`[${SCRIPT_TITLE}] extensionsMenu 按钮已添加`);
   } else {
-    console.warn(`[${SCRIPT_TITLE}] 未找到 #extensionMenu, 跳过按钮注册`);
+    console.warn(`[${SCRIPT_TITLE}] 未找到 #extensionsMenu, 跳过按钮注册`);
   }
 
   // 4. 注册脚本按钮

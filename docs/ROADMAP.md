@@ -46,7 +46,7 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 - [ ] 安全模式 (`Ctrl+Alt+Shift+R`)
 - [ ] CSS 设计令牌体系 (CSS变量、深浅色主题、`omg-` 前缀)
 - [ ] 基础组件库 (按钮、输入框、下拉框、开关、标签、图标)
-- [ ] 管理器浮窗壳 (iframe 隔离 + extensionMenu 按钮)
+- [ ] 管理器浮窗壳 (iframe 隔离 + extensionsMenu 按钮)
 - [ ] Google Fonts 加载 (Inter)
 - [ ] Font Awesome / Lucide 图标加载
 - [ ] 工具函数 (CSS 注入、DOM 工具等)
@@ -146,7 +146,7 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 - [ ] 五大模块路由注册
 - [ ] 模块间深度链接 (定义→样式, 预设→样式)
 - [ ] 帮助指引系统 (? 图标 → 浮窗)
-- [ ] #extensionMenu 按钮 → 打开管理器
+- [ ] #extensionsMenu 按钮 → 打开管理器
 
 ## Phase 8: 系统配置
 
