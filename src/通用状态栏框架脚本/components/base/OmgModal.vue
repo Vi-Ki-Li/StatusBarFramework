@@ -1,24 +1,22 @@
 <template>
-  <Teleport :to="teleportTarget">
-    <Transition name="omg-modal">
-      <div v-if="modelValue" class="omg-modal-overlay" @click.self="closeable && $emit('update:modelValue', false)">
-        <div class="omg-modal" :style="{ width: width }">
-          <header v-if="title" class="omg-modal__header">
-            <h3 class="omg-modal__title">{{ title }}</h3>
-            <button v-if="closeable" class="omg-modal__close" @click="$emit('update:modelValue', false)">
-              <i class="fa-solid fa-xmark" />
-            </button>
-          </header>
-          <div class="omg-modal__body">
-            <slot />
-          </div>
-          <footer v-if="$slots.footer" class="omg-modal__footer">
-            <slot name="footer" />
-          </footer>
+  <Transition name="omg-modal">
+    <div v-if="modelValue" class="omg-modal-overlay" @click.self="closeable && $emit('update:modelValue', false)">
+      <div class="omg-modal" :style="{ width: width }">
+        <header v-if="title" class="omg-modal__header">
+          <h3 class="omg-modal__title">{{ title }}</h3>
+          <button v-if="closeable" class="omg-modal__close" @click="$emit('update:modelValue', false)">
+            <i class="fa-solid fa-xmark" />
+          </button>
+        </header>
+        <div class="omg-modal__body">
+          <slot />
         </div>
+        <footer v-if="$slots.footer" class="omg-modal__footer">
+          <slot name="footer" />
+        </footer>
       </div>
-    </Transition>
-  </Teleport>
+    </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
@@ -36,9 +34,6 @@ withDefaults(
 );
 
 defineEmits<{ 'update:modelValue': [value: boolean] }>();
-
-// 在 iframe 中，teleport 到当前文档的 body
-const teleportTarget = computed(() => document.body);
 </script>
 
 <style>
