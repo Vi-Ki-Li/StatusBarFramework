@@ -58,7 +58,7 @@ $(() => {
         .css({ cursor: 'pointer', padding: '5px 10px' })
         .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
         .on('click', () => openManager())
-        .appendTo($extensionsMenu);
+        .appendTo(#extensionsMenu);
     }
     console.info(`[${SCRIPT_TITLE}] extensionMenu 按钮已添加`);
   } else {
