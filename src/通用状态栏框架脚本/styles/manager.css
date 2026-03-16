@@ -1,4 +1,4 @@
-/* @doc: 管理器壳 | category: 管理器 | desc: 浮窗容器、遮罩、头部布局 */
+/* @doc: 管理器壳 | category: 管理器 | desc: 浮窗容器、侧边栏导航、头部布局 */
 
 .omg-manager-overlay {
   position: fixed;
@@ -55,49 +55,61 @@
   gap: var(--omg-space-sm);
 }
 
-/* ── 导航标签栏 ── */
-.omg-manager__nav {
+/* ── 主体：侧边栏 + 内容 ── */
+.omg-manager__main {
+  flex: 1;
   display: flex;
-  padding: 0 var(--omg-space-xl);
-  background: var(--omg-bg-elevated);
-  border-bottom: 1px solid var(--omg-border);
-  flex-shrink: 0;
-  overflow-x: auto;
+  overflow: hidden;
 }
 
-.omg-manager__nav-item {
-  position: relative;
-  padding: var(--omg-space-md) var(--omg-space-lg);
+/* ── 左侧导航侧边栏 ── */
+.omg-manager__sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  flex-shrink: 0;
+  padding: var(--omg-space-sm);
+  gap: 2px;
+  background: var(--omg-bg-elevated);
+  border-right: 1px solid var(--omg-border);
+  overflow-y: auto;
+}
+
+.omg-manager__sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-sm);
+  padding: var(--omg-space-sm) var(--omg-space-md);
   font-size: var(--omg-font-sm);
   font-weight: var(--omg-font-weight-medium);
   color: var(--omg-text-secondary);
   cursor: pointer;
   border: none;
   background: none;
+  border-radius: var(--omg-radius-md);
   white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: var(--omg-space-xs);
-  transition: color var(--omg-transition-fast);
+  transition: all var(--omg-transition-fast);
+  text-align: left;
 }
 
-.omg-manager__nav-item:hover {
+.omg-manager__sidebar-item:hover {
   color: var(--omg-text-primary);
+  background: var(--omg-bg-secondary);
 }
 
-.omg-manager__nav-item--active {
+.omg-manager__sidebar-item--active {
   color: var(--omg-accent);
+  background: var(--omg-accent-subtle);
 }
 
-.omg-manager__nav-item--active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: var(--omg-space-lg);
-  right: var(--omg-space-lg);
-  height: 2px;
-  background: var(--omg-accent);
-  border-radius: 1px 1px 0 0;
+.omg-manager__sidebar-item--active:hover {
+  background: var(--omg-accent-subtle);
+}
+
+.omg-manager__sidebar-icon {
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 /* ── 内容区 ── */
@@ -172,8 +184,22 @@
     border-radius: 0;
   }
 
-  .omg-manager__nav {
-    padding: 0 var(--omg-space-md);
+  .omg-manager__sidebar {
+    width: 52px;
+    padding: var(--omg-space-xs);
+  }
+
+  .omg-manager__sidebar-label {
+    display: none;
+  }
+
+  .omg-manager__sidebar-item {
+    justify-content: center;
+    padding: var(--omg-space-sm);
+  }
+
+  .omg-manager__sidebar-icon {
+    width: auto;
   }
 
   .omg-manager__body {

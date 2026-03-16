@@ -22,38 +22,41 @@
           </div>
         </header>
 
-        <!-- 导航标签栏 -->
-        <nav class="omg-manager__nav">
-          <button
-            v-for="tab in tabs"
-            :key="tab.key"
-            class="omg-manager__nav-item"
-            :class="{ 'omg-manager__nav-item--active': activeTab === tab.key }"
-            @click="activeTab = tab.key"
-          >
-            <i :class="tab.icon" />
-            {{ tab.label }}
-          </button>
-        </nav>
+        <!-- 主体：左侧导航 + 右侧内容 -->
+        <div class="omg-manager__main">
+          <!-- 左侧导航 -->
+          <nav class="omg-manager__sidebar">
+            <button
+              v-for="tab in tabs"
+              :key="tab.key"
+              class="omg-manager__sidebar-item"
+              :class="{ 'omg-manager__sidebar-item--active': activeTab === tab.key }"
+              @click="activeTab = tab.key"
+            >
+              <i :class="tab.icon" class="omg-manager__sidebar-icon" />
+              <span class="omg-manager__sidebar-label">{{ tab.label }}</span>
+            </button>
+          </nav>
 
-        <!-- 内容区 -->
-        <main class="omg-manager__body">
-          <div v-if="activeTab === 'data-center'">
-            <p class="omg-text--muted">数据中心 — 开发中</p>
-          </div>
-          <div v-else-if="activeTab === 'data-studio'">
-            <p class="omg-text--muted">数据工作室 — 开发中</p>
-          </div>
-          <div v-else-if="activeTab === 'style-workshop'">
-            <p class="omg-text--muted">样式工坊 — 开发中</p>
-          </div>
-          <div v-else-if="activeTab === 'layout-composer'">
-            <p class="omg-text--muted">布局编排器 — 开发中</p>
-          </div>
-          <div v-else-if="activeTab === 'system-config'">
-            <p class="omg-text--muted">系统配置 — 开发中</p>
-          </div>
-        </main>
+          <!-- 右侧内容 -->
+          <main class="omg-manager__body">
+            <div v-if="activeTab === 'data-center'">
+              <p class="omg-text--muted">数据中心 — 开发中</p>
+            </div>
+            <div v-else-if="activeTab === 'data-studio'">
+              <p class="omg-text--muted">数据工作室 — 开发中</p>
+            </div>
+            <div v-else-if="activeTab === 'style-workshop'">
+              <p class="omg-text--muted">样式工坊 — 开发中</p>
+            </div>
+            <div v-else-if="activeTab === 'layout-composer'">
+              <p class="omg-text--muted">布局编排器 — 开发中</p>
+            </div>
+            <div v-else-if="activeTab === 'system-config'">
+              <p class="omg-text--muted">系统配置 — 开发中</p>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   </div>
