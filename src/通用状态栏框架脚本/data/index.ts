@@ -10,3 +10,4 @@ export * from './types';
 export * from './variables';
 export * from './definitions';
 export * from './definitions-store';
+export { injectToWorldbook, removeWorldbook } from './worldbook-inject';

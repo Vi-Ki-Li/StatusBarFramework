@@ -70,12 +70,12 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 
 - [x] 分类管理 UI (CRUD + 共享/角色属性)
 - [x] 条目 CRUD UI (key=JSON路径 / name / category / icon)
-- [ ] 图标选择器 (搜索 + 预览) — 当前为文本输入，待改进
+- [x] 图标选择器 (搜索 + 预览 + 手动输入)
 - [x] data_type + 验证规则 → Zod Schema 自动生成
 - [ ] ui_type 关联样式工坊 — 待 Phase 4 完成后关联
 - [x] interaction_type 关联交互行为
 - [x] description (AI指导文本) + update_sample (JSON Patch 示例自动生成)
-- [ ] 世界书注入功能 — 待实现
+- [x] 世界书注入功能 (OMG_StatusBar_Definitions)
 - [x] Other 回退显示 (未定义 key 自动归入)
 - [x] 导入/导出
 

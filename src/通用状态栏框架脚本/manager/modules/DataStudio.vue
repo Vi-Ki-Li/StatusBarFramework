@@ -7,6 +7,9 @@
         数据工作室
       </h2>
       <div class="omg-ds__actions">
+        <OmgButton icon="fa-solid fa-book-atlas" size="sm" variant="primary" @click="handleWorldbookInject">
+          注入世界书
+        </OmgButton>
         <OmgButton icon="fa-solid fa-file-import" size="sm" @click="handleImport"> 导入 </OmgButton>
         <OmgButton icon="fa-solid fa-file-export" size="sm" @click="handleExport"> 导出 </OmgButton>
       </div>
@@ -102,12 +105,10 @@
             <div class="omg-ds__editor-body">
               <OmgInput v-model="selectedEntry.key" label="KEY（JSON路径）" placeholder="例: 生命值" required />
               <OmgInput v-model="selectedEntry.name" label="显示名称" placeholder="例: ❤️ 生命值" required />
-              <OmgInput
-                v-model="selectedEntry.icon"
-                label="图标类名"
-                placeholder="例: fa-solid fa-heart"
-                :prefix-icon="selectedEntry.icon"
-              />
+              <div class="omg-ds__editor-field">
+                <label class="omg-ds__editor-label">图标</label>
+                <OmgIconPicker v-model="selectedEntry.icon" />
+              </div>
 
               <OmgSelect v-model="selectedEntry.dataType" label="数据类型" :options="dataTypeOptions" />
 
@@ -178,12 +179,10 @@
     <OmgModal v-model="showCategoryDialog" :title="editingCategory ? '编辑分类' : '新建分类'">
       <div class="omg-ds__category-form">
         <OmgInput v-model="categoryForm.name" label="分类名称" placeholder="例: 角色属性" required />
-        <OmgInput
-          v-model="categoryForm.icon"
-          label="图标类名"
-          placeholder="例: fa-solid fa-user"
-          :prefix-icon="categoryForm.icon || 'fa-solid fa-folder'"
-        />
+        <div class="omg-ds__editor-field">
+          <label class="omg-ds__editor-label">图标</label>
+          <OmgIconPicker v-model="categoryForm.icon" />
+        </div>
         <OmgSelect
           v-model="categoryForm.scope"
           label="分类属性"
@@ -204,6 +203,7 @@
 <script setup lang="ts">
 import OmgButton from '../../components/base/OmgButton.vue';
 import OmgEmpty from '../../components/base/OmgEmpty.vue';
+import OmgIconPicker from '../../components/base/OmgIconPicker.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgModal from '../../components/base/OmgModal.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
@@ -215,6 +215,7 @@ import {
   generateZodSnippet,
 } from '../../data/definitions';
 import * as store from '../../data/definitions-store';
+import { injectToWorldbook } from '../../data/worldbook-inject';
 
 // ─── 状态 ───
 
@@ -350,7 +351,7 @@ function autoGenerateSample() {
   selectedEntry.value.updateSample = generateUpdateSample(selectedEntry.value, selectedCategory.value.scope);
 }
 
-// 导入/导出
+// 导入/导出/世界书
 async function handleExport() {
   const data = await store.exportDefinitions();
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -386,6 +387,16 @@ async function handleImport() {
     }
   };
   input.click();
+}
+
+async function handleWorldbookInject() {
+  try {
+    const { created, entryCount } = await injectToWorldbook();
+    toastr.success(`世界书已${created ? '创建' : '更新'}，共 ${entryCount} 个条目`);
+  } catch (e) {
+    console.error('世界书注入失败:', e);
+    toastr.error('世界书注入失败，请查看控制台');
+  }
 }
 
 // ─── 初始化 ───
@@ -678,6 +689,18 @@ onMounted(() => loadData());
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--omg-space-md);
+}
+
+.omg-ds__editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.omg-ds__editor-label {
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-secondary);
+  font-weight: var(--omg-font-weight-medium);
 }
 
 .omg-ds__textarea {
