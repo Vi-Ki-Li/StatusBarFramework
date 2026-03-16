@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-**阶段**: Phase 1 - 数据层核心 (已完成)
-**最后更新**: 2026-03-16T21:24Z
+**阶段**: Phase 2 - 数据工作室 (核心已完成)
+**最后更新**: 2026-03-16T21:47Z
 
 ## 已完成
 
@@ -38,17 +38,39 @@
 - ✅ 智能合并 (`data/merge.ts` — source_id 裁决/user_modified/优先级降级/会话完整性/nil值/快照)
 - ✅ MVU 兼容适配层 (`data/mvu-adapter.ts` — 自动检测/事件监听/双向同步)
 
+### 2026-03-16: Phase 2 — 数据工作室
+
+- ✅ 条目定义数据模型 (`data/definitions.ts` — CategoryDef, DefinitionEntry, 验证规则, 辅助函数)
+- ✅ IndexedDB 存储操作 (`data/definitions-store.ts` — 分类/条目 CRUD, 导入/导出)
+- ✅ 基础 Vue 组件库:
+  - `components/base/OmgButton.vue` — 按钮（primary/secondary/ghost/danger，sm/md/lg）
+  - `components/base/OmgInput.vue` — 输入框（标签/前缀图标/校验/提示）
+  - `components/base/OmgSelect.vue` — 下拉选择器
+  - `components/base/OmgModal.vue` — 模态对话框（Teleport + 过渡动画）
+  - `components/base/OmgEmpty.vue` — 空状态占位
+- ✅ 数据工作室主界面 (`manager/modules/DataStudio.vue`):
+  - 左右分栏：左侧分类列表 + 右侧条目列表/编辑器
+  - 分类 CRUD（新建/编辑/删除 + 共享/角色属性 + 图标）
+  - 条目 CRUD（key/name/icon/dataType/验证规则/交互类型/描述/JSON Patch示例）
+  - JSON Patch 示例自动生成
+  - Zod 验证预览
+  - 导入/导出功能
+  - 响应式布局（移动端分类栏横向排列）
+- ✅ App.vue 集成 DataStudio 组件
+- ✅ 构建验证通过
+
 ## 进行中
 
-- Phase 0 剩余：基础 Vue 组件库 (OmgButton/OmgInput/OmgSwitch 等) — 将随 Phase 2 需要时逐步添加
+（无）
 
 ## 待开始
 
-- Phase 2: 数据工作室
+- Phase 2 剩余: 图标选择器组件、ui_type 关联样式工坊（需 Phase 4）、世界书注入
+- Phase 3: 状态栏渲染引擎
 
 ## 已知问题
 
-- extensionsMenu 按钮可能在某些酒馆版本中 DOM 结构不同，如果不显示需要检查实际 DOM
+- extensionsMenu 按钮可能在某些酒馆版本中 DOM 结构不同
 
 ## 上下文快速恢复指南
 
@@ -61,3 +83,5 @@
 5. `.cursor/rules/` 下的所有 `.mdc` 文件 — 了解酒馆助手开发规则
 6. `src/通用状态栏框架脚本/index.ts` — 当前代码入口
 7. `src/通用状态栏框架脚本/data/` — 数据层核心代码
+8. `src/通用状态栏框架脚本/manager/modules/DataStudio.vue` — 数据工作室 UI
+9. `src/通用状态栏框架脚本/components/base/` — 基础组件库

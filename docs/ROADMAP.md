@@ -41,43 +41,43 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 
 **目标**: 搭建脚本骨架，建立所有后续开发的基础。
 
-- [ ] 脚本入口 (`src/通用状态栏框架脚本/index.ts`)
-- [ ] 单例所有权机制 (唯一ID + top窗口全局信标 + cleanup)
-- [ ] 安全模式 (`Ctrl+Alt+Shift+R`)
-- [ ] CSS 设计令牌体系 (CSS变量、深浅色主题、`omg-` 前缀)
-- [ ] 基础组件库 (按钮、输入框、下拉框、开关、标签、图标)
-- [ ] 管理器浮窗壳 (iframe 隔离 + extensionsMenu 按钮)
-- [ ] Google Fonts 加载 (Inter)
-- [ ] Font Awesome / Lucide 图标加载
-- [ ] 工具函数 (CSS 注入、DOM 工具等)
+- [x] 脚本入口 (`src/通用状态栏框架脚本/index.ts`)
+- [x] 单例所有权机制 (唯一ID + top窗口全局信标 + cleanup)
+- [x] 安全模式 (`Ctrl+Alt+Shift+R`)
+- [x] CSS 设计令牌体系 (CSS变量、深浅色主题、`omg-` 前缀)
+- [x] 基础组件库 (OmgButton, OmgInput, OmgSelect, OmgModal, OmgEmpty)
+- [x] 管理器浮窗壳 (iframe 隔离 + extensionsMenu 按钮)
+- [x] Google Fonts 加载 (Inter)
+- [x] Font Awesome / Lucide 图标加载
+- [x] 工具函数 (CSS 注入、DOM 工具等)
 
 ## Phase 1: 数据层核心
 
 **目标**: 建立数据模型和解析引擎。
 
-- [ ] 核心 Zod Schema 定义 (角色数据、共享数据、元数据)
-- [ ] 角色 ID 系统 (`char_id` 生成 + 映射表)
-- [ ] JSON Patch (RFC 6902) 解析器
-- [ ] 数据读写封装 (脚本变量 / 聊天变量 / 消息楼层变量)
-- [ ] 智能合并逻辑 (source_id + user_modified 标记)
-- [ ] 会话完整性检测 (_meta.message_count)
-- [ ] `nil` 值处理
-- [ ] MVU 兼容适配层
+- [x] 核心 Zod Schema 定义 (角色数据、共享数据、元数据)
+- [x] 角色 ID 系统 (`char_id` 生成 + 映射表)
+- [x] JSON Patch (RFC 6902) 解析器
+- [x] 数据读写封装 (脚本变量 / 聊天变量 / 消息楼层变量)
+- [x] 智能合并逻辑 (source_id + user_modified 标记)
+- [x] 会话完整性检测 (_meta.message_count)
+- [x] `nil` 值处理
+- [x] MVU 兼容适配层
 
 ## Phase 2: 数据工作室
 
 **目标**: 数据的显示/验证元数据管理（不定义数据结构，JSON Patch 自动处理）。
 
-- [ ] 分类管理 UI (CRUD + 共享/角色属性)
-- [ ] 条目 CRUD UI (key=JSON路径 / name / category / icon)
-- [ ] 图标选择器 (搜索 + 预览)
-- [ ] data_type + 验证规则 → Zod Schema 自动生成
-- [ ] ui_type 关联样式工坊
-- [ ] interaction_type 关联交互行为
-- [ ] description (AI指导文本) + update_sample (JSON Patch 示例自动生成)
-- [ ] 世界书注入功能
-- [ ] Other 回退显示 (未定义 key 自动归入)
-- [ ] 导入/导出
+- [x] 分类管理 UI (CRUD + 共享/角色属性)
+- [x] 条目 CRUD UI (key=JSON路径 / name / category / icon)
+- [ ] 图标选择器 (搜索 + 预览) — 当前为文本输入，待改进
+- [x] data_type + 验证规则 → Zod Schema 自动生成
+- [ ] ui_type 关联样式工坊 — 待 Phase 4 完成后关联
+- [x] interaction_type 关联交互行为
+- [x] description (AI指导文本) + update_sample (JSON Patch 示例自动生成)
+- [ ] 世界书注入功能 — 待实现
+- [x] Other 回退显示 (未定义 key 自动归入)
+- [x] 导入/导出
 
 ## Phase 3: 状态栏渲染引擎
 

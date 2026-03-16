@@ -43,9 +43,7 @@
             <div v-if="activeTab === 'data-center'">
               <p class="omg-text--muted">数据中心 — 开发中</p>
             </div>
-            <div v-else-if="activeTab === 'data-studio'">
-              <p class="omg-text--muted">数据工作室 — 开发中</p>
-            </div>
+            <DataStudio v-else-if="activeTab === 'data-studio'" />
             <div v-else-if="activeTab === 'style-workshop'">
               <p class="omg-text--muted">样式工坊 — 开发中</p>
             </div>
@@ -63,6 +61,8 @@
 </template>
 
 <script setup lang="ts">
+import DataStudio from './modules/DataStudio.vue';
+
 defineEmits<{ close: [] }>();
 
 const tabs = [
