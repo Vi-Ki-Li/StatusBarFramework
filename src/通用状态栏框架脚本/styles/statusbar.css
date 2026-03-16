@@ -1,0 +1,313 @@
+/* @doc: 状态栏 | category: 聊天界面 | desc: 嵌入在聊天消息中的状态展示栏 */
+
+/* ─── 容器 ─── */
+
+.omg-sb {
+  margin-top: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(30, 41, 59, 0.92));
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 12px;
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 14px;
+  color: #e2e8f0;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ─── 角色选择栏 ─── */
+
+.omg-sb__tabs {
+  display: flex;
+  gap: 4px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.omg-sb__tab {
+  padding: 5px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 20px;
+  background: rgba(51, 65, 85, 0.4);
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.omg-sb__tab:hover {
+  background: rgba(51, 65, 85, 0.7);
+  color: #e2e8f0;
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.omg-sb__tab--active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+/* ─── 内容区 ─── */
+
+.omg-sb__content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── 分区 ─── */
+
+.omg-sb__section {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.omg-sb__section:hover {
+  border-color: rgba(148, 163, 184, 0.15);
+}
+
+.omg-sb__section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.omg-sb__section-header:hover {
+  background: rgba(51, 65, 85, 0.3);
+}
+
+.omg-sb__section-icon {
+  color: #818cf8;
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+}
+
+.omg-sb__section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.omg-sb__section-chevron {
+  margin-left: auto;
+  font-size: 10px;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.omg-sb__section--collapsed .omg-sb__section-chevron {
+  transform: rotate(-90deg);
+}
+
+.omg-sb__section-body {
+  border-top: 1px solid rgba(148, 163, 184, 0.06);
+}
+
+.omg-sb__section--collapsed .omg-sb__section-body {
+  display: none;
+}
+
+/* ─── 空状态 ─── */
+
+.omg-sb__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  color: #64748b;
+}
+
+.omg-sb__empty-icon {
+  font-size: 24px;
+  opacity: 0.5;
+}
+
+.omg-sb__empty-text {
+  font-size: 13px;
+}
+
+/* ─── 进度条辅助占位符 ─── */
+
+.omg-sb__progress {
+  height: 6px;
+  background: rgba(51, 65, 85, 0.8);
+  border-radius: 3px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.omg-sb__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════
+   内置样式单元 CSS
+   ═══════════════════════════════════════════ */
+
+/* ─── 文本 (builtin-text) ─── */
+
+.omg-su-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+}
+
+.omg-su-text__icon {
+  color: #818cf8;
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.omg-su-text__label {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.omg-su-text__value {
+  color: #e2e8f0;
+  font-weight: 500;
+  margin-left: auto;
+}
+
+/* ─── 进度条 (builtin-progress) ─── */
+
+.omg-su-progress {
+  padding: 6px 12px;
+}
+
+.omg-su-progress__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.omg-su-progress__icon {
+  color: #818cf8;
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.omg-su-progress__label {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.omg-su-progress__value {
+  margin-left: auto;
+  color: #e2e8f0;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.omg-su-progress__bar {
+  height: 6px;
+  background: rgba(51, 65, 85, 0.8);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.omg-su-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* ─── 布尔值 (builtin-boolean) ─── */
+
+.omg-su-bool {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+}
+
+.omg-su-bool__icon {
+  color: #818cf8;
+  width: 16px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.omg-su-bool__label {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.omg-su-bool__indicator {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.omg-su-bool__indicator--on {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.omg-su-bool__indicator--off {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+/* ─── 徽章 (builtin-badge) ─── */
+
+.omg-su-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 12px;
+  background: rgba(30, 41, 59, 0.6);
+  border-radius: 8px;
+  min-width: 64px;
+}
+
+.omg-su-badge__icon {
+  font-size: 18px;
+  color: #818cf8;
+}
+
+.omg-su-badge__value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.omg-su-badge__label {
+  font-size: 11px;
+  color: #64748b;
+}

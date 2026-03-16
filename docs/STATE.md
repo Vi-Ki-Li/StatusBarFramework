@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-**阶段**: Phase 2 - 数据工作室 (核心已完成)
-**最后更新**: 2026-03-16T21:47Z
+**阶段**: Phase 3 - 状态栏渲染引擎 (已完成)
+**最后更新**: 2026-03-16T22:05Z
 
 ## 已完成
 
@@ -42,21 +42,29 @@
 
 - ✅ 条目定义数据模型 (`data/definitions.ts` — CategoryDef, DefinitionEntry, 验证规则, 辅助函数)
 - ✅ IndexedDB 存储操作 (`data/definitions-store.ts` — 分类/条目 CRUD, 导入/导出)
-- ✅ 基础 Vue 组件库:
-  - `components/base/OmgButton.vue` — 按钮（primary/secondary/ghost/danger，sm/md/lg）
-  - `components/base/OmgInput.vue` — 输入框（标签/前缀图标/校验/提示）
-  - `components/base/OmgSelect.vue` — 下拉选择器
-  - `components/base/OmgModal.vue` — 模态对话框（Teleport + 过渡动画）
-  - `components/base/OmgEmpty.vue` — 空状态占位
-- ✅ 数据工作室主界面 (`manager/modules/DataStudio.vue`):
-  - 左右分栏：左侧分类列表 + 右侧条目列表/编辑器
-  - 分类 CRUD（新建/编辑/删除 + 共享/角色属性 + 图标）
-  - 条目 CRUD（key/name/icon/dataType/验证规则/交互类型/描述/JSON Patch示例）
-  - JSON Patch 示例自动生成
-  - Zod 验证预览
-  - 导入/导出功能
-  - 响应式布局（移动端分类栏横向排列）
-- ✅ App.vue 集成 DataStudio 组件
+- ✅ 基础 Vue 组件库 (OmgButton/OmgInput/OmgSelect/OmgModal/OmgEmpty)
+- ✅ 数据工作室主界面 (`manager/modules/DataStudio.vue` — 分类/条目 CRUD)
+- ✅ App.vue 集成 DataStudio
+- ✅ 修复 OmgModal Teleport 在 iframe 上下文中的目标错误
+
+### 2026-03-16: Phase 3 — 状态栏渲染引擎
+
+- ✅ 模板引擎 (`renderer/template-engine.ts` — {{placeholder}} 替换 + 内置辅助占位符)
+- ✅ 样式单元系统 (`renderer/style-units.ts` — StyleUnit 接口 + 4套内置样式)
+  - builtin-text: 文本（图标+标签+值）
+  - builtin-progress: 进度条（图标+标签+值+条形）
+  - builtin-boolean: 布尔值（图标+标签+开/关指示器）
+  - builtin-badge: 徽章（垂直排列图标+值+标签）
+- ✅ 状态栏渲染器 (`renderer/status-bar.ts`):
+  - 从聊天变量读取 FrameworkState
+  - 匹配定义条目 → 分类分组
+  - 未定义数据 → "其他"回退
+  - 多角色切换 (横向标签栏 + isPresent 过滤)
+  - 分区折叠/展开 + 状态记忆
+  - 事件驱动自动刷新 (MESSAGE_RENDERED/CHAT_CHANGED/SWIPED)
+- ✅ 状态栏 CSS (`styles/statusbar.css` — 暗色玻璃拟态风格 + 内置样式单元CSS)
+- ✅ teleportStyle 将 CSS 注入酒馆页面
+- ✅ index.ts 集成渲染器 (initRenderer/destroyRenderer + 清理)
 - ✅ 构建验证通过
 
 ## 进行中
@@ -65,12 +73,14 @@
 
 ## 待开始
 
-- Phase 2 剩余: 图标选择器组件、ui_type 关联样式工坊（需 Phase 4）、世界书注入
-- Phase 3: 状态栏渲染引擎
+- Phase 2 剩余: 图标选择器、世界书注入
+- Phase 4: 样式工坊
+- Phase 5: 布局编排器
 
 ## 已知问题
 
-- extensionsMenu 按钮可能在某些酒馆版本中 DOM 结构不同
+- 状态栏目前仅在有数据时显示（无数据时不渲染）
+- 布局为简单的垂直分区，待 Phase 5 实现自定义布局
 
 ## 上下文快速恢复指南
 
@@ -83,5 +93,6 @@
 5. `.cursor/rules/` 下的所有 `.mdc` 文件 — 了解酒馆助手开发规则
 6. `src/通用状态栏框架脚本/index.ts` — 当前代码入口
 7. `src/通用状态栏框架脚本/data/` — 数据层核心代码
-8. `src/通用状态栏框架脚本/manager/modules/DataStudio.vue` — 数据工作室 UI
-9. `src/通用状态栏框架脚本/components/base/` — 基础组件库
+8. `src/通用状态栏框架脚本/renderer/` — 状态栏渲染引擎
+9. `src/通用状态栏框架脚本/manager/modules/DataStudio.vue` — 数据工作室 UI
+10. `src/通用状态栏框架脚本/components/base/` — 基础组件库
