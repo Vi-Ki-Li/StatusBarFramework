@@ -1,0 +1,113 @@
+/* @doc: 基础样式 | category: 基础 | desc: 重置、排版、通用工具类 */
+
+/* ── 重置 ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 排版 ── */
+.omg-root {
+  font-family: var(--omg-font-family);
+  font-size: var(--omg-font-md);
+  line-height: var(--omg-line-height);
+  color: var(--omg-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── 滚动条 ── */
+.omg-root ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.omg-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.omg-root ::-webkit-scrollbar-thumb {
+  background: var(--omg-border);
+  border-radius: var(--omg-radius-full);
+}
+
+.omg-root ::-webkit-scrollbar-thumb:hover {
+  background: var(--omg-border-hover);
+}
+
+/* ── 聚焦轮廓 ── */
+.omg-root *:focus-visible {
+  outline: 2px solid var(--omg-border-focus);
+  outline-offset: 2px;
+}
+
+/* ── 选中文本 ── */
+.omg-root ::selection {
+  background: var(--omg-accent-subtle);
+  color: var(--omg-accent);
+}
+
+/* ── 图标基础 ── */
+.omg-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.omg-icon--sm { font-size: var(--omg-font-sm); }
+.omg-icon--md { font-size: var(--omg-font-md); }
+.omg-icon--lg { font-size: var(--omg-font-lg); }
+
+/* ── 文本工具 ── */
+.omg-text--truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.omg-text--muted {
+  color: var(--omg-text-secondary);
+}
+
+.omg-text--small {
+  font-size: var(--omg-font-sm);
+}
+
+/* ── Flex 工具 ── */
+.omg-flex {
+  display: flex;
+}
+
+.omg-flex--center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.omg-flex--between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.omg-flex--col {
+  display: flex;
+  flex-direction: column;
+}
+
+.omg-gap--sm { gap: var(--omg-space-sm); }
+.omg-gap--md { gap: var(--omg-space-md); }
+.omg-gap--lg { gap: var(--omg-space-lg); }
+
+/* ── 分割线 ── */
+.omg-divider {
+  border: none;
+  border-top: 1px solid var(--omg-border);
+  margin: var(--omg-space-md) 0;
+}

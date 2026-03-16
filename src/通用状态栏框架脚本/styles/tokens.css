@@ -1,0 +1,114 @@
+/* @doc: 设计令牌 | category: 基础 | desc: 框架级 CSS 变量，深浅色主题 */
+
+:root,
+[data-omg-theme="light"] {
+  /* ── 颜色系统 ── */
+  --omg-bg-primary: hsl(220, 20%, 97%);
+  --omg-bg-secondary: hsl(220, 18%, 93%);
+  --omg-bg-tertiary: hsl(220, 16%, 88%);
+  --omg-bg-elevated: hsl(0, 0%, 100%);
+  --omg-bg-overlay: hsla(220, 20%, 10%, 0.5);
+  --omg-bg-glass: hsla(0, 0%, 100%, 0.72);
+
+  --omg-text-primary: hsl(220, 25%, 12%);
+  --omg-text-secondary: hsl(220, 15%, 40%);
+  --omg-text-tertiary: hsl(220, 10%, 58%);
+  --omg-text-inverse: hsl(0, 0%, 100%);
+
+  --omg-accent: hsl(245, 58%, 58%);
+  --omg-accent-hover: hsl(245, 58%, 50%);
+  --omg-accent-subtle: hsl(245, 50%, 95%);
+  --omg-accent-text: hsl(0, 0%, 100%);
+
+  --omg-success: hsl(152, 55%, 42%);
+  --omg-warning: hsl(38, 92%, 55%);
+  --omg-danger: hsl(0, 72%, 58%);
+  --omg-info: hsl(205, 70%, 52%);
+
+  --omg-border: hsl(220, 15%, 85%);
+  --omg-border-hover: hsl(220, 15%, 72%);
+  --omg-border-focus: var(--omg-accent);
+
+  /* ── 阴影 ── */
+  --omg-shadow-sm: 0 1px 2px hsla(220, 20%, 10%, 0.06);
+  --omg-shadow-md: 0 4px 12px hsla(220, 20%, 10%, 0.08);
+  --omg-shadow-lg: 0 8px 28px hsla(220, 20%, 10%, 0.12);
+  --omg-shadow-xl: 0 16px 48px hsla(220, 20%, 10%, 0.16);
+
+  /* ── 间距 ── */
+  --omg-space-xs: 4px;
+  --omg-space-sm: 8px;
+  --omg-space-md: 12px;
+  --omg-space-lg: 16px;
+  --omg-space-xl: 24px;
+  --omg-space-2xl: 32px;
+  --omg-space-3xl: 48px;
+
+  /* ── 圆角 ── */
+  --omg-radius-sm: 4px;
+  --omg-radius-md: 8px;
+  --omg-radius-lg: 12px;
+  --omg-radius-xl: 16px;
+  --omg-radius-full: 9999px;
+
+  /* ── 字体 ── */
+  --omg-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --omg-font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --omg-font-xs: 11px;
+  --omg-font-sm: 12px;
+  --omg-font-md: 14px;
+  --omg-font-lg: 16px;
+  --omg-font-xl: 18px;
+  --omg-font-2xl: 22px;
+  --omg-font-3xl: 28px;
+
+  --omg-line-height: 1.5;
+  --omg-font-weight-normal: 400;
+  --omg-font-weight-medium: 500;
+  --omg-font-weight-semibold: 600;
+  --omg-font-weight-bold: 700;
+
+  /* ── 动画 ── */
+  --omg-transition-fast: 120ms ease;
+  --omg-transition-normal: 200ms ease;
+  --omg-transition-slow: 350ms ease;
+
+  /* ── 层级 ── */
+  --omg-z-dropdown: 1000;
+  --omg-z-modal: 10000;
+  --omg-z-toast: 10100;
+  --omg-z-tooltip: 10200;
+}
+
+/* ── 深色主题 ── */
+[data-omg-theme="dark"] {
+  --omg-bg-primary: hsl(225, 18%, 11%);
+  --omg-bg-secondary: hsl(225, 16%, 15%);
+  --omg-bg-tertiary: hsl(225, 14%, 20%);
+  --omg-bg-elevated: hsl(225, 18%, 14%);
+  --omg-bg-overlay: hsla(225, 20%, 4%, 0.65);
+  --omg-bg-glass: hsla(225, 18%, 14%, 0.78);
+
+  --omg-text-primary: hsl(220, 15%, 92%);
+  --omg-text-secondary: hsl(220, 10%, 65%);
+  --omg-text-tertiary: hsl(220, 8%, 48%);
+  --omg-text-inverse: hsl(225, 18%, 11%);
+
+  --omg-accent: hsl(245, 65%, 68%);
+  --omg-accent-hover: hsl(245, 65%, 75%);
+  --omg-accent-subtle: hsl(245, 35%, 20%);
+
+  --omg-success: hsl(152, 50%, 48%);
+  --omg-warning: hsl(38, 85%, 58%);
+  --omg-danger: hsl(0, 68%, 62%);
+  --omg-info: hsl(205, 65%, 58%);
+
+  --omg-border: hsl(225, 14%, 22%);
+  --omg-border-hover: hsl(225, 14%, 32%);
+
+  --omg-shadow-sm: 0 1px 2px hsla(0, 0%, 0%, 0.2);
+  --omg-shadow-md: 0 4px 12px hsla(0, 0%, 0%, 0.3);
+  --omg-shadow-lg: 0 8px 28px hsla(0, 0%, 0%, 0.35);
+  --omg-shadow-xl: 0 16px 48px hsla(0, 0%, 0%, 0.4);
+}

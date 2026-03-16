@@ -4,43 +4,46 @@
 
 ## 当前状态
 
-**阶段**: Phase 0 - 基础设施 (未开始)
-**最后更新**: 2026-03-16T18:50Z
+**阶段**: Phase 0 - 基础设施 (核心已完成)
+**最后更新**: 2026-03-16T20:20Z
 
 ## 已完成
 
 ### 2026-03-16: 项目初始化
+
 - ✅ 需求收集与分析
-- ✅ 创建文档体系
-  - `docs/REQUIREMENTS-RAW.md` — 用户原始需求完整存档
-  - `docs/REQUIREMENTS.md` — 结构化需求分析
-  - `docs/DECISIONS.md` — 设计决策记录 (6项决策)
-  - `docs/ROADMAP.md` — 10阶段开发路线图
-  - `docs/STATE.md` — 本文件
-- ✅ 关键设计决策确认
-  - DEC-001: 存储策略 (脚本变量/聊天变量/消息楼层变量/localStorage 分配)
-  - DEC-002: 独立数据解析 + MVU 兼容接口
-  - DEC-003: user_modified 通过叙事快照告知AI，不阻止更新
-  - DEC-004: 全部 Vanilla CSS, BEM, `omg-` 前缀
-  - DEC-005: source_id 机制保留，待细化
-  - DEC-006: 管理器用独立 iframe 隔离样式
+- ✅ 创建文档体系 (REQUIREMENTS-RAW/REQUIREMENTS/DECISIONS/ROADMAP/STATE)
+- ✅ 关键设计决策确认 (DEC-001 ~ DEC-008)
+
+### 2026-03-16: Phase 0 — 基础设施搭建
+
+- ✅ 脚本入口骨架 (`src/通用状态栏框架脚本/index.ts`)
+- ✅ 单例所有权机制 (`core/singleton.ts`)
+- ✅ 安全模式 Ctrl+Alt+Shift+R (`core/safe-mode.ts`)
+- ✅ IndexedDB 存储封装 (`core/storage.ts`)
+- ✅ CSS 设计令牌体系 (`styles/tokens.css` - 深浅色主题, `omg-` 前缀)
+- ✅ 基础样式 (`styles/base.css` - 重置/排版/工具类)
+- ✅ 管理器样式 (`styles/manager.css` - 浮窗/导航/响应式)
+- ✅ 管理器浮窗壳 (`manager/shell.ts` + `manager/App.vue`)
+- ✅ extensionMenu + 脚本按钮注册
+- ✅ 构建验证通过
 
 ## 进行中
 
-（无）
+- Phase 0 剩余：基础 Vue 组件库 (OmgButton/OmgInput/OmgSwitch 等)
 
 ## 待开始
 
-- Phase 0: 基础设施
-  - 脚本骨架、生命周期、安全模式、CSS体系、基础组件库
+- Phase 1: 数据层核心
 
 ## 已知问题
 
-- PowerShell 7 (pwsh) 安装后需重启 VSCode 使 PATH 生效
+（无）
 
 ## 上下文快速恢复指南
 
 如果你是新会话的 AI，请按顺序阅读：
+
 1. `docs/REQUIREMENTS.md` — 了解项目需求
 2. `docs/DECISIONS.md` — 了解已做的设计决策
 3. `docs/ROADMAP.md` — 了解开发阶段规划

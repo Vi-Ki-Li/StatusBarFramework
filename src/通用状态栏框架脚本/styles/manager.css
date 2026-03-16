@@ -1,0 +1,182 @@
+/* @doc: 管理器壳 | category: 管理器 | desc: 浮窗容器、遮罩、头部布局 */
+
+.omg-manager-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--omg-z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--omg-bg-overlay);
+  backdrop-filter: blur(4px);
+  animation: omg-fade-in var(--omg-transition-normal);
+}
+
+.omg-manager {
+  position: relative;
+  width: min(92vw, 1100px);
+  height: min(88vh, 780px);
+  background: var(--omg-bg-primary);
+  border-radius: var(--omg-radius-xl);
+  box-shadow: var(--omg-shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: omg-scale-in var(--omg-transition-normal);
+}
+
+/* ── 头部 ── */
+.omg-manager__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--omg-space-md) var(--omg-space-xl);
+  border-bottom: 1px solid var(--omg-border);
+  background: var(--omg-bg-elevated);
+  flex-shrink: 0;
+}
+
+.omg-manager__title {
+  font-size: var(--omg-font-lg);
+  font-weight: var(--omg-font-weight-semibold);
+  color: var(--omg-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-sm);
+}
+
+.omg-manager__title-icon {
+  color: var(--omg-accent);
+}
+
+.omg-manager__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-sm);
+}
+
+/* ── 导航标签栏 ── */
+.omg-manager__nav {
+  display: flex;
+  padding: 0 var(--omg-space-xl);
+  background: var(--omg-bg-elevated);
+  border-bottom: 1px solid var(--omg-border);
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+
+.omg-manager__nav-item {
+  position: relative;
+  padding: var(--omg-space-md) var(--omg-space-lg);
+  font-size: var(--omg-font-sm);
+  font-weight: var(--omg-font-weight-medium);
+  color: var(--omg-text-secondary);
+  cursor: pointer;
+  border: none;
+  background: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-xs);
+  transition: color var(--omg-transition-fast);
+}
+
+.omg-manager__nav-item:hover {
+  color: var(--omg-text-primary);
+}
+
+.omg-manager__nav-item--active {
+  color: var(--omg-accent);
+}
+
+.omg-manager__nav-item--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: var(--omg-space-lg);
+  right: var(--omg-space-lg);
+  height: 2px;
+  background: var(--omg-accent);
+  border-radius: 1px 1px 0 0;
+}
+
+/* ── 内容区 ── */
+.omg-manager__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--omg-space-xl);
+}
+
+/* ── 动画 ── */
+@keyframes omg-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes omg-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ── 关闭按钮 ── */
+.omg-manager__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  color: var(--omg-text-tertiary);
+  cursor: pointer;
+  border-radius: var(--omg-radius-md);
+  transition: all var(--omg-transition-fast);
+}
+
+.omg-manager__close:hover {
+  background: var(--omg-bg-tertiary);
+  color: var(--omg-text-primary);
+}
+
+/* ── 主题切换按钮 ── */
+.omg-theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-secondary);
+  color: var(--omg-text-secondary);
+  cursor: pointer;
+  border-radius: var(--omg-radius-md);
+  transition: all var(--omg-transition-fast);
+}
+
+.omg-theme-toggle:hover {
+  border-color: var(--omg-border-hover);
+  color: var(--omg-text-primary);
+}
+
+/* ── 响应式 ── */
+@media (max-width: 768px) {
+  .omg-manager {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+
+  .omg-manager__nav {
+    padding: 0 var(--omg-space-md);
+  }
+
+  .omg-manager__body {
+    padding: var(--omg-space-md);
+  }
+}
