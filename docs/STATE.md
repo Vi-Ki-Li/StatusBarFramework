@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-**阶段**: Phase 3 - 状态栏渲染引擎 (已完成)
-**最后更新**: 2026-03-16T22:05Z
+**阶段**: Phase 4 - 样式工坊 (已完成)
+**最后更新**: 2026-03-17T01:00Z
 
 ## 已完成
 
@@ -67,15 +67,36 @@
 - ✅ index.ts 集成渲染器 (initRenderer/destroyRenderer + 清理)
 - ✅ 构建验证通过
 
+### 2026-03-17: Phase 2 完善
+
+- ✅ 图标选择器组件 (`components/base/OmgIconPicker.vue` — 搜索+网格+手动输入)
+- ✅ 世界书注入功能 (`data/worldbook-inject.ts` — 定义条目→世界书)
+- ✅ 测试文档 (`docs/TESTING.md`)
+
+### 2026-03-17: Phase 4 — 样式工坊
+
+- ✅ CSS 安全检查 (`core/css-safety.ts` — 危险规则检测: 通配符隐藏/body选择器/z-index过高等)
+- ✅ 样式单元存储 (`data/styles-store.ts` — IndexedDB CRUD + 全局主题 + 导入/导出)
+- ✅ 样式工坊主界面 (`manager/modules/StyleWorkshop.vue`):
+  - 左侧栏: 内置样式(只读) + 自定义样式 + 全局主题
+  - 代码编辑器: HTML 模板 + CSS 双标签页
+  - 占位符参考面板 (标准/计算/辅助函数/数据工作室条目)
+  - 实时预览 (文本/数字/布尔三种数据类型)
+  - CSS 安全检查结果展示
+  - 内置样式"复制为自定义" 
+  - 全局主题编辑器 (CSS + HTML 模板)
+  - 导入/导出
+- ✅ App.vue 集成 StyleWorkshop
+- ✅ 构建验证通过
+
 ## 进行中
 
 （无）
 
 ## 待开始
 
-- Phase 2 剩余: 图标选择器、世界书注入
-- Phase 4: 样式工坊
 - Phase 5: 布局编排器
+- Phase 6: 数据中心
 
 ## 已知问题
 
@@ -95,4 +116,6 @@
 7. `src/通用状态栏框架脚本/data/` — 数据层核心代码
 8. `src/通用状态栏框架脚本/renderer/` — 状态栏渲染引擎
 9. `src/通用状态栏框架脚本/manager/modules/DataStudio.vue` — 数据工作室 UI
-10. `src/通用状态栏框架脚本/components/base/` — 基础组件库
+10. `src/通用状态栏框架脚本/manager/modules/StyleWorkshop.vue` — 样式工坊 UI
+11. `src/通用状态栏框架脚本/core/css-safety.ts` — CSS 安全检查
+12. `src/通用状态栏框架脚本/components/base/` — 基础组件库

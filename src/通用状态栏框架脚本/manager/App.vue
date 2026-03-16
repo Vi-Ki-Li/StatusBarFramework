@@ -44,9 +44,7 @@
               <p class="omg-text--muted">数据中心 — 开发中</p>
             </div>
             <DataStudio v-else-if="activeTab === 'data-studio'" />
-            <div v-else-if="activeTab === 'style-workshop'">
-              <p class="omg-text--muted">样式工坊 — 开发中</p>
-            </div>
+            <StyleWorkshop v-else-if="activeTab === 'style-workshop'" />
             <div v-else-if="activeTab === 'layout-composer'">
               <p class="omg-text--muted">布局编排器 — 开发中</p>
             </div>
@@ -62,6 +60,7 @@
 
 <script setup lang="ts">
 import DataStudio from './modules/DataStudio.vue';
+import StyleWorkshop from './modules/StyleWorkshop.vue';
 
 defineEmits<{ close: [] }>();
 
