@@ -11,4 +11,5 @@ export * from './variables';
 export * from './definitions';
 export * from './definitions-store';
 export * from './styles-store';
+export * from './layouts-store';
 export { injectToWorldbook, removeWorldbook } from './worldbook-inject';

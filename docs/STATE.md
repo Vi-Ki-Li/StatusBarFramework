@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-**阶段**: Phase 4 - 样式工坊 (已完成)
-**最后更新**: 2026-03-17T01:00Z
+**阶段**: Phase 5 - 布局编排器 (已完成)
+**最后更新**: 2026-03-17T01:30Z
 
 ## 已完成
 
@@ -89,13 +89,33 @@
 - ✅ App.vue 集成 StyleWorkshop
 - ✅ 构建验证通过
 
-## 进行中
+### 2026-03-17: Phase 5 — 布局编排器
+
+- ✅ 布局数据模型 (`data/layouts-store.ts`):
+  - LayoutNode 树状结构 (容器/条目两种节点)
+  - 布局模式: flex-row/flex-col/grid/absolute/custom
+  - 树操作函数: 查找/父节点/移除/移动
+  - IndexedDB CRUD + 导入/导出
+- ✅ 递归树节点组件 (`manager/modules/LayoutTreeNode.vue`):
+  - 展开/收起、图标、标签、布局模式标识
+  - 递归渲染子节点
+- ✅ 布局编排器主界面 (`manager/modules/LayoutComposer.vue`):
+  - 左侧: 布局方案列表 CRUD
+  - 中间: 结构树 (递归树形展示)
+  - 右侧: 属性面板 (布局模式/间距/对齐/条目绑定)
+  - 添加容器/添加条目功能
+  - 节点移动(上下)/删除
+  - 布局预览 (实时渲染)
+  - JSON 直接编辑模式
+  - 导入/导出
+- ✅ App.vue 集成 LayoutComposer
+- ✅ 构建验证通过
 
 （无）
 
 ## 待开始
 
-- Phase 5: 布局编排器
+- Phase 5: 布局编排器 — WYSIWYG 画布、调整手柄待完善
 - Phase 6: 数据中心
 
 ## 已知问题

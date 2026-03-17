@@ -45,9 +45,7 @@
             </div>
             <DataStudio v-else-if="activeTab === 'data-studio'" />
             <StyleWorkshop v-else-if="activeTab === 'style-workshop'" />
-            <div v-else-if="activeTab === 'layout-composer'">
-              <p class="omg-text--muted">布局编排器 — 开发中</p>
-            </div>
+            <LayoutComposer v-else-if="activeTab === 'layout-composer'" />
             <div v-else-if="activeTab === 'system-config'">
               <p class="omg-text--muted">系统配置 — 开发中</p>
             </div>
@@ -60,6 +58,7 @@
 
 <script setup lang="ts">
 import DataStudio from './modules/DataStudio.vue';
+import LayoutComposer from './modules/LayoutComposer.vue';
 import StyleWorkshop from './modules/StyleWorkshop.vue';
 
 defineEmits<{ close: [] }>();
