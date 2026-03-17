@@ -5,6 +5,9 @@
       <h2 class="omg-dc__title">
         <i class="fa-solid fa-database" />
         数据中心
+        <OmgHelpTip title="数据中心">
+          实时编辑所有角色和共享数据。左侧选择数据源（共享/角色），右侧编辑条目。所有修改先暂存在内存中，点击"保存"按钮统一写入。
+        </OmgHelpTip>
       </h2>
       <div class="omg-dc__actions">
         <OmgButton icon="fa-solid fa-rotate" size="sm" @click="reload"> 刷新 </OmgButton>
@@ -196,6 +199,7 @@
 <script setup lang="ts">
 import OmgButton from '../../components/base/OmgButton.vue';
 import OmgEmpty from '../../components/base/OmgEmpty.vue';
+import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgModal from '../../components/base/OmgModal.vue';
 import { getAllCategories, getAllEntries } from '../../data/definitions-store';

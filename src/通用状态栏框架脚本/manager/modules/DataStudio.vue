@@ -5,6 +5,9 @@
       <h2 class="omg-ds__title">
         <i class="fa-solid fa-flask" />
         数据工作室
+        <OmgHelpTip title="数据工作室">
+          全局"条目字典"。创建分类（共享/角色），在分类下创建条目定义（KEY、显示名、图标、描述等）。定义好的条目可在数据中心智能推荐，也可注入世界书让 AI 了解数据结构。
+        </OmgHelpTip>
       </h2>
       <div class="omg-ds__actions">
         <OmgButton icon="fa-solid fa-book-atlas" size="sm" variant="primary" @click="handleWorldbookInject">
@@ -138,6 +141,19 @@
 
               <OmgSelect v-model="selectedEntry.interactionType" label="交互类型" :options="interactionOptions" />
 
+              <div class="omg-ds__editor-field">
+                <label class="omg-ds__editor-label">渲染样式</label>
+                <div class="omg-ds__style-row">
+                  <select v-model="selectedEntry.uiType" class="omg-ds__select">
+                    <option value="default">默认</option>
+                    <option v-for="su in styleUnitOptions" :key="su.id" :value="su.id">{{ su.name }}</option>
+                  </select>
+                  <button class="omg-ds__link-btn" title="跳转到样式工坊" @click="goToStyleWorkshop(selectedEntry.uiType)">
+                    <i class="fa-solid fa-arrow-up-right-from-square" />
+                  </button>
+                </div>
+              </div>
+
               <div class="omg-input">
                 <label class="omg-input__label">AI 指导描述</label>
                 <textarea
@@ -203,6 +219,7 @@
 <script setup lang="ts">
 import OmgButton from '../../components/base/OmgButton.vue';
 import OmgEmpty from '../../components/base/OmgEmpty.vue';
+import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgIconPicker from '../../components/base/OmgIconPicker.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgModal from '../../components/base/OmgModal.vue';
@@ -215,7 +232,18 @@ import {
   generateZodSnippet,
 } from '../../data/definitions';
 import * as store from '../../data/definitions-store';
+import { getAllStyleUnits, type StoredStyleUnit } from '../../data/styles-store';
+import { BUILTIN_STYLE_UNITS } from '../../renderer/style-units';
 import { injectToWorldbook } from '../../data/worldbook-inject';
+import { NAV_KEY } from '../navigation';
+
+// ─── 导航 ───
+
+const nav = inject(NAV_KEY);
+
+function goToStyleWorkshop(styleId: string) {
+  nav?.navigateTo({ tab: 'style-workshop', context: { styleId } });
+}
 
 // ─── 状态 ───
 
@@ -231,6 +259,8 @@ const categoryForm = ref<{ name: string; icon: string; scope: CategoryScope }>({
   icon: '',
   scope: 'character',
 });
+
+const styleUnitOptions = ref<Array<{ id: string; name: string }>>([]);
 
 // ─── 计算属性 ───
 
@@ -407,6 +437,12 @@ async function loadData() {
   if (categories.value.length > 0 && !selectedCategoryId.value) {
     selectedCategoryId.value = categories.value[0].id;
   }
+  // Load style units for uiType selector
+  const customs = await getAllStyleUnits();
+  styleUnitOptions.value = [
+    ...BUILTIN_STYLE_UNITS.map(s => ({ id: s.id, name: `[内置] ${s.id}` })),
+    ...customs.map(s => ({ id: s.id, name: s.name ?? s.id })),
+  ];
 }
 
 onMounted(() => loadData());
@@ -785,5 +821,50 @@ onMounted(() => loadData());
   .omg-ds__editor-row {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── 样式行 + 深度链接 ── */
+.omg-ds__style-row {
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-xs);
+}
+
+.omg-ds__select {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: var(--omg-font-sm);
+  font-family: var(--omg-font-family);
+  color: var(--omg-text-primary);
+  background: var(--omg-bg-primary);
+  border: 1px solid var(--omg-border);
+  border-radius: var(--omg-radius-md);
+  outline: none;
+}
+
+.omg-ds__select:focus {
+  border-color: var(--omg-accent);
+}
+
+.omg-ds__link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-secondary);
+  color: var(--omg-text-tertiary);
+  cursor: pointer;
+  border-radius: var(--omg-radius-md);
+  font-size: var(--omg-font-xs);
+  transition: all var(--omg-transition-fast);
+  flex-shrink: 0;
+}
+
+.omg-ds__link-btn:hover {
+  color: var(--omg-accent);
+  border-color: var(--omg-accent);
+  background: var(--omg-accent-subtle);
 }
 </style>

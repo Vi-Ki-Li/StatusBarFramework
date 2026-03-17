@@ -58,6 +58,7 @@ import DataStudio from './modules/DataStudio.vue';
 import LayoutComposer from './modules/LayoutComposer.vue';
 import StyleWorkshop from './modules/StyleWorkshop.vue';
 import SystemConfig from './modules/SystemConfig.vue';
+import { NAV_KEY, type NavigationTarget } from './navigation';
 
 defineEmits<{ close: [] }>();
 
@@ -72,10 +73,18 @@ const tabs = [
 type TabKey = (typeof tabs)[number]['key'];
 
 const activeTab = ref<TabKey>('data-center');
+const navContext = ref<Record<string, string>>({});
 
 const theme = ref<'light' | 'dark'>('dark');
 
 function toggleTheme() {
   theme.value = theme.value === 'dark' ? 'light' : 'dark';
 }
+
+function navigateTo(target: NavigationTarget) {
+  activeTab.value = target.tab;
+  navContext.value = target.context ?? {};
+}
+
+provide(NAV_KEY, { navigateTo, navContext });
 </script>

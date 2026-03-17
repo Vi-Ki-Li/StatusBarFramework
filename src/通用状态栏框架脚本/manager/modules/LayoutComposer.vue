@@ -5,6 +5,9 @@
       <h2 class="omg-lc__title">
         <i class="fa-solid fa-grip" />
         布局编排器
+        <OmgHelpTip title="布局编排器">
+          以树状结构设计状态栏布局。支持 Flexbox/Grid/Absolute/Custom 四种布局模式，可嵌套容器并绑定条目。所有布局保存为 JSON，支持多方案切换。
+        </OmgHelpTip>
       </h2>
       <div class="omg-lc__actions">
         <OmgButton icon="fa-solid fa-plus" size="sm" variant="primary" @click="createLayout"> 新建布局 </OmgButton>
@@ -205,6 +208,7 @@
 <script setup lang="ts">
 import OmgButton from '../../components/base/OmgButton.vue';
 import OmgEmpty from '../../components/base/OmgEmpty.vue';
+import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
 import type { DefinitionEntry } from '../../data/definitions';

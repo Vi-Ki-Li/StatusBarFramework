@@ -5,6 +5,9 @@
       <h2 class="omg-sw__title">
         <i class="fa-solid fa-palette" />
         样式工坊
+        <OmgHelpTip title="样式工坊">
+          创建和管理"样式单元"——状态栏条目的外观模板。使用 HTML + CSS 编写，支持 {{placeholder}} 占位符。内置默认样式供参考或复制。全局主题允许定制框架级外观。
+        </OmgHelpTip>
       </h2>
       <div class="omg-sw__actions">
         <OmgButton icon="fa-solid fa-plus" size="sm" variant="primary" @click="createUnit"> 新建样式 </OmgButton>
@@ -304,6 +307,7 @@
 <script setup lang="ts">
 import OmgButton from '../../components/base/OmgButton.vue';
 import OmgEmpty from '../../components/base/OmgEmpty.vue';
+import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
 import { checkCssSafety } from '../../core/css-safety';
