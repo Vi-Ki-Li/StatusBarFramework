@@ -44,9 +44,7 @@
             <DataStudio v-else-if="activeTab === 'data-studio'" />
             <StyleWorkshop v-else-if="activeTab === 'style-workshop'" />
             <LayoutComposer v-else-if="activeTab === 'layout-composer'" />
-            <div v-else-if="activeTab === 'system-config'">
-              <p class="omg-text--muted">系统配置 — 开发中</p>
-            </div>
+            <SystemConfig v-else-if="activeTab === 'system-config'" />
           </main>
         </div>
       </div>
@@ -59,6 +57,7 @@ import DataCenter from './modules/DataCenter.vue';
 import DataStudio from './modules/DataStudio.vue';
 import LayoutComposer from './modules/LayoutComposer.vue';
 import StyleWorkshop from './modules/StyleWorkshop.vue';
+import SystemConfig from './modules/SystemConfig.vue';
 
 defineEmits<{ close: [] }>();
 

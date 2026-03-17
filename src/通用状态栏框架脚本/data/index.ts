@@ -12,4 +12,6 @@ export * from './definitions';
 export * from './definitions-store';
 export * from './styles-store';
 export * from './layouts-store';
+export * from './themes-store';
+export * from './narratives-store';
 export { injectToWorldbook, removeWorldbook } from './worldbook-inject';

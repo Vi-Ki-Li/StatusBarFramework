@@ -4,8 +4,8 @@
 
 ## 当前状态
 
-**阶段**: Phase 6 - 数据中心 (已完成)
-**最后更新**: 2026-03-17T02:00Z
+**阶段**: Phase 8 - 系统配置 (已完成)
+**最后更新**: 2026-03-17T03:00Z
 
 ## 已完成
 
@@ -113,10 +113,38 @@
 
 （无）
 
+### 2026-03-17: Phase 6 — 数据中心
+
+- ✅ DataCenter.vue 全功能实时编辑器:
+  - 数据源切换: 共享数据 / 角色数据
+  - 角色列表: char_id 显示, isPresent 切换(眼睛图标)
+  - 按分类分组展示数据条目
+  - 智能值编辑 (数字/布尔/文本/JSON 自动识别)
+  - 智能推荐输入 (datalist 基于未使用的定义条目)
+  - 暂存模式 + 全局保存 (脏数据标记)
+  - 添加/删除角色, 清空数据
+  - Other 回退分类
+- ✅ App.vue 集成 DataCenter
+- ✅ 构建验证通过
+
+### 2026-03-17: Phase 8 — 系统配置
+
+- ✅ 主题组合存储 (`data/themes-store.ts` — ThemeCombo 类型 + IndexedDB CRUD + 导入/导出)
+- ✅ 叙事快照存储 (`data/narratives-store.ts` — NarrativeTemplate 类型 + IndexedDB CRUD + 导入/导出)
+- ✅ 系统配置主界面 (`manager/modules/SystemConfig.vue`) 含 5 个子标签页:
+  - **原始数据查看器**: DevTools 风格 JSON 编辑, 支持切换聊天变量/脚本变量数据源, 可选编辑模式 + 写入保存
+  - **主题组合**: 创建/编辑/删除, 绑定到聊天/一次性应用, 导入/导出
+  - **叙事快照**: 启用/禁用开关, 模板 CRUD (共享/角色/用户/用户修改 四种模板), AI 风格指导提示词, 注入世界书开关, 导入/导出
+  - **备份与迁移**: 多模块选择性导出 (定义/样式/布局/主题/叙事), 文件导入, 双重确认恢复出厂
+  - **使用指南**: 8 个模块的完整功能说明
+- ✅ App.vue 集成 SystemConfig
+- ✅ data/index.ts 导出 themes-store + narratives-store
+- ✅ 构建验证通过
+
 ## 待开始
 
-- Phase 7: 管理器整合
-- Phase 8-10: 后续
+- Phase 7: 管理器整合 (深度链接 + 帮助指引)
+- Phase 9-10: 高级功能 + 打磨优化
 
 ## 已知问题
 
@@ -137,5 +165,8 @@
 8. `src/通用状态栏框架脚本/renderer/` — 状态栏渲染引擎
 9. `src/通用状态栏框架脚本/manager/modules/DataStudio.vue` — 数据工作室 UI
 10. `src/通用状态栏框架脚本/manager/modules/StyleWorkshop.vue` — 样式工坊 UI
-11. `src/通用状态栏框架脚本/core/css-safety.ts` — CSS 安全检查
-12. `src/通用状态栏框架脚本/components/base/` — 基础组件库
+11. `src/通用状态栏框架脚本/manager/modules/DataCenter.vue` — 数据中心 UI
+12. `src/通用状态栏框架脚本/manager/modules/LayoutComposer.vue` — 布局编排器 UI
+13. `src/通用状态栏框架脚本/manager/modules/SystemConfig.vue` — 系统配置 UI
+14. `src/通用状态栏框架脚本/core/css-safety.ts` — CSS 安全检查
+15. `src/通用状态栏框架脚本/components/base/` — 基础组件库
