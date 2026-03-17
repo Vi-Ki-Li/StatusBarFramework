@@ -40,9 +40,7 @@
 
           <!-- 右侧内容 -->
           <main class="omg-manager__body">
-            <div v-if="activeTab === 'data-center'">
-              <p class="omg-text--muted">数据中心 — 开发中</p>
-            </div>
+            <DataCenter v-if="activeTab === 'data-center'" />
             <DataStudio v-else-if="activeTab === 'data-studio'" />
             <StyleWorkshop v-else-if="activeTab === 'style-workshop'" />
             <LayoutComposer v-else-if="activeTab === 'layout-composer'" />
@@ -57,6 +55,7 @@
 </template>
 
 <script setup lang="ts">
+import DataCenter from './modules/DataCenter.vue';
 import DataStudio from './modules/DataStudio.vue';
 import LayoutComposer from './modules/LayoutComposer.vue';
 import StyleWorkshop from './modules/StyleWorkshop.vue';
