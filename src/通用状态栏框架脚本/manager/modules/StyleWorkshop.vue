@@ -6,7 +6,8 @@
         <i class="fa-solid fa-palette" />
         样式工坊
         <OmgHelpTip title="样式工坊">
-          创建和管理"样式单元"——状态栏条目的外观模板。使用 HTML + CSS 编写，支持 {{placeholder}} 占位符。内置默认样式供参考或复制。全局主题允许定制框架级外观。
+          创建和管理"样式单元"——状态栏条目的外观模板。使用 HTML + CSS 编写，支持
+          {{ placeholder }} 占位符。内置默认样式供参考或复制。全局主题允许定制框架级外观。
         </OmgHelpTip>
       </h2>
       <div class="omg-sw__actions">
@@ -312,8 +313,8 @@ import OmgInput from '../../components/base/OmgInput.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
 import { checkCssSafety } from '../../core/css-safety';
 import { getAllEntries } from '../../data/definitions-store';
-import * as stylesStore from '../../data/styles-store';
 import type { StoredStyleUnit } from '../../data/styles-store';
+import * as stylesStore from '../../data/styles-store';
 import { BUILTIN_STYLE_UNITS } from '../../renderer/style-units';
 import { renderTemplate } from '../../renderer/template-engine';
 

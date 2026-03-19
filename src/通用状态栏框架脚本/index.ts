@@ -13,10 +13,10 @@ import { destroyManager, openManager } from './manager/shell';
 import { destroyRenderer, initRenderer } from './renderer';
 
 // 导入样式（注入到脚本 iframe 的 head 中，之后通过 teleportStyle 复制到目标）
-import './styles/tokens.css';
 import './styles/base.css';
 import './styles/manager.css';
 import './styles/statusbar.css';
+import './styles/tokens.css';
 
 let cleanupSafeMode: (() => void) | null = null;
 let destroyTavernStyle: (() => void) | null = null;
@@ -53,7 +53,7 @@ $(() => {
       .addClass('list-group-item')
       .css('cursor', 'pointer')
       .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
-      .on('click', (e) => {
+      .on('click', e => {
         e.preventDefault();
         openManager();
       })

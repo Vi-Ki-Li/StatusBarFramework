@@ -6,7 +6,8 @@
         <i class="fa-solid fa-flask" />
         数据工作室
         <OmgHelpTip title="数据工作室">
-          全局"条目字典"。创建分类（共享/角色），在分类下创建条目定义（KEY、显示名、图标、描述等）。定义好的条目可在数据中心智能推荐，也可注入世界书让 AI 了解数据结构。
+          全局"条目字典"。创建分类（共享/角色），在分类下创建条目定义（KEY、显示名、图标、描述等）。定义好的条目可在数据中心智能推荐，也可注入世界书让
+          AI 了解数据结构。
         </OmgHelpTip>
       </h2>
       <div class="omg-ds__actions">
@@ -148,7 +149,11 @@
                     <option value="default">默认</option>
                     <option v-for="su in styleUnitOptions" :key="su.id" :value="su.id">{{ su.name }}</option>
                   </select>
-                  <button class="omg-ds__link-btn" title="跳转到样式工坊" @click="goToStyleWorkshop(selectedEntry.uiType)">
+                  <button
+                    class="omg-ds__link-btn"
+                    title="跳转到样式工坊"
+                    @click="goToStyleWorkshop(selectedEntry.uiType)"
+                  >
                     <i class="fa-solid fa-arrow-up-right-from-square" />
                   </button>
                 </div>
@@ -232,9 +237,9 @@ import {
   generateZodSnippet,
 } from '../../data/definitions';
 import * as store from '../../data/definitions-store';
-import { getAllStyleUnits, type StoredStyleUnit } from '../../data/styles-store';
-import { BUILTIN_STYLE_UNITS } from '../../renderer/style-units';
+import { getAllStyleUnits } from '../../data/styles-store';
 import { injectToWorldbook } from '../../data/worldbook-inject';
+import { BUILTIN_STYLE_UNITS } from '../../renderer/style-units';
 import { NAV_KEY } from '../navigation';
 
 // ─── 导航 ───

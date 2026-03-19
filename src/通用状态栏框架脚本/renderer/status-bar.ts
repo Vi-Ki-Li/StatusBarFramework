@@ -18,7 +18,7 @@ const CONTAINER_ATTR = 'data-omg-statusbar';
 let activeCharId: CharId | null = null;
 let cachedCategories: CategoryDef[] = [];
 let cachedEntries: DefinitionEntry[] = [];
-let injectedCssIds = new Set<string>();
+const injectedCssIds = new Set<string>();
 let $dynamicStyle: JQuery | null = null;
 
 // ─── 定义数据加载 ───

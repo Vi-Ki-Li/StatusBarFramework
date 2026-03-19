@@ -42,7 +42,7 @@
             </select>
           </label>
           <label class="omg-sc__checkbox-label">
-            <input type="checkbox" v-model="rawEditable" />
+            <input v-model="rawEditable" type="checkbox" />
             允许编辑
           </label>
         </div>
@@ -141,11 +141,11 @@
           <h3><i class="fa-solid fa-scroll" /> 叙事快照</h3>
           <div class="omg-sc__section-actions">
             <label class="omg-sc__toggle-label">
-              <input type="checkbox" v-model="sysConfig.narrativeEnabled" @change="saveSysConfig" />
+              <input v-model="sysConfig.narrativeEnabled" type="checkbox" @change="saveSysConfig" />
               启用叙事生成
             </label>
             <label class="omg-sc__toggle-label">
-              <input type="checkbox" v-model="sysConfig.narrativeInjectEnabled" @change="saveSysConfig" />
+              <input v-model="sysConfig.narrativeInjectEnabled" type="checkbox" @change="saveSysConfig" />
               注入世界书
             </label>
           </div>
@@ -259,7 +259,7 @@
             <p class="omg-sc__hint">选择要导出的模块，生成 JSON 文件。</p>
             <div class="omg-sc__backup-checks">
               <label v-for="mod in exportModules" :key="mod.key" class="omg-sc__checkbox-label">
-                <input type="checkbox" v-model="mod.selected" />
+                <input v-model="mod.selected" type="checkbox" />
                 {{ mod.label }}
               </label>
             </div>
@@ -300,7 +300,7 @@
           <h3><i class="fa-solid fa-circle-question" /> 使用指南</h3>
         </div>
         <div class="omg-sc__guide">
-          <div class="omg-sc__guide-section" v-for="g in guideItems" :key="g.title">
+          <div v-for="g in guideItems" :key="g.title" class="omg-sc__guide-section">
             <h4 class="omg-sc__guide-title"><i :class="g.icon" /> {{ g.title }}</h4>
             <p class="omg-sc__guide-text">{{ g.text }}</p>
           </div>

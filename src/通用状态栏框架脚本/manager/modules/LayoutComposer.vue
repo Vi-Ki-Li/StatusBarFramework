@@ -6,7 +6,8 @@
         <i class="fa-solid fa-grip" />
         布局编排器
         <OmgHelpTip title="布局编排器">
-          以树状结构设计状态栏布局。支持 Flexbox/Grid/Absolute/Custom 四种布局模式，可嵌套容器并绑定条目。所有布局保存为 JSON，支持多方案切换。
+          以树状结构设计状态栏布局。支持 Flexbox/Grid/Absolute/Custom 四种布局模式，可嵌套容器并绑定条目。所有布局保存为
+          JSON，支持多方案切换。
         </OmgHelpTip>
       </h2>
       <div class="omg-lc__actions">
@@ -38,7 +39,7 @@
         </div>
       </aside>
 
-      <!-- 右侧 -->
+      <!-- v-if="currentLayout" 右侧 -->
       <div class="omg-lc__main" v-if="currentLayout">
         <!-- 布局名称 -->
         <div class="omg-lc__layout-header">
@@ -86,7 +87,7 @@
               </div>
             </div>
 
-            <!-- 属性面板 -->
+            <!-- v-if="selectedNode" 属性面板 -->
             <div class="omg-lc__props-panel" v-if="selectedNode">
               <div class="omg-lc__props-header">
                 <span class="omg-lc__props-label">属性</span>

@@ -167,3 +167,29 @@
 - 高级用户: 直接编辑布局 JSON 或写 Custom CSS
 
 **布局数据格式**: 树状 JSON 结构，每个节点包含 `type`(container/item)、`mode`、布局参数、`children`。
+
+---
+
+## DEC-009: 文档工作流与职责固定化
+
+**日期**: 2026-03-19  
+**状态**: ✅ 已决定
+
+**背景**: 随迭代增长，`STATE.md` 混入大量历史，`phases/` 缺少阶段文档，导致新会话恢复成本高、文档职责混乱。
+
+**决定**:
+
+1. 固定流程为：**需求 → 讨论 → 研究 → 规划 → 执行 → 验证**
+2. 文档职责明确：
+   - `STATE.md` 只保留当前快照
+   - `phases/phase-N-*.md` 记录阶段完整过程
+   - `DECISIONS.md` 记录关键取舍
+   - `TESTING.md` 持续补齐可复用测试
+   - `ARCHITECTURE.md` 维护系统结构总览
+3. 新会话按固定顺序读取：STATE → WORKFLOW → ARCHITECTURE → DECISIONS → ROADMAP → 最新 phase 文档
+
+**原因**:
+
+- 降低上下文腐化
+- 提高跨会话可恢复性
+- 让非开发用户也能快速理解当前状态与下一步

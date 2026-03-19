@@ -25,7 +25,10 @@
         <button
           class="omg-dc__source-item"
           :class="{ 'omg-dc__source-item--active': source === 'shared' }"
-          @click="source = 'shared'; selectedCharId = null"
+          @click="
+            source = 'shared';
+            selectedCharId = null;
+          "
         >
           <i class="fa-solid fa-globe omg-dc__source-icon" />
           <span>共享数据</span>
@@ -39,15 +42,14 @@
           <i class="fa-solid fa-users" />
           角色数据
         </div>
-        <div
-          v-for="char in characterList"
-          :key="char.char_id"
-          class="omg-dc__char-row"
-        >
+        <div v-for="char in characterList" :key="char.char_id" class="omg-dc__char-row">
           <button
             class="omg-dc__source-item omg-dc__source-item--char"
             :class="{ 'omg-dc__source-item--active': source === 'character' && selectedCharId === char.char_id }"
-            @click="source = 'character'; selectedCharId = char.char_id"
+            @click="
+              source = 'character';
+              selectedCharId = char.char_id;
+            "
           >
             <i class="fa-solid fa-user omg-dc__source-icon" />
             <span class="omg-dc__char-name">{{ char.name }}</span>
@@ -80,14 +82,18 @@
           </OmgButton>
           <OmgButton
             v-if="source === 'shared'"
-            icon="fa-solid fa-eraser" size="sm" variant="danger"
+            icon="fa-solid fa-eraser"
+            size="sm"
+            variant="danger"
             @click="clearSharedData"
           >
             清空共享
           </OmgButton>
           <OmgButton
             v-if="source === 'character' && selectedCharId"
-            icon="fa-solid fa-eraser" size="sm" variant="danger"
+            icon="fa-solid fa-eraser"
+            size="sm"
+            variant="danger"
             @click="clearCharacterData"
           >
             清空角色数据
@@ -99,22 +105,14 @@
       <div class="omg-dc__main">
         <template v-if="currentData">
           <!-- 分类分组显示 -->
-          <div
-            v-for="group in groupedEntries"
-            :key="group.category"
-            class="omg-dc__group"
-          >
+          <div v-for="group in groupedEntries" :key="group.category" class="omg-dc__group">
             <div class="omg-dc__group-header">
               <i :class="group.icon || 'fa-solid fa-folder'" class="omg-dc__group-icon" />
               <span class="omg-dc__group-name">{{ group.category }}</span>
               <span class="omg-dc__group-count">{{ group.entries.length }}</span>
             </div>
             <div class="omg-dc__group-body">
-              <div
-                v-for="entry in group.entries"
-                :key="entry.key"
-                class="omg-dc__entry-row"
-              >
+              <div v-for="entry in group.entries" :key="entry.key" class="omg-dc__entry-row">
                 <span class="omg-dc__entry-key" :title="entry.key">{{ entry.key }}</span>
                 <span v-if="entry.defName" class="omg-dc__entry-def">{{ entry.defName }}</span>
                 <!-- 值编辑 -->
@@ -168,11 +166,7 @@
               <datalist id="omg-dc-suggestions">
                 <option v-for="s in suggestions" :key="s" :value="s" />
               </datalist>
-              <input
-                v-model="newEntryValue"
-                class="omg-dc__add-input"
-                placeholder="值"
-              />
+              <input v-model="newEntryValue" class="omg-dc__add-input" placeholder="值" />
               <OmgButton icon="fa-solid fa-plus" size="sm" variant="primary" @click="addEntry"> 添加 </OmgButton>
             </div>
           </div>
@@ -202,8 +196,8 @@ import OmgEmpty from '../../components/base/OmgEmpty.vue';
 import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgModal from '../../components/base/OmgModal.vue';
-import { getAllCategories, getAllEntries } from '../../data/definitions-store';
 import type { CategoryDef, DefinitionEntry } from '../../data/definitions';
+import { getAllCategories, getAllEntries } from '../../data/definitions-store';
 import type { CharId, CharacterInfo, FrameworkState } from '../../data/types';
 import { createEmptyState, isNil } from '../../data/types';
 import { loadState, saveState } from '../../data/variables';
@@ -316,11 +310,16 @@ const suggestions = computed(() => {
 
 function typeLabel(t: string): string {
   switch (t) {
-    case 'number': return '数字';
-    case 'boolean': return '布尔';
-    case 'string': return '文本';
-    case 'object': return 'JSON';
-    default: return t;
+    case 'number':
+      return '数字';
+    case 'boolean':
+      return '布尔';
+    case 'string':
+      return '文本';
+    case 'object':
+      return 'JSON';
+    default:
+      return t;
   }
 }
 
