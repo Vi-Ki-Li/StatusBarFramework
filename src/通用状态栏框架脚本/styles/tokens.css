@@ -1,7 +1,7 @@
 /* @doc: 设计令牌 | category: 基础 | desc: 框架级 CSS 变量，深浅色主题 */
 
 :root,
-[data-omg-theme="light"] {
+[data-omg-theme='light'] {
   /* ── 颜色系统 ── */
   --omg-bg-primary: hsl(220, 20%, 97%);
   --omg-bg-secondary: hsl(220, 18%, 93%);
@@ -82,7 +82,7 @@
 }
 
 /* ── 深色主题 ── */
-[data-omg-theme="dark"] {
+[data-omg-theme='dark'] {
   --omg-bg-primary: hsl(225, 18%, 11%);
   --omg-bg-secondary: hsl(225, 16%, 15%);
   --omg-bg-tertiary: hsl(225, 14%, 20%);

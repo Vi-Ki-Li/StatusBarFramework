@@ -60,9 +60,15 @@
   flex-shrink: 0;
 }
 
-.omg-icon--sm { font-size: var(--omg-font-sm); }
-.omg-icon--md { font-size: var(--omg-font-md); }
-.omg-icon--lg { font-size: var(--omg-font-lg); }
+.omg-icon--sm {
+  font-size: var(--omg-font-sm);
+}
+.omg-icon--md {
+  font-size: var(--omg-font-md);
+}
+.omg-icon--lg {
+  font-size: var(--omg-font-lg);
+}
 
 /* ── 文本工具 ── */
 .omg-text--truncate {
@@ -101,9 +107,15 @@
   flex-direction: column;
 }
 
-.omg-gap--sm { gap: var(--omg-space-sm); }
-.omg-gap--md { gap: var(--omg-space-md); }
-.omg-gap--lg { gap: var(--omg-space-lg); }
+.omg-gap--sm {
+  gap: var(--omg-space-sm);
+}
+.omg-gap--md {
+  gap: var(--omg-space-md);
+}
+.omg-gap--lg {
+  gap: var(--omg-space-lg);
+}
 
 /* ── 分割线 ── */
 .omg-divider {
