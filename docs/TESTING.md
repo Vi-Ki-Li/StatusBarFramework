@@ -1,12 +1,35 @@
-# 测试指南
+# 测试指南（AI 代理执行版）
 
-> 每个 Phase 完成后的测试方法。你需要在 SillyTavern 中加载脚本才能测试。
+> 本文档主要服务 **AI 代理自动化/半自动化测试**，用户无需手工逐项录入。
 
-## 环境准备
+## 环境准备（代理必做）
 
-1. 在项目根目录运行 `pnpm watch` 启动 webpack 热重载
-2. 在 SillyTavern 中导入实时脚本（地址类似 `import 'http://localhost:5500/copilot-worktree-xxx/dist/通用状态栏框架脚本/index.js'`）
-3. 打开浏览器开发者工具 (F12) 查看控制台输出
+1. 运行 `pnpm watch`
+2. 确认 SillyTavern 已加载脚本
+3. 连接 DevTools 并检查初始化日志
+4. 检查实时监听开关已启用（见 `.cursor/rules/mcp.mdc`）
+
+## 标准测试数据（建议先注入）
+
+```js
+insertOrAssignVariables({
+  _omg_state: {
+    _meta: { message_count: 1, version: 1 },
+    _characters: {
+      char_user: { char_id: 'char_user', name: '玩家', isPresent: true },
+      char_npc1: { char_id: 'char_npc1', name: '少女A', isPresent: true },
+      char_npc2: { char_id: 'char_npc2', name: '守卫', isPresent: false },
+    },
+    shared: { 时间: '傍晚', 地点: '学院中庭', 天气: '小雨' },
+    characters: {
+      char_user: { 生命值: 85, 魔力: 50, 状态: '谨慎' },
+      char_npc1: { 生命值: 70, 好感度: 45, 状态: '关注你' },
+      char_npc2: { 生命值: 92, 警戒: true },
+    },
+    _entry_meta: {},
+  },
+}, { type: 'chat' });
+```
 
 ## Phase 0: 基础设施
 
@@ -161,6 +184,11 @@ insertOrAssignVariables({
 - 风险 CSS 有明确提示，不会静默失败
 - 重开管理器后数据不丢失
 
+### 代理执行建议
+
+- 优先通过注入数据 + 批量点击完成，不手工逐字输入字段。
+- 每步完成后记录单条断言（DOM 文本/按钮状态/错误提示是否出现）。
+
 ## Phase 5: 布局编排器
 
 ### 前置条件
@@ -184,6 +212,11 @@ insertOrAssignVariables({
 - 布局树、属性面板、预览保持一致
 - JSON 模式与可视化模式双向可用
 - 导入导出不会破坏节点层级
+
+### 代理执行建议
+
+- 用固定测试布局模板（容器+2条目）快速重复验证。
+- 切模式后立刻做一次保存+回读，优先验证数据闭环。
 
 ## Phase 6: 数据中心
 
@@ -210,6 +243,11 @@ insertOrAssignVariables({
 - 类型编辑行为与定义约束一致
 - 存储回写稳定，重开后数据一致
 
+### 代理执行建议
+
+- 批量写入角色与共享数据，减少手工表单操作。
+- 保存后立即读取 `getVariables({ type: 'chat' })` 对比关键字段。
+
 ## Phase 7: 管理器整合
 
 ### 前置条件
@@ -230,6 +268,11 @@ insertOrAssignVariables({
 - 导航切换稳定，无空白页
 - 深度链接与帮助系统可用
 - 多入口打开管理器行为一致
+
+### 代理执行建议
+
+- 两种入口都测：扩展菜单按钮 + 脚本按钮。
+- 跳转测试优先覆盖 DataStudio → StyleWorkshop 链路。
 
 ## Phase 8: 系统配置
 
@@ -254,3 +297,8 @@ insertOrAssignVariables({
 - 系统配置的读写与校验行为明确、可预期
 - 备份/导入/恢复出厂可闭环
 - 使用指南可被非开发用户直接阅读
+
+### 代理执行建议
+
+- 合法/非法 JSON 各跑一遍，确保报错与成功路径都覆盖。
+- 导出后立刻导入并回读，形成“写入→导出→导入→校验”闭环。

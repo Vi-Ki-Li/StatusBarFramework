@@ -6,6 +6,10 @@
 .omg-root *::before,
 .omg-root *::after {
   box-sizing: border-box;
+}
+
+/* 仅重置根容器，避免把浏览器默认间距全部清空导致管理器内部 UI 过“硬” */
+.omg-root {
   margin: 0;
   padding: 0;
 }

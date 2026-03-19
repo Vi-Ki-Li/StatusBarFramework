@@ -29,6 +29,32 @@ pnpm watch
 - 推荐配置名：`编译代码并调试酒馆网页 (Chrome)` 或 `仅调试酒馆网页 (Chrome)`
 - 默认地址：`http://localhost:8000`
 
+### 外部 Chrome 无法被 MCP 连接时（关键排障）
+
+如果出现“页面没真正打开/一直 loading/酒馆后台没反应”，优先执行下面的**独立 Chrome 调试实例**流程：
+
+```powershell
+# 1) 关闭现有 Chrome（避免已有实例吞掉参数）
+$pids=(Get-Process chrome -ErrorAction SilentlyContinue).Id
+if ($pids) { Stop-Process -Id $pids -Force }
+
+# 2) 用独立用户目录启动外部 Chrome + 远程调试
+$chromePath='C:\Program Files\Google\Chrome\Application\chrome.exe'
+if (-not (Test-Path $chromePath)) { $chromePath="$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe" }
+$profile='C:\temp\chrome-mcp-profile'
+New-Item -ItemType Directory -Force -Path $profile | Out-Null
+Start-Process -FilePath $chromePath -ArgumentList "--user-data-dir=$profile --remote-debugging-port=9222 --remote-debugging-address=127.0.0.1 --remote-allow-origins=* --new-window http://localhost:8000"
+
+# 3) 验证 DevTools 端口可用（200 才算成功）
+Invoke-WebRequest -Uri 'http://127.0.0.1:9222/json/version' -UseBasicParsing
+```
+
+成功标志：
+
+- `http://localhost:8000` 可访问；
+- `http://127.0.0.1:9222/json/version` 返回 `200` 且包含 `webSocketDebuggerUrl`；
+- 此时再使用 `chrome-devtools-mcp` 接管页面。
+
 3. 在酒馆页面确认基础条件：
 
 - `#extensions_settings` 存在
@@ -53,6 +79,7 @@ pnpm watch
 - `01-home.png`
 - `02-after-open-attempt.png`
 - `03-module-probe.png`
+……
 - `ui-test-results.json`
 
 ## 污染排查检查项
@@ -72,4 +99,3 @@ pnpm watch
 - 截图路径:
 - JSON 结果路径:
 ```
-
