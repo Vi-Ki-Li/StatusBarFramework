@@ -20,6 +20,79 @@ import './styles/tokens.css';
 
 let cleanupSafeMode: (() => void) | null = null;
 let destroyTavernStyle: (() => void) | null = null;
+let extMenuObserver: MutationObserver | null = null;
+let extMenuRetryTimer: number | null = null;
+
+const EXT_MENU_SELECTORS = ['#extensionsMenu', '#extensions_settings #extensionsMenu', '#extensions_settings .list-group'];
+const EXT_MENU_RETRY_INTERVAL_MS = 500;
+const EXT_MENU_MAX_RETRY = 24;
+
+function stopExtensionsMenuWatchers(): void {
+  if (extMenuObserver) {
+    extMenuObserver.disconnect();
+    extMenuObserver = null;
+  }
+  if (extMenuRetryTimer !== null) {
+    window.clearTimeout(extMenuRetryTimer);
+    extMenuRetryTimer = null;
+  }
+}
+
+function createExtensionsMenuButton($targetMenu: JQuery): void {
+  if ($('[data-omg-ext-btn]').length > 0) {
+    return;
+  }
+  $('<a>')
+    .attr('data-omg-ext-btn', 'true')
+    .addClass('list-group-item')
+    .css('cursor', 'pointer')
+    .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
+    .on('click', e => {
+      e.preventDefault();
+      openManager();
+    })
+    .appendTo($targetMenu);
+}
+
+function tryAttachExtensionsMenuButton(): boolean {
+  for (const selector of EXT_MENU_SELECTORS) {
+    const $menu = $(selector).first();
+    if ($menu.length === 0) {
+      continue;
+    }
+    createExtensionsMenuButton($menu);
+    return true;
+  }
+  return false;
+}
+
+function registerExtensionsMenuButtonWithRetry(): void {
+  let retries = 0;
+  const attemptAttach = (): void => {
+    if (tryAttachExtensionsMenuButton()) {
+      console.info(`[${SCRIPT_TITLE}] extensionsMenu 按钮已添加`);
+      stopExtensionsMenuWatchers();
+      return;
+    }
+    retries += 1;
+    if (retries >= EXT_MENU_MAX_RETRY) {
+      console.warn(`[${SCRIPT_TITLE}] 未找到扩展菜单容器，使用脚本按钮作为入口`);
+      stopExtensionsMenuWatchers();
+      return;
+    }
+    extMenuRetryTimer = window.setTimeout(attemptAttach, EXT_MENU_RETRY_INTERVAL_MS);
+  };
+
+  stopExtensionsMenuWatchers();
+  extMenuObserver = new MutationObserver(() => {
+    if (tryAttachExtensionsMenuButton()) {
+      console.info(`[${SCRIPT_TITLE}] extensionsMenu 按钮已添加（延迟挂载）`);
+      stopExtensionsMenuWatchers();
+    }
+  });
+  extMenuObserver.observe(document.body, { childList: true, subtree: true });
+  attemptAttach();
+}
 
 /** 全局清理函数，热重载时由新实例调用 */
 function cleanup(): void {
@@ -27,6 +100,7 @@ function cleanup(): void {
   destroyRenderer();
   destroyManager();
   $(`[data-omg-ext-btn]`).remove();
+  stopExtensionsMenuWatchers();
   destroyTavernStyle?.();
   cleanupSafeMode?.();
   closeDB();
@@ -45,23 +119,8 @@ $(() => {
   const { destroy } = teleportStyle();
   destroyTavernStyle = destroy;
 
-  // 4. 在 #extensionsMenu 添加管理器入口按钮
-  const $extMenu = $('#extensionsMenu');
-  if ($extMenu.length) {
-    $('<a>')
-      .attr('data-omg-ext-btn', 'true')
-      .addClass('list-group-item')
-      .css('cursor', 'pointer')
-      .html('<i class="fa-solid fa-table-columns"></i> 状态栏管理器')
-      .on('click', e => {
-        e.preventDefault();
-        openManager();
-      })
-      .appendTo($extMenu);
-    console.info(`[${SCRIPT_TITLE}] extensionsMenu 按钮已添加`);
-  } else {
-    console.warn(`[${SCRIPT_TITLE}] 未找到 #extensionsMenu, 跳过按钮注册`);
-  }
+  // 4. 在扩展菜单添加管理器入口按钮（兼容异步渲染）
+  registerExtensionsMenuButtonWithRetry();
 
   // 5. 注册脚本按钮
   replaceScriptButtons([{ name: '打开管理器', visible: true }]);

@@ -1,9 +1,10 @@
 /* @doc: 基础样式 | category: 基础 | desc: 重置、排版、通用工具类 */
 
-/* ── 重置 ── */
-*,
-*::before,
-*::after {
+/* ── 重置（仅作用于框架根节点，避免污染酒馆页面）── */
+.omg-root,
+.omg-root *,
+.omg-root *::before,
+.omg-root *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;

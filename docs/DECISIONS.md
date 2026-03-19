@@ -193,3 +193,29 @@
 - 降低上下文腐化
 - 提高跨会话可恢复性
 - 让非开发用户也能快速理解当前状态与下一步
+
+---
+
+## DEC-010: Subagent 协作落地方案
+
+**日期**: 2026-03-19  
+**状态**: ✅ 已决定
+
+**背景**: 当前迭代同时涉及 UI 修复、测试补齐与文档同步，单代理上下文易混杂，需要可复用的多代理协作模板。
+
+**决定**:
+
+1. 在仓库内新增 `.github/agents/*.agent.md`：
+   - `statusbar-coordinator`
+   - `statusbar-researcher`
+   - `statusbar-ui-fixer`
+   - `statusbar-test-writer`
+   - `statusbar-reviewer`
+2. 固定编排顺序：研究 → 执行 → 测试文档 → 审阅，由 coordinator 协调。
+3. worker agents 默认 `user-invocable: false`，减少误用，保持角色边界。
+
+**原因**:
+
+- 降低复杂任务中的上下文污染；
+- 让“需求→讨论→研究→规划→执行→验证”流程可复用；
+- 便于后续会话快速接续并并行处理子任务。

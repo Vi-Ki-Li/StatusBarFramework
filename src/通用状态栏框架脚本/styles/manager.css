@@ -14,8 +14,9 @@
 
 .omg-manager {
   position: relative;
-  width: min(92vw, 1100px);
-  height: min(88vh, 780px);
+  width: min(96vw, 1180px);
+  height: min(90vh, 860px);
+  min-height: min(640px, 90vh);
   background: var(--omg-bg-primary);
   border-radius: var(--omg-radius-xl);
   box-shadow: var(--omg-shadow-xl);
@@ -66,7 +67,7 @@
 .omg-manager__sidebar {
   display: flex;
   flex-direction: column;
-  width: 180px;
+  width: clamp(160px, 18vw, 220px);
   flex-shrink: 0;
   padding: var(--omg-space-sm);
   gap: 2px;
@@ -117,6 +118,19 @@
   flex: 1;
   overflow-y: auto;
   padding: var(--omg-space-xl);
+  min-width: 0;
+}
+
+@media (max-width: 1100px) {
+  .omg-manager {
+    width: min(98vw, 1040px);
+    height: min(92vh, 860px);
+    min-height: min(600px, 92vh);
+  }
+
+  .omg-manager__body {
+    padding: var(--omg-space-lg);
+  }
 }
 
 /* ── 动画 ── */
@@ -184,12 +198,13 @@
 @media (max-width: 768px) {
   .omg-manager {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
+    min-height: 100%;
     border-radius: 0;
   }
 
   .omg-manager__sidebar {
-    width: 52px;
+    width: 56px;
     padding: var(--omg-space-xs);
   }
 
