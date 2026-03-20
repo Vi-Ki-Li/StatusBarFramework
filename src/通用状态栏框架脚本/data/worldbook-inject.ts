@@ -9,10 +9,10 @@ import type { CategoryDef, DefinitionEntry } from './definitions';
 import * as store from './definitions-store';
 
 /** 世界书名称 */
-const WB_NAME = 'OMG_StatusBar_Definitions';
+export const WB_NAME = 'OMG_StatusBar_Definitions';
 
 /** 条目名称前缀 */
-const ENTRY_PREFIX = 'OMG_Def_';
+export const ENTRY_PREFIX = 'OMG_Def_';
 
 /**
  * 根据当前定义生成世界书条目内容
@@ -151,4 +151,34 @@ export async function removeWorldbook(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+/** 获取框架世界书（不存在则返回 null） */
+export async function getFrameworkWorldbook(): Promise<WorldbookEntry[] | null> {
+  try {
+    return await getWorldbook(WB_NAME);
+  } catch {
+    return null;
+  }
+}
+
+/** 获取框架管理的条目（以 OMG_Def_ 前缀识别） */
+export async function getManagedEntries(): Promise<WorldbookEntry[]> {
+  const wb = await getFrameworkWorldbook();
+  if (!wb) return [];
+  return wb.filter(entry => entry.name.startsWith(ENTRY_PREFIX));
+}
+
+/** 启用/禁用某个框架条目 */
+export async function setManagedEntryEnabled(uid: number, enabled: boolean): Promise<void> {
+  await updateWorldbookWith(WB_NAME, worldbook =>
+    worldbook.map(entry => (entry.uid === uid ? { ...entry, enabled } : entry)),
+  );
+}
+
+/** 一键启用/禁用全部框架条目 */
+export async function setAllManagedEntriesEnabled(enabled: boolean): Promise<void> {
+  await updateWorldbookWith(WB_NAME, worldbook =>
+    worldbook.map(entry => (entry.name.startsWith(ENTRY_PREFIX) ? { ...entry, enabled } : entry)),
+  );
 }

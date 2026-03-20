@@ -7,9 +7,12 @@
 import { SCRIPT_TITLE } from '../core/constants';
 import type { CategoryDef, DefinitionEntry } from '../data/definitions';
 import * as defStore from '../data/definitions-store';
+import type { LayoutConfig, LayoutNode } from '../data/layouts-store';
+import * as layoutStore from '../data/layouts-store';
+import { getAllThemes, type ThemeCombo } from '../data/themes-store';
 import type { CharId, CharacterInfo, FrameworkState } from '../data/types';
 import { CHAR_USER_ID, isNil } from '../data/types';
-import { loadState } from '../data/variables';
+import { loadConfig, loadState } from '../data/variables';
 import { BUILTIN_STYLE_UNITS, findStyleUnit, getDefaultStyleUnitId, type StyleUnit } from './style-units';
 import { renderTemplate } from './template-engine';
 
@@ -18,6 +21,8 @@ const CONTAINER_ATTR = 'data-omg-statusbar';
 let activeCharId: CharId | null = null;
 let cachedCategories: CategoryDef[] = [];
 let cachedEntries: DefinitionEntry[] = [];
+let cachedLayouts: LayoutConfig[] = [];
+let cachedThemes: ThemeCombo[] = [];
 const injectedCssIds = new Set<string>();
 let $dynamicStyle: JQuery | null = null;
 
@@ -27,6 +32,8 @@ async function loadDefinitions(): Promise<void> {
   try {
     cachedCategories = await defStore.getAllCategories();
     cachedEntries = await defStore.getAllEntries();
+    cachedLayouts = await layoutStore.getAllLayouts();
+    cachedThemes = await getAllThemes();
   } catch (e) {
     console.warn(`[${SCRIPT_TITLE}] 加载定义失败:`, e);
   }
@@ -85,6 +92,72 @@ function buildTabs(chars: Record<CharId, CharacterInfo>, active: CharId | null):
   return `<div class="omg-sb__tabs">${tabs}</div>`;
 }
 
+interface RenderContext {
+  layout: LayoutConfig | null;
+  styleOverrides: Record<string, string>;
+}
+
+function resolveRenderContext(): RenderContext {
+  const config = loadConfig();
+  const theme = cachedThemes.find(t => t.id === config.activeThemeId) ?? null;
+  const layout = theme?.layoutId ? cachedLayouts.find(l => l.id === theme.layoutId) ?? null : null;
+  return {
+    layout,
+    styleOverrides: theme?.styleOverrides ?? {},
+  };
+}
+
+function getNodeStyle(node: LayoutNode): string {
+  const parts: string[] = [];
+
+  if (node.type === 'container') {
+    const mode = node.layoutMode ?? 'flex-col';
+    if (mode === 'flex-row' || mode === 'flex-col') {
+      parts.push('display:flex');
+      parts.push(`flex-direction:${mode === 'flex-row' ? 'row' : 'column'}`);
+      if (node.flexWrap) parts.push('flex-wrap:wrap');
+    } else if (mode === 'grid') {
+      parts.push('display:grid');
+      parts.push(`grid-template-columns:repeat(${node.gridCols ?? 2}, minmax(0, 1fr))`);
+    } else if (mode === 'absolute') {
+      parts.push('position:relative');
+      parts.push('min-height:40px');
+    }
+    if (node.gap) parts.push(`gap:${node.gap}`);
+    if (node.padding) parts.push(`padding:${node.padding}`);
+    if (node.justifyContent) parts.push(`justify-content:${node.justifyContent}`);
+    if (node.alignItems) parts.push(`align-items:${node.alignItems}`);
+  }
+
+  if (node.width) parts.push(`width:${node.width}`);
+  if (node.height) parts.push(`height:${node.height}`);
+  if (node.customCss) parts.push(node.customCss.trim());
+
+  return parts.filter(Boolean).join(';');
+}
+
+function renderLayoutNode(node: LayoutNode, renderedEntries: Map<string, string>, usedDefs: Set<string>): string {
+  if (node.type === 'item') {
+    if (!node.definitionId) return '';
+    const html = renderedEntries.get(node.definitionId);
+    if (!html) return '';
+    usedDefs.add(node.definitionId);
+    const style = getNodeStyle(node);
+    return `<div class="omg-sb__layout-item"${style ? ` style="${style.replaceAll('"', '&quot;')}"` : ''}>${html}</div>`;
+  }
+
+  const childrenHTML = (node.children ?? [])
+    .map(child => renderLayoutNode(child, renderedEntries, usedDefs))
+    .filter(Boolean)
+    .join('');
+
+  if (!childrenHTML) return '';
+
+  const mode = node.layoutMode ?? 'flex-col';
+  const style = getNodeStyle(node);
+  return `<div class="omg-sb__layout-node omg-sb__layout-node--${mode}"${style ? ` style="${style.replaceAll('"', '&quot;')}"` : ''}>${childrenHTML}</div>`;
+}
+
 // ─── 构建完整 HTML ───
 
 function buildHTML(state: FrameworkState): string {
@@ -97,12 +170,15 @@ function buildHTML(state: FrameworkState): string {
 
   const charData = activeCharId ? (state.characters[activeCharId] ?? {}) : {};
   const sharedData = state.shared;
+  const renderContext = resolveRenderContext();
 
   // 按分类分组
   const groups = new Map<string, { cat: CategoryDef; items: { def: DefinitionEntry; value: any }[] }>();
   for (const cat of cachedCategories) {
     groups.set(cat.id, { cat, items: [] });
   }
+
+  const renderedByDefId = new Map<string, string>();
 
   for (const def of cachedEntries) {
     const cat = cachedCategories.find(c => c.id === def.categoryId);
@@ -111,6 +187,11 @@ function buildHTML(state: FrameworkState): string {
     const val = _.get(src, def.key);
     if (val !== undefined) {
       groups.get(cat.id)?.items.push({ def, value: val });
+
+      const overrideId = renderContext.styleOverrides[def.id];
+      const unitId = overrideId || (def.uiType !== 'default' ? def.uiType : getDefaultStyleUnitId(def.dataType));
+      const unit = findStyleUnit(unitId) ?? BUILTIN_STYLE_UNITS[0];
+      renderedByDefId.set(def.id, renderEntry(def, val, unit));
     }
   }
 
@@ -136,25 +217,58 @@ function buildHTML(state: FrameworkState): string {
   // 渲染各分类
   let sectionsHTML = '';
 
-  for (const [, { cat, items }] of groups) {
-    if (items.length === 0) continue;
-
-    let entriesHTML = '';
-    for (const { def, value } of items) {
-      const unitId = def.uiType !== 'default' ? def.uiType : getDefaultStyleUnitId(def.dataType);
-      const unit = findStyleUnit(unitId) ?? BUILTIN_STYLE_UNITS[0];
-      entriesHTML += renderEntry(def, value, unit);
+  if (renderContext.layout) {
+    const usedDefs = new Set<string>();
+    const layoutHTML = renderLayoutNode(renderContext.layout.root, renderedByDefId, usedDefs);
+    if (layoutHTML) {
+      sectionsHTML += `
+        <div class="omg-sb__section omg-sb__section--layout" data-omg-section="layout">
+          <div class="omg-sb__section-header" data-omg-toggle>
+            <i class="fa-solid fa-grip omg-sb__section-icon"></i>
+            <span class="omg-sb__section-title">布局：${renderContext.layout.name}</span>
+            <i class="fa-solid fa-chevron-down omg-sb__section-chevron"></i>
+          </div>
+          <div class="omg-sb__section-body omg-sb__layout-root">${layoutHTML}</div>
+        </div>`;
     }
 
-    sectionsHTML += `
-      <div class="omg-sb__section" data-omg-section="${cat.id}">
-        <div class="omg-sb__section-header" data-omg-toggle>
-          <i class="${cat.icon || 'fa-solid fa-folder'} omg-sb__section-icon"></i>
-          <span class="omg-sb__section-title">${cat.name}</span>
-          <i class="fa-solid fa-chevron-down omg-sb__section-chevron"></i>
-        </div>
-        <div class="omg-sb__section-body">${entriesHTML}</div>
-      </div>`;
+    let unplacedHTML = '';
+    for (const [defId, html] of renderedByDefId.entries()) {
+      if (!usedDefs.has(defId)) {
+        unplacedHTML += html;
+      }
+    }
+
+    if (unplacedHTML) {
+      sectionsHTML += `
+        <div class="omg-sb__section omg-sb__section--unplaced" data-omg-section="unplaced">
+          <div class="omg-sb__section-header" data-omg-toggle>
+            <i class="fa-solid fa-layer-group omg-sb__section-icon"></i>
+            <span class="omg-sb__section-title">未布局条目</span>
+            <i class="fa-solid fa-chevron-down omg-sb__section-chevron"></i>
+          </div>
+          <div class="omg-sb__section-body">${unplacedHTML}</div>
+        </div>`;
+    }
+  } else {
+    for (const [, { cat, items }] of groups) {
+      if (items.length === 0) continue;
+
+      let entriesHTML = '';
+      for (const { def } of items) {
+        entriesHTML += renderedByDefId.get(def.id) ?? '';
+      }
+
+      sectionsHTML += `
+        <div class="omg-sb__section" data-omg-section="${cat.id}">
+          <div class="omg-sb__section-header" data-omg-toggle>
+            <i class="${cat.icon || 'fa-solid fa-folder'} omg-sb__section-icon"></i>
+            <span class="omg-sb__section-title">${cat.name}</span>
+            <i class="fa-solid fa-chevron-down omg-sb__section-chevron"></i>
+          </div>
+          <div class="omg-sb__section-body">${entriesHTML}</div>
+        </div>`;
+    }
   }
 
   // "其他" 分类

@@ -246,6 +246,50 @@
         </div>
       </div>
 
+      <!-- ═══ 世界书条目管理 ═══ -->
+      <div v-if="activeSubTab === 'worldbook'" class="omg-sc__section">
+        <div class="omg-sc__section-header">
+          <h3><i class="fa-solid fa-book-open" /> 世界书条目管理</h3>
+          <div class="omg-sc__section-actions">
+            <OmgButton icon="fa-solid fa-rotate" size="sm" @click="refreshWorldbook">刷新</OmgButton>
+            <OmgButton icon="fa-solid fa-book-atlas" size="sm" variant="primary" @click="reinjectWorldbook"
+              >重新注入定义</OmgButton
+            >
+            <OmgButton icon="fa-solid fa-toggle-on" size="sm" variant="ghost" @click="setAllManagedEntries(true)"
+              >全部启用</OmgButton
+            >
+            <OmgButton icon="fa-solid fa-toggle-off" size="sm" variant="ghost" @click="setAllManagedEntries(false)"
+              >全部禁用</OmgButton
+            >
+            <OmgButton icon="fa-solid fa-trash-can" size="sm" variant="danger" @click="deleteFrameworkWorldbook"
+              >删除框架世界书</OmgButton
+            >
+          </div>
+        </div>
+
+        <div class="omg-sc__worldbook-overview">
+          <span>世界书: {{ worldbookExists ? frameworkWorldbookName : '未创建' }}</span>
+          <span>框架条目: {{ managedEntries.length }}</span>
+          <span>已启用: {{ enabledManagedCount }}</span>
+        </div>
+
+        <div v-if="managedEntries.length === 0" class="omg-sc__empty-hint">
+          <i class="fa-solid fa-book-open" />
+          <p>暂无框架管理条目。</p>
+          <p class="omg-sc__hint">点击“重新注入定义”可按当前数据工作室条目重建世界书。</p>
+        </div>
+
+        <div v-else class="omg-sc__worldbook-list">
+          <div v-for="entry in managedEntries" :key="entry.uid" class="omg-sc__worldbook-row">
+            <label class="omg-sc__checkbox-label">
+              <input :checked="entry.enabled" type="checkbox" @change="toggleManagedEntry(entry.uid, $event)" />
+              {{ entry.name }}
+            </label>
+            <span class="omg-sc__hint">关键词: {{ entry.strategy.keys.length }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══ 备份与迁移 ═══ -->
       <div v-if="activeSubTab === 'backup'" class="omg-sc__section">
         <div class="omg-sc__section-header">
@@ -329,6 +373,15 @@ import {
 } from '../../data/narratives-store';
 import { exportStyles, importStyles, type StylesExport } from '../../data/styles-store';
 import {
+  WB_NAME,
+  getFrameworkWorldbook,
+  getManagedEntries,
+  injectToWorldbook,
+  removeWorldbook,
+  setAllManagedEntriesEnabled,
+  setManagedEntryEnabled,
+} from '../../data/worldbook-inject';
+import {
   createThemeCombo,
   deleteTheme,
   exportThemes,
@@ -346,6 +399,7 @@ const subTabs = [
   { key: 'raw', label: '原始数据', icon: 'fa-solid fa-code' },
   { key: 'themes', label: '主题组合', icon: 'fa-solid fa-swatchbook' },
   { key: 'narrative', label: '叙事快照', icon: 'fa-solid fa-scroll' },
+  { key: 'worldbook', label: '世界书条目', icon: 'fa-solid fa-book-open' },
   { key: 'backup', label: '备份与迁移', icon: 'fa-solid fa-box-archive' },
   { key: 'guide', label: '使用指南', icon: 'fa-solid fa-circle-question' },
 ] as const;
@@ -482,6 +536,50 @@ async function importNarrAction() {
   await importNarratives(data);
   await loadNarratives();
   toastr.success('叙事模板已导入');
+}
+
+// ─── 世界书条目管理 ───
+
+const frameworkWorldbookName = WB_NAME;
+const worldbookExists = ref(false);
+const managedEntries = ref<WorldbookEntry[]>([]);
+
+const enabledManagedCount = computed(() => managedEntries.value.filter(entry => entry.enabled).length);
+
+async function refreshWorldbook() {
+  const wb = await getFrameworkWorldbook();
+  worldbookExists.value = !!wb;
+  managedEntries.value = await getManagedEntries();
+}
+
+async function reinjectWorldbook() {
+  const { created, entryCount } = await injectToWorldbook();
+  toastr.success(`世界书已${created ? '创建' : '更新'}，共 ${entryCount} 条`);
+  await refreshWorldbook();
+}
+
+async function toggleManagedEntry(uid: number, e: Event) {
+  const checked = (e.target as HTMLInputElement).checked;
+  await setManagedEntryEnabled(uid, checked);
+  await refreshWorldbook();
+}
+
+async function setAllManagedEntries(enabled: boolean) {
+  if (managedEntries.value.length === 0) return;
+  await setAllManagedEntriesEnabled(enabled);
+  toastr.success(enabled ? '已启用全部框架条目' : '已禁用全部框架条目');
+  await refreshWorldbook();
+}
+
+async function deleteFrameworkWorldbook() {
+  if (!confirm('确定删除框架世界书？删除后 AI 将失去状态栏结构提示。')) return;
+  const ok = await removeWorldbook();
+  if (ok) {
+    toastr.success('框架世界书已删除');
+  } else {
+    toastr.warning('删除失败或世界书不存在');
+  }
+  await refreshWorldbook();
 }
 
 // ─── 备份与迁移 ───
@@ -668,6 +766,7 @@ onMounted(async () => {
   loadRawData();
   await loadThemes();
   await loadNarratives();
+  await refreshWorldbook();
   sysConfig.value = loadConfig();
 });
 </script>
@@ -751,6 +850,29 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: var(--omg-space-md);
+}
+
+.omg-sc__worldbook-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--omg-space-sm);
+  color: var(--omg-text-secondary);
+}
+
+.omg-sc__worldbook-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.omg-sc__worldbook-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--omg-bg-secondary);
+  border: 1px solid var(--omg-border-color);
+  border-radius: var(--omg-radius-md);
+  padding: 8px 10px;
 }
 
 .omg-sc__section-header {

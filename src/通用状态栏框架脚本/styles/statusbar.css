@@ -130,6 +130,26 @@
   display: none;
 }
 
+/* ─── 布局渲染 ─── */
+
+.omg-sb__layout-root {
+  padding: 8px;
+}
+
+.omg-sb__layout-node {
+  min-width: 0;
+}
+
+.omg-sb__layout-node--flex-row,
+.omg-sb__layout-node--flex-col,
+.omg-sb__layout-node--grid {
+  width: 100%;
+}
+
+.omg-sb__layout-item {
+  min-width: 0;
+}
+
 /* ─── 空状态 ─── */
 
 .omg-sb__empty {

@@ -73,7 +73,7 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 - [x] 条目 CRUD UI (key=JSON路径 / name / category / icon)
 - [x] 图标选择器 (搜索 + 预览 + 手动输入)
 - [x] data_type + 验证规则 → Zod Schema 自动生成
-- [ ] ui_type 关联样式工坊 — 待 Phase 4 完成后关联
+- [x] ui_type 关联样式工坊
 - [x] interaction_type 关联交互行为
 - [x] description (AI指导文本) + update_sample (JSON Patch 示例自动生成)
 - [x] 世界书注入功能 (OMG_StatusBar_Definitions)
@@ -86,7 +86,7 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 
 - [x] {{placeholder}} 模板引擎
 - [x] 样式单元渲染器
-- [ ] 布局 JSON → DOM 渲染 — 当前使用默认垂直布局，待 Phase 5
+- [x] 布局 JSON → DOM 渲染
 - [x] 多角色切换 (横向滚动选择栏)
 - [x] 折叠/展开 (区块级 + 状态记忆)
 - [ ] 事件绑定系统 (interaction_type → 动态绑定) — Phase 9
@@ -157,7 +157,7 @@ P0 ─→ P1 ─→ P2 ─→ P3 ─┐
 - [x] 主题组合 CRUD (世界书+定义+样式+布局)
 - [x] 主题绑定/应用逻辑
 - [x] 叙事快照系统 (模板CRUD + 数据变化检测)
-- [ ] 世界书条目管理
+- [x] 世界书条目管理
 - [x] 备份与迁移 (多选导出/导入/恢复出厂)
 - [x] 使用指南 (内置帮助)
 
