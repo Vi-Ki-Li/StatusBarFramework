@@ -1,6 +1,6 @@
 <template>
   <div class="omg-root" :data-omg-theme="theme">
-    <div class="omg-manager-overlay" @click.self="$emit('close')">
+    <div class="omg-manager-overlay">
       <div class="omg-manager">
         <!-- 头部 -->
         <header class="omg-manager__header">

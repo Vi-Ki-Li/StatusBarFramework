@@ -1,4 +1,4 @@
-# Phase 9（批次 A）：UI 修复与测试补齐
+# Phase 8.1（批次 A）：UI 修复与测试补齐
 
 ## 1) 需求（Requirement）
 
