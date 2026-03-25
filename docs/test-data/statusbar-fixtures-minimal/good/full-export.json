@@ -1,0 +1,115 @@
+{
+  "_omg_export": true,
+  "version": 1,
+  "timestamp": 1700000000000,
+  "definitions": {
+    "version": 1,
+    "categories": [
+      {
+        "id": "cat_demo",
+        "name": "示例分类",
+        "scope": "shared",
+        "order": 0,
+        "icon": "fa-solid fa-layer-group"
+      }
+    ],
+    "entries": [
+      {
+        "id": "def_demo_hp",
+        "key": "角色.气血",
+        "name": "气血",
+        "categoryId": "cat_demo",
+        "icon": "fa-solid fa-heart-pulse",
+        "dataType": "number",
+        "validation": {
+          "min": 0,
+          "max": 100
+        },
+        "uiType": "builtin-progress",
+        "interactionType": "none",
+        "description": "角色生命值",
+        "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_user/角色.气血\", \"value\": 80 }]",
+        "order": 0
+      }
+    ]
+  },
+  "styles": {
+    "version": 1,
+    "units": [
+      {
+        "id": "su_demo",
+        "name": "示例样式",
+        "template": "<div class=\"demo\">{{name}}: {{value}}</div>",
+        "css": ".demo{color:#ffffff}",
+        "description": "",
+        "builtin": false,
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      }
+    ],
+    "globalTheme": {
+      "css": "",
+      "htmlTemplate": ""
+    }
+  },
+  "layouts": {
+    "version": 1,
+    "layouts": [
+      {
+        "id": "layout_demo",
+        "name": "示例布局",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000,
+        "root": {
+          "id": "ln_root",
+          "type": "container",
+          "label": "根容器",
+          "layoutMode": "flex-col",
+          "gap": "8px",
+          "padding": "0",
+          "children": [
+            {
+              "id": "ln_item_hp",
+              "type": "item",
+              "definitionId": "def_demo_hp",
+              "label": "气血"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "themes": {
+    "version": 1,
+    "themes": [
+      {
+        "id": "theme_demo",
+        "name": "示例主题",
+        "description": "",
+        "entryIds": ["def_demo_hp"],
+        "styleOverrides": {
+          "def_demo_hp": "builtin-progress"
+        },
+        "layoutId": "layout_demo",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      }
+    ]
+  },
+  "narratives": {
+    "version": 1,
+    "templates": [
+      {
+        "id": "narr_demo",
+        "name": "示例叙事",
+        "sharedTemplate": "【世界】{{key}}: {{old_value}} -> {{new_value}}",
+        "characterTemplate": "【{{char_name}}】{{key}}: {{old_value}} -> {{new_value}}",
+        "userTemplate": "【{{user_name}}】{{key}}: {{old_value}} -> {{new_value}}",
+        "userModifiedTemplate": "【用户修改】{{char_name}} 的 {{key}} 调整为 {{new_value}}",
+        "stylePrompt": "",
+        "createdAt": 1700000000000,
+        "updatedAt": 1700000000000
+      }
+    ]
+  }
+}

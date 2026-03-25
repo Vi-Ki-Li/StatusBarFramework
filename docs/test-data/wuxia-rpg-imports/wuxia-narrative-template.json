@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "narr_wuxia_chronicle",
+      "name": "武侠RPG-江湖纪要",
+      "sharedTemplate": "【江湖风云】{{key}}：{{old_value}} -> {{new_value}}。",
+      "characterTemplate": "【{{char_name}}近况】{{key}}：{{old_value}} -> {{new_value}}。",
+      "userTemplate": "【{{user_name}}行迹】{{key}}：{{old_value}} -> {{new_value}}。",
+      "userModifiedTemplate": "【玩家定稿】{{char_name}} 的 {{key}} 调整为 {{new_value}}，后续叙事必须延续该结果。",
+      "stylePrompt": "文风要求：古风武侠评书口吻，句子短促有力；先写动作与结果，再补充情绪与余波；避免现代术语、网络梗和元叙事。",
+      "createdAt": 1774010030000,
+      "updatedAt": 1774010030000
+    }
+  ]
+}

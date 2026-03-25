@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "narr_demo",
+      "name": "示例叙事",
+      "sharedTemplate": "【世界】{{key}}: {{old_value}} -> {{new_value}}",
+      "characterTemplate": "【{{char_name}}】{{key}}: {{old_value}} -> {{new_value}}",
+      "userTemplate": "【{{user_name}}】{{key}}: {{old_value}} -> {{new_value}}",
+      "userModifiedTemplate": "【用户修改】{{char_name}} 的 {{key}} 调整为 {{new_value}}",
+      "stylePrompt": "",
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    }
+  ]
+}

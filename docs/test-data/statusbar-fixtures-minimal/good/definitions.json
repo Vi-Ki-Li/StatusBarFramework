@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "cat_demo",
+      "name": "示例分类",
+      "scope": "shared",
+      "order": 0,
+      "icon": "fa-solid fa-layer-group"
+    }
+  ],
+  "entries": [
+    {
+      "id": "def_demo_hp",
+      "key": "角色.气血",
+      "name": "气血",
+      "categoryId": "cat_demo",
+      "icon": "fa-solid fa-heart-pulse",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "builtin-progress",
+      "interactionType": "none",
+      "description": "角色生命值",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_user/角色.气血\", \"value\": 80 }]",
+      "order": 0
+    }
+  ]
+}

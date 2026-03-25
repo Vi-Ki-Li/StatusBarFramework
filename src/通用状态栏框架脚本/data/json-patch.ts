@@ -8,6 +8,10 @@
 import { PatchDocumentSchema } from './schemas';
 import type { PatchOperation } from './types';
 
+/** AI 输出补丁标签（仅解析该标签包裹的内容） */
+export const PATCH_TAG_OPEN = '<OmgPatch>';
+export const PATCH_TAG_CLOSE = '</OmgPatch>';
+
 /** JSON Patch 路径转 lodash 路径 (e.g., "/a/b/0/c" → "a.b[0].c") */
 export function patchPathToLodashPath(patchPath: string): string {
   if (!patchPath || patchPath === '/') return '';
@@ -42,25 +46,21 @@ export function parsePatchDocument(input: unknown): PatchOperation[] | null {
 
 /** 从 AI 消息中提取 JSON Patch 数组 */
 export function extractPatchFromMessage(message: string): PatchOperation[] | null {
-  // 尝试多种格式匹配
-  const patterns = [
-    // ```json [...] ``` 代码块
-    /```(?:json)?\s*(\[[\s\S]*?\])\s*```/,
-    // 直接的 JSON 数组
-    /(\[[\s\S]*?\])/,
-  ];
+  const openIdx = message.indexOf(PATCH_TAG_OPEN);
+  if (openIdx === -1) return null;
 
-  for (const pattern of patterns) {
-    const match = message.match(pattern);
-    if (match) {
-      try {
-        const parsed = JSON.parse(match[1]);
-        const ops = parsePatchDocument(parsed);
-        if (ops && ops.length > 0) return ops;
-      } catch {
-        // 继续尝试下一个 pattern
-      }
-    }
+  const closeIdx = message.indexOf(PATCH_TAG_CLOSE, openIdx + PATCH_TAG_OPEN.length);
+  if (closeIdx === -1) return null;
+
+  const payload = message.slice(openIdx + PATCH_TAG_OPEN.length, closeIdx).trim();
+  if (!payload) return null;
+
+  try {
+    const parsed = JSON.parse(payload);
+    const ops = parsePatchDocument(parsed);
+    if (ops && ops.length > 0) return ops;
+  } catch {
+    // 标签存在但 JSON 非法，返回 null 让上层静默跳过
   }
 
   return null;

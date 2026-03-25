@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "cat_wuxia_world",
+      "name": "江湖大势",
+      "scope": "shared",
+      "order": 0,
+      "icon": "fa-solid fa-earth-asia"
+    },
+    {
+      "id": "cat_wuxia_character",
+      "name": "角色面板",
+      "scope": "character",
+      "order": 1,
+      "icon": "fa-solid fa-user-ninja"
+    },
+    {
+      "id": "cat_wuxia_combat",
+      "name": "战斗状态",
+      "scope": "character",
+      "order": 2,
+      "icon": "fa-solid fa-hand-fist"
+    }
+  ],
+  "entries": [
+    {
+      "id": "def_wx_world_time",
+      "key": "世界.时辰",
+      "name": "当前时辰",
+      "categoryId": "cat_wuxia_world",
+      "icon": "fa-regular fa-clock",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 20
+      },
+      "uiType": "su_wx_scroll_text",
+      "interactionType": "none",
+      "description": "当前世界时间节点，如卯时、子时、三更。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/世界.时辰\",\n    \"value\": \"戌时\"\n  }\n]",
+      "order": 0
+    },
+    {
+      "id": "def_wx_world_region",
+      "key": "世界.地域",
+      "name": "所在地域",
+      "categoryId": "cat_wuxia_world",
+      "icon": "fa-solid fa-map-location-dot",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 30
+      },
+      "uiType": "su_wx_plaque",
+      "interactionType": "none",
+      "description": "当前剧情主要发生地。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/世界.地域\",\n    \"value\": \"燕云关\"\n  }\n]",
+      "order": 1
+    },
+    {
+      "id": "def_wx_world_weather",
+      "key": "世界.天气",
+      "name": "天象气候",
+      "categoryId": "cat_wuxia_world",
+      "icon": "fa-solid fa-cloud-moon-rain",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 30
+      },
+      "uiType": "su_wx_weather_chip",
+      "interactionType": "none",
+      "description": "天气与天象，影响潜行、追踪、战斗氛围。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/世界.天气\",\n    \"value\": \"细雨夹雾\"\n  }\n]",
+      "order": 2
+    },
+    {
+      "id": "def_wx_world_fame",
+      "key": "江湖.风闻度",
+      "name": "江湖风闻度",
+      "categoryId": "cat_wuxia_world",
+      "icon": "fa-solid fa-bullhorn",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "su_wx_fame_meter",
+      "interactionType": "none",
+      "description": "主角事迹在江湖上的传播热度。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/江湖.风闻度\",\n    \"value\": 42\n  }\n]",
+      "order": 3
+    },
+    {
+      "id": "def_wx_char_realm",
+      "key": "角色.境界",
+      "name": "修为境界",
+      "categoryId": "cat_wuxia_character",
+      "icon": "fa-solid fa-dragon",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 24
+      },
+      "uiType": "su_wx_realm_seal",
+      "interactionType": "none",
+      "description": "例如后天、先天、宗师、大宗师。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.境界\",\n    \"value\": \"半步宗师\"\n  }\n]",
+      "order": 4
+    },
+    {
+      "id": "def_wx_char_hp",
+      "key": "角色.气血",
+      "name": "气血",
+      "categoryId": "cat_wuxia_character",
+      "icon": "fa-solid fa-heart-pulse",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "su_wx_ink_bar",
+      "interactionType": "none",
+      "description": "生命状态，0 为濒死。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.气血\",\n    \"value\": 86\n  }\n]",
+      "order": 5
+    },
+    {
+      "id": "def_wx_char_inner",
+      "key": "角色.内力",
+      "name": "内力",
+      "categoryId": "cat_wuxia_character",
+      "icon": "fa-solid fa-yin-yang",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "su_wx_ink_bar",
+      "interactionType": "none",
+      "description": "施展轻功、绝学和护体真气的核心资源。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.内力\",\n    \"value\": 63\n  }\n]",
+      "order": 6
+    },
+    {
+      "id": "def_wx_char_stamina",
+      "key": "角色.体力",
+      "name": "体力",
+      "categoryId": "cat_wuxia_character",
+      "icon": "fa-solid fa-person-running",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "su_wx_ink_bar",
+      "interactionType": "none",
+      "description": "长途跋涉、连战后下降，休整可恢复。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.体力\",\n    \"value\": 55\n  }\n]",
+      "order": 7
+    },
+    {
+      "id": "def_wx_char_weapon",
+      "key": "角色.兵器",
+      "name": "随身兵器",
+      "categoryId": "cat_wuxia_character",
+      "icon": "fa-solid fa-sword",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 40
+      },
+      "uiType": "su_wx_plaque",
+      "interactionType": "none",
+      "description": "当前主要武器与状态。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.兵器\",\n    \"value\": \"寒铁长刀（刃口微卷）\"\n  }\n]",
+      "order": 8
+    },
+    {
+      "id": "def_wx_fight_qinggong",
+      "key": "战斗.轻功位",
+      "name": "轻功身位",
+      "categoryId": "cat_wuxia_combat",
+      "icon": "fa-solid fa-wind",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "su_wx_fame_meter",
+      "interactionType": "none",
+      "description": "值越高代表越占据地形与节奏优势。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/战斗.轻功位\",\n    \"value\": 68\n  }\n]",
+      "order": 9
+    },
+    {
+      "id": "def_wx_fight_poisoned",
+      "key": "战斗.中毒",
+      "name": "中毒状态",
+      "categoryId": "cat_wuxia_combat",
+      "icon": "fa-solid fa-skull-crossbones",
+      "dataType": "boolean",
+      "validation": {},
+      "uiType": "su_wx_dual_flag",
+      "interactionType": "toggle",
+      "description": "是否处于毒性发作状态。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/战斗.中毒\",\n    \"value\": false\n  }\n]",
+      "order": 10
+    },
+    {
+      "id": "def_wx_fight_mind",
+      "key": "战斗.心法状态",
+      "name": "心法状态",
+      "categoryId": "cat_wuxia_combat",
+      "icon": "fa-solid fa-fire-flame-curved",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 40
+      },
+      "uiType": "su_wx_scroll_text",
+      "interactionType": "none",
+      "description": "例如逆运真气、平稳运转、走火征兆。",
+      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/战斗.心法状态\",\n    \"value\": \"逆运三息，真气紊乱\"\n  }\n]",
+      "order": 11
+    }
+  ]
+}

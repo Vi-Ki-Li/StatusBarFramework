@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "timestamp": 1700000000000,
+  "definitions": {
+    "version": 1,
+    "categories": [],
+    "entries": []
+  },
+  "styles": {
+    "version": 1,
+    "units": []
+  },
+  "layouts": {
+    "version": 1,
+    "layouts": []
+  },
+  "themes": {
+    "version": 1,
+    "themes": []
+  },
+  "narratives": {
+    "version": 1,
+    "templates": []
+  }
+}

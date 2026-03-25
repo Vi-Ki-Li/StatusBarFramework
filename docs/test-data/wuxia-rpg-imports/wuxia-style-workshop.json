@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "units": [
+    {
+      "id": "su_wx_scroll_text",
+      "name": "卷轴正文",
+      "template": "<div class=\"wx-scroll\"><i class=\"{{icon}}\"></i><span class=\"wx-scroll__name\">{{name}}</span><span class=\"wx-scroll__value\">{{value}}</span></div>",
+      "css": ".wx-scroll{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #7b5a33;border-radius:10px;background:linear-gradient(180deg,#f6ead0,#ead8b1);color:#3b2717;box-shadow:inset 0 1px 0 #fff9ea,0 4px 12px rgba(45,28,12,.12)}.wx-scroll i{color:#6f4f2a}.wx-scroll__name{font-size:12px;font-weight:700;opacity:.88}.wx-scroll__value{margin-left:auto;font-size:22px;line-height:1;font-weight:800;letter-spacing:.02em}",
+      "description": "卷轴底纹 + 大号数值，强调信息层级。",
+      "builtin": false,
+      "createdAt": 1774010000000,
+      "updatedAt": 1774010000000
+    },
+    {
+      "id": "su_wx_ink_bar",
+      "name": "墨色气槽",
+      "template": "<div class=\"wx-ink\"><div class=\"wx-ink__meta\"><span class=\"wx-ink__left\"><i class=\"{{icon}}\"></i><span>{{name}}</span></span><b>{{value}}</b></div><div class=\"wx-ink__rail\"><div class=\"wx-ink__fill\" style=\"width:{{_percent}}%\"></div></div></div>",
+      "css": ".wx-ink{padding:8px 10px;border:1px solid #bca47a;border-radius:10px;background:linear-gradient(180deg,#f8edd6,#efe0bd);box-shadow:inset 0 1px 0 #fff9ec}.wx-ink__meta{display:flex;align-items:center;justify-content:space-between;color:#432d1b;font-size:12px;font-weight:700}.wx-ink__left{display:flex;align-items:center;gap:6px}.wx-ink__rail{height:8px;margin-top:8px;background:#d7c7a3;border-radius:999px;overflow:hidden}.wx-ink__fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#7f1f1f,#b23b2a 46%,#dd9f66 100%);box-shadow:0 0 10px rgba(173,55,36,.3)}",
+      "description": "高可读气槽，兼容气血/内力/体力。",
+      "builtin": false,
+      "createdAt": 1774010000100,
+      "updatedAt": 1774010000100
+    },
+    {
+      "id": "su_wx_realm_seal",
+      "name": "境界印记",
+      "template": "<div class=\"wx-seal\"><span class=\"wx-seal__tag\">境</span><span class=\"wx-seal__name\">{{name}}</span><span class=\"wx-seal__value\">{{value}}</span></div>",
+      "css": ".wx-seal{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #612020;border-radius:999px;background:linear-gradient(180deg,#451616,#2f0f0f);color:#f6dfbc;box-shadow:0 6px 14px rgba(41,13,13,.25)}.wx-seal__tag{width:24px;height:24px;display:grid;place-items:center;border-radius:999px;background:linear-gradient(180deg,#c44c36,#9f2f24);font-weight:800}.wx-seal__name{font-size:12px;font-weight:700;opacity:.92}.wx-seal__value{margin-left:auto;font-size:26px;line-height:1;font-weight:900}",
+      "description": "强视觉主轴，用于境界/称号。",
+      "builtin": false,
+      "createdAt": 1774010000200,
+      "updatedAt": 1774010000200
+    },
+    {
+      "id": "su_wx_fame_meter",
+      "name": "江湖声望尺",
+      "template": "<div class=\"wx-fame\"><i class=\"{{icon}}\"></i><span class=\"wx-fame__name\">{{name}}</span><div class=\"wx-fame__bar\"><div class=\"wx-fame__fill\" style=\"width:{{_percent}}%\"></div></div><strong>{{value}}</strong></div>",
+      "css": ".wx-fame{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #3c5658;border-radius:10px;background:linear-gradient(180deg,#1f3438,#1a2a2f);color:#d8ece8}.wx-fame__name{font-size:12px;font-weight:700;white-space:nowrap}.wx-fame__bar{flex:1;height:8px;border-radius:999px;background:#253e41;overflow:hidden}.wx-fame__fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#4f8e72,#8fcf7f 62%,#d4e79c)}.wx-fame strong{font-size:24px;line-height:1;font-weight:900;color:#ebf8df}",
+      "description": "进度信息主视觉，适合风闻/身位。",
+      "builtin": false,
+      "createdAt": 1774010000300,
+      "updatedAt": 1774010000300
+    },
+    {
+      "id": "su_wx_dual_flag",
+      "name": "阴阳状态旗",
+      "template": "<div class=\"wx-flag wx-flag--{{_boolClass}}\"><i class=\"{{icon}}\"></i><span class=\"wx-flag__name\">{{name}}</span><b>{{_boolText}}</b></div>",
+      "css": ".wx-flag{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid}.wx-flag__name{font-size:12px;font-weight:700}.wx-flag b{margin-left:auto;font-size:16px;font-weight:900}.wx-flag--true{background:linear-gradient(180deg,#402121,#2c1414);border-color:#7f3a3a;color:#ffd8d8}.wx-flag--false{background:linear-gradient(180deg,#1f3628,#16281e);border-color:#447255;color:#d7f5e2}",
+      "description": "布尔态分层明确，减少误读。",
+      "builtin": false,
+      "createdAt": 1774010000400,
+      "updatedAt": 1774010000400
+    },
+    {
+      "id": "su_wx_weather_chip",
+      "name": "天象签",
+      "template": "<div class=\"wx-weather\"><i class=\"{{icon}}\"></i><span class=\"wx-weather__name\">{{name}}</span><em>{{value}}</em></div>",
+      "css": ".wx-weather{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid #6f88ae;background:linear-gradient(120deg,#2a3e59,#3f5f84 62%,#5f83ac);color:#ecf4ff;box-shadow:0 4px 10px rgba(30,44,63,.22)}.wx-weather__name{font-size:12px;font-weight:700;opacity:.88}.wx-weather em{margin-left:auto;font-style:italic;font-size:26px;line-height:1;font-weight:900;color:#f1f7ff}",
+      "description": "用于天气，突出语义与情绪。",
+      "builtin": false,
+      "createdAt": 1774010000500,
+      "updatedAt": 1774010000500
+    },
+    {
+      "id": "su_wx_plaque",
+      "name": "门派牌匾",
+      "template": "<div class=\"wx-plaque\"><small>{{name}}</small><strong>{{value}}</strong></div>",
+      "css": ".wx-plaque{display:flex;flex-direction:column;gap:4px;padding:8px 12px;border:1px solid #6f4b2b;border-radius:8px;background:linear-gradient(180deg,#3a2517,#2c1b11);color:#f2dfbf;box-shadow:inset 0 1px 0 rgba(255,224,176,.08)}.wx-plaque small{font-size:11px;opacity:.78;letter-spacing:.02em}.wx-plaque strong{font-size:30px;line-height:1;font-weight:900}",
+      "description": "文本信息大号展示，适合地域/兵器。",
+      "builtin": false,
+      "createdAt": 1774010000600,
+      "updatedAt": 1774010000600
+    },
+    {
+      "id": "su_wx_compact_badge",
+      "name": "紧凑徽章",
+      "template": "<div class=\"wx-badge\"><span>{{name}}</span><b>{{value}}</b></div>",
+      "css": ".wx-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #b59466;border-radius:999px;background:linear-gradient(180deg,#f3e8cd,#e8d9b2);color:#593c21}.wx-badge span{font-size:12px;font-weight:700}.wx-badge b{font-size:18px;line-height:1;font-weight:900}",
+      "description": "紧凑模式中的信息胶囊。",
+      "builtin": false,
+      "createdAt": 1774010000700,
+      "updatedAt": 1774010000700
+    }
+  ],
+  "globalTheme": {
+    "css": ".omg-statusbar{--wx-ink:#2e1c11;--wx-gold:#b88b50;--wx-line:#9f7a45;background:radial-gradient(circle at 10% -5%,#fff6df 0%,#f3e4c2 38%,#e6d2ab 100%);border:1px solid var(--wx-line);border-radius:16px;padding:12px;color:var(--wx-ink);box-shadow:0 18px 28px rgba(53,34,15,.18),inset 0 1px 0 rgba(255,247,229,.7)}.omg-statusbar .omg-sb__tabs{margin-bottom:8px;padding:3px;border-radius:999px;background:rgba(98,66,31,.16)}.omg-statusbar .omg-sb__tab{border-radius:999px;border:1px solid transparent;font-weight:700;color:#5a3e22}.omg-statusbar .omg-sb__tab.omg-sb__tab--active{background:#2a1a11;border-color:#6f4e2a;color:#f9e7c2}.omg-statusbar .omg-sb__section{border:none;background:transparent}.omg-statusbar .omg-sb__section-header{padding:0 2px 8px;color:#6b4a28;opacity:.85}.omg-statusbar .omg-sb__section-title{font-weight:700;font-size:12px}.omg-statusbar .omg-sb__layout-root{display:grid;gap:10px}.omg-statusbar .omg-sb__layout-node{background:rgba(56,37,17,.06);border:1px solid rgba(117,84,49,.24);border-radius:12px;padding:8px}",
+    "htmlTemplate": ""
+  }
+}

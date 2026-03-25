@@ -47,7 +47,6 @@
           </label>
         </div>
         <textarea
-          ref="rawTextarea"
           class="omg-sc__raw-editor"
           :value="rawJson"
           :readonly="!rawEditable"
@@ -96,7 +95,7 @@
             <div class="omg-sc__card-actions">
               <OmgButton
                 icon="fa-solid fa-link"
-                size="xs"
+                size="sm"
                 variant="ghost"
                 title="绑定到当前聊天"
                 @click="bindTheme(t.id)"
@@ -104,13 +103,21 @@
               >
               <OmgButton
                 icon="fa-solid fa-play"
-                size="xs"
+                size="sm"
                 variant="ghost"
                 title="仅应用一次"
                 @click="applyThemeOnce(t.id)"
                 >应用</OmgButton
               >
-              <OmgButton icon="fa-solid fa-trash-can" size="xs" variant="danger" @click="removeTheme(t.id)"
+              <OmgButton
+                icon="fa-solid fa-floppy-disk"
+                size="sm"
+                variant="ghost"
+                title="保存主题"
+                @click="saveThemeItem(t, false)"
+                >保存</OmgButton
+              >
+              <OmgButton icon="fa-solid fa-trash-can" size="sm" variant="danger" @click="removeTheme(t.id)"
                 >删除</OmgButton
               >
             </div>
@@ -131,6 +138,54 @@
               <span>布局: {{ t.layoutId || '未指定' }}</span>
               <span>覆盖: {{ Object.keys(t.styleOverrides).length }}</span>
             </div>
+
+            <div class="omg-sc__theme-editor">
+              <label class="omg-sc__field-label">
+                布局
+                <select
+                  class="omg-sc__select"
+                  :value="t.layoutId || ''"
+                  @change="setThemeLayout(t, ($event.target as HTMLSelectElement).value)"
+                >
+                  <option value="">未指定布局</option>
+                  <option v-for="layout in themeLayouts" :key="layout.id" :value="layout.id">
+                    {{ layout.name }}
+                  </option>
+                </select>
+              </label>
+
+              <div class="omg-sc__field-label">
+                关联定义（勾选打包）
+                <div class="omg-sc__theme-entry-grid">
+                  <label v-for="entry in themeEntries" :key="entry.id" class="omg-sc__theme-entry-item">
+                    <input
+                      :checked="t.entryIds.includes(entry.id)"
+                      type="checkbox"
+                      @change="toggleThemeEntry(t, entry.id, ($event.target as HTMLInputElement).checked)"
+                    />
+                    <span>{{ entry.name }}</span>
+                    <span class="omg-sc__hint">{{ entry.key }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <div v-if="t.entryIds.length > 0" class="omg-sc__theme-overrides">
+                <div class="omg-sc__field-label">条目样式覆盖</div>
+                <div v-for="entryId in t.entryIds" :key="entryId" class="omg-sc__theme-override-row">
+                  <span class="omg-sc__theme-override-name">{{ getEntryDisplayName(entryId) }}</span>
+                  <select
+                    class="omg-sc__select"
+                    :value="t.styleOverrides[entryId] || ''"
+                    @change="setThemeEntryStyle(t, entryId, ($event.target as HTMLSelectElement).value)"
+                  >
+                    <option value="">跟随定义默认样式</option>
+                    <option v-for="su in themeStyleUnits" :key="su.id" :value="su.id">
+                      {{ su.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -147,6 +202,10 @@
             <label class="omg-sc__toggle-label">
               <input v-model="sysConfig.narrativeInjectEnabled" type="checkbox" @change="saveSysConfig" />
               注入世界书
+            </label>
+            <label class="omg-sc__toggle-label">
+              <input v-model="sysConfig.narrativeKeepOnRollback" type="checkbox" @change="saveSysConfig" />
+              回溯时保留叙事条目
             </label>
           </div>
         </div>
@@ -173,7 +232,7 @@
                 saveNarrItem(n);
               "
             />
-            <OmgButton icon="fa-solid fa-trash-can" size="xs" variant="danger" @click="removeNarrative(n.id)" />
+            <OmgButton icon="fa-solid fa-trash-can" size="sm" variant="danger" @click="removeNarrative(n.id)" />
           </div>
           <div class="omg-sc__narr-fields">
             <label class="omg-sc__field-label">
@@ -264,6 +323,10 @@
             <OmgButton icon="fa-solid fa-trash-can" size="sm" variant="danger" @click="deleteFrameworkWorldbook"
               >删除框架世界书</OmgButton
             >
+            <label class="omg-sc__toggle-label">
+              <input v-model="sysConfig.patchHideRegexEnabled" type="checkbox" @change="savePatchRegexConfig" />
+              自动隐藏补丁标签
+            </label>
           </div>
         </div>
 
@@ -359,8 +422,20 @@ import OmgButton from '../../components/base/OmgButton.vue';
 import { STORES } from '../../core/constants';
 import { clearStore } from '../../core/storage';
 
-import { exportDefinitions, importDefinitions, type DefinitionsExport } from '../../data/definitions-store';
-import { exportLayouts, importLayouts, type LayoutsExport } from '../../data/layouts-store';
+import type { DefinitionEntry } from '../../data/definitions';
+import {
+  exportDefinitions,
+  getAllEntries,
+  importDefinitions,
+  type DefinitionsExport,
+} from '../../data/definitions-store';
+import {
+  exportLayouts,
+  getAllLayouts,
+  importLayouts,
+  type LayoutConfig,
+  type LayoutsExport,
+} from '../../data/layouts-store';
 import {
   createNarrativeTemplate,
   deleteNarrative,
@@ -371,16 +446,14 @@ import {
   type NarrativeTemplate,
   type NarrativesExport,
 } from '../../data/narratives-store';
-import { exportStyles, importStyles, type StylesExport } from '../../data/styles-store';
+import { setPatchHideRegexEnabled } from '../../data/patch-runtime';
 import {
-  WB_NAME,
-  getFrameworkWorldbook,
-  getManagedEntries,
-  injectToWorldbook,
-  removeWorldbook,
-  setAllManagedEntriesEnabled,
-  setManagedEntryEnabled,
-} from '../../data/worldbook-inject';
+  exportStyles,
+  getAllStyleUnits,
+  importStyles,
+  type StoredStyleUnit,
+  type StylesExport,
+} from '../../data/styles-store';
 import {
   createThemeCombo,
   deleteTheme,
@@ -392,6 +465,17 @@ import {
   type ThemesExport,
 } from '../../data/themes-store';
 import { loadConfig, loadState, saveConfig, saveState, type SystemConfig } from '../../data/variables';
+import {
+  WB_NAME,
+  getFrameworkWorldbook,
+  getManagedEntries,
+  injectToWorldbook,
+  removeWorldbook,
+  setAllManagedEntriesEnabled,
+  setManagedEntryEnabled,
+} from '../../data/worldbook-inject';
+import { renderStatusBar } from '../../renderer';
+import { BUILTIN_STYLE_UNITS } from '../../renderer/style-units';
 
 // ─── 子标签 ───
 
@@ -418,7 +502,6 @@ function wrapPlaceholder(key: string): string {
 const rawSource = ref<'current' | 'config'>('current');
 const rawJson = ref('');
 const rawEditable = ref(false);
-const rawTextarea = ref<HTMLTextAreaElement>();
 
 function loadRawData() {
   if (rawSource.value === 'current') {
@@ -453,9 +536,27 @@ function saveRawData() {
 // ─── 主题组合 ───
 
 const themes = ref<ThemeCombo[]>([]);
+const themeEntries = ref<DefinitionEntry[]>([]);
+const themeLayouts = ref<LayoutConfig[]>([]);
+const themeStyleUnits = ref<Array<{ id: string; name: string }>>([]);
 
 async function loadThemes() {
   themes.value = await getAllThemes();
+}
+
+async function loadThemeEditorOptions() {
+  themeEntries.value = await getAllEntries();
+  themeLayouts.value = await getAllLayouts();
+  const customUnits = await getAllStyleUnits();
+
+  const styleMap = new Map<string, string>();
+  for (const su of BUILTIN_STYLE_UNITS) {
+    styleMap.set(su.id, `${su.name}（内置）`);
+  }
+  for (const su of customUnits as StoredStyleUnit[]) {
+    styleMap.set(su.id, su.name);
+  }
+  themeStyleUnits.value = Array.from(styleMap, ([id, name]) => ({ id, name }));
 }
 
 async function addTheme() {
@@ -464,8 +565,48 @@ async function addTheme() {
   themes.value.push(t);
 }
 
-async function saveThemeItem(t: ThemeCombo) {
-  await saveTheme(t);
+async function saveThemeItem(t: ThemeCombo, silent = true) {
+  try {
+    await saveTheme(t);
+    void renderStatusBar();
+    if (!silent) {
+      toastr.success('主题已保存');
+    }
+  } catch (e) {
+    console.error('[系统配置] 保存主题失败:', e);
+    toastr.error('主题保存失败，请查看控制台日志');
+  }
+}
+
+async function setThemeLayout(t: ThemeCombo, layoutId: string) {
+  t.layoutId = layoutId || null;
+  await saveThemeItem(t);
+}
+
+async function toggleThemeEntry(t: ThemeCombo, entryId: string, checked: boolean) {
+  if (checked) {
+    if (!t.entryIds.includes(entryId)) {
+      t.entryIds.push(entryId);
+    }
+  } else {
+    t.entryIds = t.entryIds.filter(id => id !== entryId);
+    delete t.styleOverrides[entryId];
+  }
+  await saveThemeItem(t);
+}
+
+async function setThemeEntryStyle(t: ThemeCombo, entryId: string, styleId: string) {
+  if (!styleId) {
+    delete t.styleOverrides[entryId];
+  } else {
+    t.styleOverrides[entryId] = styleId;
+  }
+  await saveThemeItem(t);
+}
+
+function getEntryDisplayName(entryId: string): string {
+  const entry = themeEntries.value.find(e => e.id === entryId);
+  return entry ? `${entry.name} (${entry.key})` : entryId;
 }
 
 async function removeTheme(id: string) {
@@ -476,11 +617,14 @@ async function removeTheme(id: string) {
 
 function bindTheme(id: string) {
   saveConfig({ activeThemeId: id });
+  void renderStatusBar();
   toastr.success('已绑定到当前聊天');
 }
 
-function applyThemeOnce(_id: string) {
-  toastr.info('已应用（仅本次）');
+function applyThemeOnce(id: string) {
+  saveConfig({ activeThemeId: id });
+  void renderStatusBar();
+  toastr.success('已应用主题并刷新状态栏');
 }
 
 async function exportThemesAction() {
@@ -493,6 +637,8 @@ async function importThemesAction() {
   if (!data) return;
   await importThemes(data);
   await loadThemes();
+  await loadThemeEditorOptions();
+  void renderStatusBar();
   toastr.success('主题组合已导入');
 }
 
@@ -503,6 +649,12 @@ const sysConfig = ref<SystemConfig>(loadConfig());
 
 function saveSysConfig() {
   saveConfig(sysConfig.value);
+}
+
+async function savePatchRegexConfig() {
+  saveConfig({ patchHideRegexEnabled: sysConfig.value.patchHideRegexEnabled });
+  await setPatchHideRegexEnabled(sysConfig.value.patchHideRegexEnabled);
+  toastr.success(sysConfig.value.patchHideRegexEnabled ? '已启用补丁标签隐藏' : '已禁用补丁标签隐藏');
 }
 
 async function loadNarratives() {
@@ -655,6 +807,7 @@ async function doImport(e: Event) {
     toastr.success(`已导入 ${count} 个模块`);
     // 重新加载当前子标签的数据
     await loadThemes();
+    await loadThemeEditorOptions();
     await loadNarratives();
   } catch {
     toastr.error('导入失败: 文件格式无效');
@@ -677,6 +830,7 @@ async function factoryReset() {
   await clearStore(STORES.NARRATIVES);
   toastr.success('已恢复出厂设置');
   await loadThemes();
+  await loadThemeEditorOptions();
   await loadNarratives();
 }
 
@@ -765,6 +919,7 @@ function uploadJson<T>(): Promise<T | null> {
 onMounted(async () => {
   loadRawData();
   await loadThemes();
+  await loadThemeEditorOptions();
   await loadNarratives();
   await refreshWorldbook();
   sysConfig.value = loadConfig();
@@ -1081,6 +1236,46 @@ onMounted(async () => {
   gap: var(--omg-space-md);
   font-size: var(--omg-font-xs);
   color: var(--omg-text-tertiary);
+}
+
+.omg-sc__theme-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--omg-space-sm);
+}
+
+.omg-sc__theme-entry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px;
+}
+
+.omg-sc__theme-entry-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border: 1px solid var(--omg-border);
+  border-radius: var(--omg-radius-md);
+  background: var(--omg-bg-primary);
+}
+
+.omg-sc__theme-overrides {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.omg-sc__theme-override-row {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(180px, 260px);
+  gap: 8px;
+  align-items: center;
+}
+
+.omg-sc__theme-override-name {
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-secondary);
 }
 
 /* ── 叙事 ── */

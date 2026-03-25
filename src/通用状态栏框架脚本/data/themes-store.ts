@@ -48,8 +48,11 @@ export async function getAllThemes(): Promise<ThemeCombo[]> {
 }
 
 export async function saveTheme(theme: ThemeCombo): Promise<void> {
-  theme.updatedAt = Date.now();
-  await putItem(STORES.THEMES, theme);
+  const plain: ThemeCombo = {
+    ...JSON.parse(JSON.stringify(theme)),
+    updatedAt: Date.now(),
+  };
+  await putItem(STORES.THEMES, plain);
 }
 
 export async function deleteTheme(id: string): Promise<void> {
@@ -69,5 +72,6 @@ export async function exportThemes(): Promise<ThemesExport> {
 
 export async function importThemes(data: ThemesExport, merge = false): Promise<void> {
   if (!merge) await clearStore(STORES.THEMES);
-  await putItems(STORES.THEMES, data.themes);
+  const plainThemes = data.themes.map(theme => ({ ...JSON.parse(JSON.stringify(theme)) }));
+  await putItems(STORES.THEMES, plainThemes);
 }

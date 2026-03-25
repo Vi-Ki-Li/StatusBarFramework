@@ -253,6 +253,31 @@ interface GroupedData {
   entries: DisplayEntry[];
 }
 
+function hasDirectKey(obj: Record<string, any>, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key);
+}
+
+function getDataValue(obj: Record<string, any>, key: string): any {
+  if (hasDirectKey(obj, key)) return obj[key];
+  return _.get(obj, key);
+}
+
+function setDataValue(obj: Record<string, any>, key: string, value: any): void {
+  if (hasDirectKey(obj, key)) {
+    obj[key] = value;
+    return;
+  }
+  _.set(obj, key, value);
+}
+
+function unsetDataValue(obj: Record<string, any>, key: string): void {
+  if (hasDirectKey(obj, key)) {
+    delete obj[key];
+    return;
+  }
+  _.unset(obj, key);
+}
+
 const groupedEntries = computed((): GroupedData[] => {
   const data = currentData.value;
   if (!data) return [];
@@ -262,30 +287,54 @@ const groupedEntries = computed((): GroupedData[] => {
 
   const groups = new Map<string, GroupedData>();
   const otherEntries: DisplayEntry[] = [];
+  const consumedKeys = new Set<string>();
 
-  for (const [key, value] of Object.entries(data)) {
-    if (isNil(value)) continue;
+  const scope = source.value === 'shared' ? 'shared' : 'character';
+  const scopedDefs = definitions.value.filter(d => {
+    const cat = categories.value.find(c => c.id === d.categoryId);
+    return cat?.scope === scope;
+  });
 
-    const def = defMap.get(key);
-    const entry: DisplayEntry = {
-      key,
+  for (const def of scopedDefs) {
+    const value = getDataValue(data, def.key);
+    if (value === undefined || isNil(value)) continue;
+
+    const cat = catMap.get(def.categoryId);
+    const catName = cat?.name ?? '未知分类';
+    if (!groups.has(def.categoryId)) {
+      groups.set(def.categoryId, { category: catName, icon: cat?.icon, entries: [] });
+    }
+
+    groups.get(def.categoryId)!.entries.push({
+      key: def.key,
       value,
-      type: typeof value,
-      categoryId: def?.categoryId,
-      defName: def?.name,
-    };
+      type: def.dataType === 'text' ? 'string' : def.dataType,
+      categoryId: def.categoryId,
+      defName: def.name,
+    });
+    consumedKeys.add(def.key);
+  }
 
-    if (def && def.categoryId) {
-      const cat = catMap.get(def.categoryId);
-      const catName = cat?.name ?? '未知分类';
-      if (!groups.has(def.categoryId)) {
-        groups.set(def.categoryId, { category: catName, icon: cat?.icon, entries: [] });
+  function collectLeaves(obj: Record<string, any>, prefix = ''): void {
+    for (const [k, v] of Object.entries(obj)) {
+      if (k.startsWith('_')) continue;
+      const full = prefix ? `${prefix}.${k}` : k;
+
+      if (typeof v === 'object' && v !== null && !Array.isArray(v)) {
+        if (hasDirectKey(obj, full) && !consumedKeys.has(full) && !defMap.has(full)) {
+          otherEntries.push({ key: full, value: obj[full], type: typeof obj[full] });
+        }
+        collectLeaves(v as Record<string, any>, full);
+        continue;
       }
-      groups.get(def.categoryId)!.entries.push(entry);
-    } else {
-      otherEntries.push(entry);
+
+      if (!consumedKeys.has(full) && !defMap.has(full)) {
+        otherEntries.push({ key: full, value: v, type: typeof v });
+      }
     }
   }
+
+  collectLeaves(data);
 
   const result = Array.from(groups.values());
   if (otherEntries.length > 0) {
@@ -296,8 +345,17 @@ const groupedEntries = computed((): GroupedData[] => {
 
 const suggestions = computed(() => {
   const data = currentData.value ?? {};
-  const existingKeys = new Set(Object.keys(data));
+  const existingKeys = new Set<string>();
   const scope = source.value === 'shared' ? 'shared' : 'character';
+
+  for (const def of definitions.value) {
+    const cat = categories.value.find(c => c.id === def.categoryId);
+    if (cat?.scope !== scope) continue;
+    if (getDataValue(data, def.key) !== undefined) {
+      existingKeys.add(def.key);
+    }
+  }
+
   return definitions.value
     .filter(d => {
       const cat = categories.value.find(c => c.id === d.categoryId);
@@ -325,14 +383,14 @@ function typeLabel(t: string): string {
 
 function updateEntry(key: string, value: any) {
   const data = currentData.value;
-  if (data) data[key] = value;
+  if (data) setDataValue(data, key, value);
 }
 
 function updateJsonEntry(key: string, jsonStr: string) {
   const data = currentData.value;
   if (!data) return;
   try {
-    data[key] = JSON.parse(jsonStr);
+    setDataValue(data, key, JSON.parse(jsonStr));
   } catch {
     toastr.warning('JSON 格式无效');
   }
@@ -340,7 +398,7 @@ function updateJsonEntry(key: string, jsonStr: string) {
 
 function deleteEntry(key: string) {
   const data = currentData.value;
-  if (data) delete data[key];
+  if (data) unsetDataValue(data, key);
 }
 
 function addEntry() {
@@ -356,7 +414,7 @@ function addEntry() {
   else if (value === 'false') value = false;
   else if (!isNaN(Number(value)) && value.trim() !== '') value = Number(value);
 
-  data[newEntryKey.value.trim()] = value;
+  setDataValue(data, newEntryKey.value.trim(), value);
   newEntryKey.value = '';
   newEntryValue.value = '';
 }
@@ -506,7 +564,7 @@ onMounted(async () => {
   font-size: var(--omg-font-sm);
   text-align: left;
   transition: all var(--omg-transition-fast);
-  flex: 1;
+  /* flex: 1; */
   min-width: 0;
 }
 

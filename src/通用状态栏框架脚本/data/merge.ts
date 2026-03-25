@@ -9,7 +9,7 @@
 import { SCRIPT_TITLE } from '../core/constants';
 import { applyPatch } from './json-patch';
 import type { FloorSnapshot, FrameworkState, PatchOperation } from './types';
-import { isNil } from './types';
+import { CHAR_USER_ID, isNil } from './types';
 
 /** 合并选项 */
 export interface MergeOptions {
@@ -100,6 +100,15 @@ function resolveTarget(
   if (root === 'characters') {
     if (segments.length < 2) return null;
     const charId = segments[1];
+
+    if (!state._characters[charId as any]) {
+      state._characters[charId as any] = {
+        char_id: charId as any,
+        name: charId === CHAR_USER_ID ? '用户' : charId,
+        isPresent: true,
+      };
+    }
+
     if (!state.characters[charId as any]) {
       state.characters[charId as any] = {};
     }

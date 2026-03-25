@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "theme_wuxia_rpg_core",
+      "name": "武侠RPG-墨金江湖",
+      "description": "主打大字值和卷轴质感，适合主线推进时的信息总览。",
+      "entryIds": [
+        "def_wx_world_time",
+        "def_wx_world_region",
+        "def_wx_world_weather",
+        "def_wx_world_fame",
+        "def_wx_char_realm",
+        "def_wx_char_hp",
+        "def_wx_char_inner",
+        "def_wx_char_stamina",
+        "def_wx_char_weapon",
+        "def_wx_fight_qinggong",
+        "def_wx_fight_poisoned",
+        "def_wx_fight_mind"
+      ],
+      "styleOverrides": {
+        "def_wx_world_time": "su_wx_scroll_text",
+        "def_wx_world_region": "su_wx_plaque",
+        "def_wx_world_weather": "su_wx_weather_chip",
+        "def_wx_world_fame": "su_wx_fame_meter",
+        "def_wx_char_realm": "su_wx_realm_seal",
+        "def_wx_char_hp": "su_wx_ink_bar",
+        "def_wx_char_inner": "su_wx_ink_bar",
+        "def_wx_char_stamina": "su_wx_ink_bar",
+        "def_wx_char_weapon": "su_wx_plaque",
+        "def_wx_fight_qinggong": "su_wx_fame_meter",
+        "def_wx_fight_poisoned": "su_wx_dual_flag",
+        "def_wx_fight_mind": "su_wx_scroll_text"
+      },
+      "layoutId": "layout_wuxia_dashboard",
+      "createdAt": 1774010020000,
+      "updatedAt": 1774010020000
+    },
+    {
+      "id": "theme_wuxia_rpg_compact",
+      "name": "武侠RPG-疾战紧凑",
+      "description": "用于战斗回合，优先展示读条与状态，不堆叙事文本。",
+      "entryIds": [
+        "def_wx_world_time",
+        "def_wx_world_weather",
+        "def_wx_world_fame",
+        "def_wx_char_realm",
+        "def_wx_char_hp",
+        "def_wx_char_inner",
+        "def_wx_char_stamina",
+        "def_wx_fight_qinggong",
+        "def_wx_fight_poisoned",
+        "def_wx_fight_mind"
+      ],
+      "styleOverrides": {
+        "def_wx_world_time": "su_wx_compact_badge",
+        "def_wx_world_weather": "su_wx_compact_badge",
+        "def_wx_world_fame": "su_wx_fame_meter",
+        "def_wx_char_realm": "su_wx_compact_badge",
+        "def_wx_char_hp": "su_wx_ink_bar",
+        "def_wx_char_inner": "su_wx_ink_bar",
+        "def_wx_char_stamina": "su_wx_ink_bar",
+        "def_wx_fight_qinggong": "su_wx_fame_meter",
+        "def_wx_fight_poisoned": "su_wx_dual_flag",
+        "def_wx_fight_mind": "su_wx_scroll_text"
+      },
+      "layoutId": "layout_wuxia_compact",
+      "createdAt": 1774010021000,
+      "updatedAt": 1774010021000
+    }
+  ]
+}

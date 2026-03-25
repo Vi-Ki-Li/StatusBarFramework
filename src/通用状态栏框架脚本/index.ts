@@ -9,8 +9,9 @@ import { SCRIPT_TITLE } from './core/constants';
 import { registerSafeMode } from './core/safe-mode';
 import { claimOwnership } from './core/singleton';
 import { closeDB } from './core/storage';
+import { ensurePatchHideRegex, initPatchRuntime } from './data/patch-runtime';
 import { destroyManager, openManager } from './manager/shell';
-import { destroyRenderer, initRenderer } from './renderer';
+import { destroyRenderer, initRenderer, renderStatusBar } from './renderer';
 
 // 导入样式（注入到脚本 iframe 的 head 中，之后通过 teleportStyle 复制到目标）
 import './styles/base.css';
@@ -20,10 +21,15 @@ import './styles/tokens.css';
 
 let cleanupSafeMode: (() => void) | null = null;
 let destroyTavernStyle: (() => void) | null = null;
+let cleanupPatchRuntime: (() => void) | null = null;
 let extMenuObserver: MutationObserver | null = null;
 let extMenuRetryTimer: number | null = null;
 
-const EXT_MENU_SELECTORS = ['#extensionsMenu', '#extensions_settings #extensionsMenu', '#extensions_settings .list-group'];
+const EXT_MENU_SELECTORS = [
+  '#extensionsMenu',
+  '#extensions_settings #extensionsMenu',
+  '#extensions_settings .list-group',
+];
 const EXT_MENU_RETRY_INTERVAL_MS = 500;
 const EXT_MENU_MAX_RETRY = 24;
 
@@ -99,6 +105,7 @@ function cleanup(): void {
   console.info(`[${SCRIPT_TITLE}] 执行清理...`);
   destroyRenderer();
   destroyManager();
+  cleanupPatchRuntime?.();
   $(`[data-omg-ext-btn]`).remove();
   stopExtensionsMenuWatchers();
   destroyTavernStyle?.();
@@ -123,15 +130,28 @@ $(() => {
   registerExtensionsMenuButtonWithRetry();
 
   // 5. 注册脚本按钮
-  replaceScriptButtons([{ name: '打开管理器', visible: true }]);
+  replaceScriptButtons([
+    { name: '打开管理器', visible: true },
+    { name: '刷新状态栏', visible: true },
+  ]);
   eventOn(getButtonEvent('打开管理器'), () => {
     openManager();
+  });
+  eventOn(getButtonEvent('刷新状态栏'), () => {
+    void renderStatusBar();
+    toastr.success('状态栏已刷新', undefined, { timeOut: 900 });
   });
 
   // 6. 初始化状态栏渲染器
   initRenderer();
 
-  // 7. 脚本卸载时清理
+  // 7. 初始化补丁运行时（解析 AI 输出 + 应用状态 + 隐藏补丁输出）
+  cleanupPatchRuntime = initPatchRuntime();
+  void ensurePatchHideRegex().catch(e => {
+    console.warn(`[${SCRIPT_TITLE}] 自动配置隐藏正则失败:`, e);
+  });
+
+  // 8. 脚本卸载时清理
   $(window).on('pagehide', () => {
     cleanup();
   });

@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "layouts": [
+    {
+      "id": "layout_wuxia_dashboard",
+      "name": "武侠总览-双仪表",
+      "createdAt": 1774010010000,
+      "updatedAt": 1774010010000,
+      "root": {
+        "id": "ln_root_dash",
+        "type": "container",
+        "label": "根容器",
+        "layoutMode": "flex-col",
+        "gap": "10px",
+        "padding": "0",
+        "children": [
+          {
+            "id": "ln_dash_hero",
+            "type": "container",
+            "label": "世界信息主行",
+            "layoutMode": "grid",
+            "gridCols": 2,
+            "gap": "10px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_item_world_region",
+                "type": "item",
+                "definitionId": "def_wx_world_region",
+                "label": "所在地域"
+              },
+              {
+                "id": "ln_item_world_weather",
+                "type": "item",
+                "definitionId": "def_wx_world_weather",
+                "label": "天象气候"
+              },
+              {
+                "id": "ln_item_world_fame",
+                "type": "item",
+                "definitionId": "def_wx_world_fame",
+                "label": "江湖风闻度"
+              },
+              {
+                "id": "ln_item_world_time",
+                "type": "item",
+                "definitionId": "def_wx_world_time",
+                "label": "当前时辰"
+              }
+            ]
+          },
+          {
+            "id": "ln_dash_identity",
+            "type": "container",
+            "label": "角色身份行",
+            "layoutMode": "grid",
+            "gridCols": 2,
+            "gap": "10px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_item_char_realm",
+                "type": "item",
+                "definitionId": "def_wx_char_realm",
+                "label": "修为境界"
+              },
+              {
+                "id": "ln_item_char_weapon",
+                "type": "item",
+                "definitionId": "def_wx_char_weapon",
+                "label": "随身兵器"
+              },
+              {
+                "id": "ln_item_char_hp",
+                "type": "item",
+                "definitionId": "def_wx_char_hp",
+                "label": "气血"
+              },
+              {
+                "id": "ln_item_char_inner",
+                "type": "item",
+                "definitionId": "def_wx_char_inner",
+                "label": "内力"
+              }
+            ]
+          },
+          {
+            "id": "ln_dash_combat",
+            "type": "container",
+            "label": "战斗读条行",
+            "layoutMode": "grid",
+            "gridCols": 3,
+            "gap": "10px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_item_char_stamina",
+                "type": "item",
+                "definitionId": "def_wx_char_stamina",
+                "label": "体力"
+              },
+              {
+                "id": "ln_item_fight_qinggong",
+                "type": "item",
+                "definitionId": "def_wx_fight_qinggong",
+                "label": "轻功身位"
+              },
+              {
+                "id": "ln_item_fight_poisoned",
+                "type": "item",
+                "definitionId": "def_wx_fight_poisoned",
+                "label": "中毒状态"
+              },
+              {
+                "id": "ln_item_fight_mind",
+                "type": "item",
+                "definitionId": "def_wx_fight_mind",
+                "label": "心法状态"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "layout_wuxia_compact",
+      "name": "武侠紧凑-战斗卡",
+      "createdAt": 1774010011000,
+      "updatedAt": 1774010011000,
+      "root": {
+        "id": "ln_root_compact",
+        "type": "container",
+        "label": "紧凑根容器",
+        "layoutMode": "flex-col",
+        "gap": "6px",
+        "padding": "0",
+        "children": [
+          {
+            "id": "ln_compact_top",
+            "type": "container",
+            "label": "顶部徽章行",
+            "layoutMode": "flex-row",
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_c_world_time",
+                "type": "item",
+                "definitionId": "def_wx_world_time",
+                "label": "时辰"
+              },
+              {
+                "id": "ln_c_char_realm",
+                "type": "item",
+                "definitionId": "def_wx_char_realm",
+                "label": "境界"
+              },
+              {
+                "id": "ln_c_world_fame",
+                "type": "item",
+                "definitionId": "def_wx_world_fame",
+                "label": "风闻"
+              },
+              {
+                "id": "ln_c_weather",
+                "type": "item",
+                "definitionId": "def_wx_world_weather",
+                "label": "天气"
+              }
+            ]
+          },
+          {
+            "id": "ln_compact_mid",
+            "type": "container",
+            "label": "战斗核心条",
+            "layoutMode": "grid",
+            "gridCols": 2,
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_c_hp",
+                "type": "item",
+                "definitionId": "def_wx_char_hp",
+                "label": "气血"
+              },
+              {
+                "id": "ln_c_inner",
+                "type": "item",
+                "definitionId": "def_wx_char_inner",
+                "label": "内力"
+              },
+              {
+                "id": "ln_c_stamina",
+                "type": "item",
+                "definitionId": "def_wx_char_stamina",
+                "label": "体力"
+              },
+              {
+                "id": "ln_c_qinggong",
+                "type": "item",
+                "definitionId": "def_wx_fight_qinggong",
+                "label": "身位"
+              }
+            ]
+          },
+          {
+            "id": "ln_compact_bottom",
+            "type": "container",
+            "label": "状态行",
+            "layoutMode": "flex-row",
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_c_poison",
+                "type": "item",
+                "definitionId": "def_wx_fight_poisoned",
+                "label": "中毒"
+              },
+              {
+                "id": "ln_c_mind",
+                "type": "item",
+                "definitionId": "def_wx_fight_mind",
+                "label": "心法"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

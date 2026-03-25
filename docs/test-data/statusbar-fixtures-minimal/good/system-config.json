@@ -1,0 +1,7 @@
+{
+  "narrativeEnabled": false,
+  "narrativeInjectEnabled": false,
+  "narrativeKeepOnRollback": false,
+  "activeThemeId": "theme_demo",
+  "patchHideRegexEnabled": true
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "units": [
+    {
+      "id": "su_demo",
+      "name": "示例样式",
+      "template": "<div class=\"demo\">{{name}}: {{value}}</div>",
+      "css": ".demo{color:#ffffff}",
+      "description": "",
+      "builtin": false,
+      "createdAt": 1700000000000,
+      "updatedAt": 1700000000000
+    }
+  ],
+  "globalTheme": {
+    "css": "",
+    "htmlTemplate": ""
+  }
+}

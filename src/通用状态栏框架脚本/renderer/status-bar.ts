@@ -9,6 +9,7 @@ import type { CategoryDef, DefinitionEntry } from '../data/definitions';
 import * as defStore from '../data/definitions-store';
 import type { LayoutConfig, LayoutNode } from '../data/layouts-store';
 import * as layoutStore from '../data/layouts-store';
+import { getAllStyleUnits, getGlobalTheme, type StoredStyleUnit } from '../data/styles-store';
 import { getAllThemes, type ThemeCombo } from '../data/themes-store';
 import type { CharId, CharacterInfo, FrameworkState } from '../data/types';
 import { CHAR_USER_ID, isNil } from '../data/types';
@@ -23,8 +24,10 @@ let cachedCategories: CategoryDef[] = [];
 let cachedEntries: DefinitionEntry[] = [];
 let cachedLayouts: LayoutConfig[] = [];
 let cachedThemes: ThemeCombo[] = [];
+let cachedCustomUnits: StoredStyleUnit[] = [];
 const injectedCssIds = new Set<string>();
 let $dynamicStyle: JQuery | null = null;
+let $globalThemeStyle: JQuery | null = null;
 
 // ─── 定义数据加载 ───
 
@@ -34,6 +37,18 @@ async function loadDefinitions(): Promise<void> {
     cachedEntries = await defStore.getAllEntries();
     cachedLayouts = await layoutStore.getAllLayouts();
     cachedThemes = await getAllThemes();
+    cachedCustomUnits = await getAllStyleUnits();
+
+    const globalTheme = await getGlobalTheme();
+    if (globalTheme?.css) {
+      if (!$globalThemeStyle) {
+        $globalThemeStyle = $('<style data-omg-global-theme>').appendTo('head');
+      }
+      $globalThemeStyle.text(globalTheme.css);
+    } else {
+      $globalThemeStyle?.remove();
+      $globalThemeStyle = null;
+    }
   } catch (e) {
     console.warn(`[${SCRIPT_TITLE}] 加载定义失败:`, e);
   }
@@ -100,7 +115,7 @@ interface RenderContext {
 function resolveRenderContext(): RenderContext {
   const config = loadConfig();
   const theme = cachedThemes.find(t => t.id === config.activeThemeId) ?? null;
-  const layout = theme?.layoutId ? cachedLayouts.find(l => l.id === theme.layoutId) ?? null : null;
+  const layout = theme?.layoutId ? (cachedLayouts.find(l => l.id === theme.layoutId) ?? null) : null;
   return {
     layout,
     styleOverrides: theme?.styleOverrides ?? {},
@@ -190,7 +205,7 @@ function buildHTML(state: FrameworkState): string {
 
       const overrideId = renderContext.styleOverrides[def.id];
       const unitId = overrideId || (def.uiType !== 'default' ? def.uiType : getDefaultStyleUnitId(def.dataType));
-      const unit = findStyleUnit(unitId) ?? BUILTIN_STYLE_UNITS[0];
+      const unit = findStyleUnit(unitId, cachedCustomUnits) ?? BUILTIN_STYLE_UNITS[0];
       renderedByDefId.set(def.id, renderEntry(def, val, unit));
     }
   }
@@ -297,7 +312,7 @@ function buildHTML(state: FrameworkState): string {
   }
 
   if (!sectionsHTML) {
-    return `<div class="omg-sb" ${CONTAINER_ATTR}>
+    return `<div class="omg-sb omg-statusbar" ${CONTAINER_ATTR}>
       <div class="omg-sb__empty">
         <i class="fa-solid fa-chart-bar omg-sb__empty-icon"></i>
         <span class="omg-sb__empty-text">暂无状态数据</span>
@@ -307,7 +322,7 @@ function buildHTML(state: FrameworkState): string {
 
   const tabsHTML = buildTabs(chars, activeCharId);
 
-  return `<div class="omg-sb" ${CONTAINER_ATTR}>
+  return `<div class="omg-sb omg-statusbar" ${CONTAINER_ATTR}>
     ${tabsHTML}
     <div class="omg-sb__content">${sectionsHTML}</div>
   </div>`;
@@ -333,6 +348,7 @@ function bindEvents($el: JQuery): void {
 
 /** 渲染/刷新状态栏 */
 export async function renderStatusBar(): Promise<void> {
+  await loadDefinitions();
   const state = loadState();
 
   const hasData = Object.keys(state._characters).length > 0 || Object.keys(state.shared).length > 0;
@@ -396,5 +412,8 @@ export function destroyRenderer(): void {
   injectedCssIds.clear();
   cachedCategories = [];
   cachedEntries = [];
+  cachedCustomUnits = [];
   activeCharId = null;
+  $globalThemeStyle?.remove();
+  $globalThemeStyle = null;
 }

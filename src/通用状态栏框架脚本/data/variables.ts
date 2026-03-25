@@ -79,15 +79,21 @@ export interface SystemConfig {
   narrativeEnabled: boolean;
   /** 是否启用叙事快照注入世界书 */
   narrativeInjectEnabled: boolean;
+  /** 删楼回溯时是否保留叙事世界书条目 */
+  narrativeKeepOnRollback: boolean;
   /** 当前激活的主题组合 ID */
   activeThemeId: string | null;
+  /** 是否启用补丁标签隐藏正则 */
+  patchHideRegexEnabled: boolean;
 }
 
 /** 默认系统配置 */
 const DEFAULT_CONFIG: SystemConfig = {
   narrativeEnabled: false,
   narrativeInjectEnabled: false,
+  narrativeKeepOnRollback: false,
   activeThemeId: null,
+  patchHideRegexEnabled: true,
 };
 
 /** 读取系统配置 */
