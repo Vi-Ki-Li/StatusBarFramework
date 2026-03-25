@@ -49,6 +49,38 @@
   - 支持 `--report` 输出 JSON 报告
   - 非零失败时返回退出码 `2`，可接入自动化流程
 
+补充增强（同日三次迭代）：
+
+- 按用户要求将武侠测试主题做“全模块重置”（含 Data Studio）：
+  - `docs/test-data/wuxia-rpg-imports/wuxia-data-studio.json`
+  - `docs/test-data/wuxia-rpg-imports/wuxia-style-workshop.json`
+  - `docs/test-data/wuxia-rpg-imports/wuxia-layout-composer.json`
+  - `docs/test-data/wuxia-rpg-imports/wuxia-theme-combo.json`
+  - `docs/test-data/wuxia-rpg-imports/wuxia-narrative-template.json`
+- 视觉方向升级为“竹/墨/酒/剑”：
+  - 竹：结构分割与节奏线
+  - 墨：深浅层级与留白
+  - 酒：温暖高光与轻微呼吸动效
+  - 剑：锋线导向与进度条方向性
+- 在样式单元中引入内联 SVG 与 CSS 轻量动画，验证状态栏表现上限。
+- 对 Skill 反思并补齐缺失：
+  - 新增“复杂 RPG 数据落地（对象/数组）”策略（扁平键优先、详情 JSON 兜底、Data Center 原始数据承载）。
+  - 新增“SVG/动画能力边界”与武侠整套校验命令速查。
+
+补充增强（同日四次迭代）：
+
+- 根据用户截图反馈，针对“同层混搭导致视觉秩序失衡”进行结构化修正：
+  - 重构 `wuxia-layout-composer.json`，从单一大层拆分为：世界层 / 身份层 / 角色数值层 / 战斗层 / 技能数值层 / 技能描述层 / 技能对象层。
+  - 容器布局统一改为 `flex-row + flexWrap`（需要并排时）并给条目设置 `flex-basis`，降低“全部单列占满”风险。
+- 重排 `wuxia-theme-combo.json` 的 `styleOverrides`：
+  - 同一容器优先复用同一类样式单元（如世界层统一竹牌、角色数值统一剑槽、战斗层统一卷轴行）。
+  - 将强调组件与基础读值组件分层，避免在同容器抢焦点。
+- 微调 `wuxia-style-workshop.json`：
+  - 收敛大字号和组件高度，统一最小高度节奏，减少同屏视觉撕裂。
+- 在 `STATUSBAR-VISUAL-DESIGN.md` 明确“容器同形制策略”，并补充 Single/List 历史决策说明：
+  - 引用 DEC-007：`entry_type`（Single/List）与 `parts` 为配合 JSON Patch 已移除。
+  - 提出后续演进草案：`structure_hint` + `render_parts`（仅用于 UI 渲染，不改变 Patch 执行语义）。
+
 ## 代码依据（已核对）
 
 - 布局模式来源：`src/通用状态栏框架脚本/data/layouts-store.ts`

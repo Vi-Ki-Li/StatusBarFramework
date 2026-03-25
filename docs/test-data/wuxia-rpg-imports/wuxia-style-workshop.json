@@ -2,88 +2,108 @@
   "version": 1,
   "units": [
     {
-      "id": "su_wx_scroll_text",
-      "name": "卷轴正文",
-      "template": "<div class=\"wx-scroll\"><i class=\"{{icon}}\"></i><span class=\"wx-scroll__name\">{{name}}</span><span class=\"wx-scroll__value\">{{value}}</span></div>",
-      "css": ".wx-scroll{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #7b5a33;border-radius:10px;background:linear-gradient(180deg,#f6ead0,#ead8b1);color:#3b2717;box-shadow:inset 0 1px 0 #fff9ea,0 4px 12px rgba(45,28,12,.12)}.wx-scroll i{color:#6f4f2a}.wx-scroll__name{font-size:12px;font-weight:700;opacity:.88}.wx-scroll__value{margin-left:auto;font-size:22px;line-height:1;font-weight:800;letter-spacing:.02em}",
-      "description": "卷轴底纹 + 大号数值，强调信息层级。",
+      "id": "su_wx_bamboo_plaque",
+      "name": "竹简牌",
+      "template": "<div class=\"wx-bamboo\"><div class=\"wx-bamboo__edge\"></div><i class=\"{{icon}}\"></i><span class=\"wx-bamboo__name\">{{name}}</span><strong class=\"wx-bamboo__value\">{{value}}</strong></div>",
+      "css": ".wx-bamboo{position:relative;display:flex;align-items:center;gap:8px;min-height:46px;padding:10px 12px;border:1px solid #5f7f57;border-left:5px solid #6fa46d;border-radius:8px;background:linear-gradient(120deg,#dbe8c7,#c2d8a0 60%,#b2cb8e);color:#22331f;box-shadow:0 6px 12px rgba(35,56,31,.15)}.wx-bamboo__edge{position:absolute;right:6px;top:3px;bottom:3px;width:2px;background:linear-gradient(180deg,transparent,#6d8f63,transparent)}.wx-bamboo__name{font-size:12px;font-weight:700;opacity:.9}.wx-bamboo__value{margin-left:auto;font-size:20px;line-height:1;font-weight:900}",
+      "description": "竹意主组件，含竹节视觉分割。",
       "builtin": false,
-      "createdAt": 1774010000000,
-      "updatedAt": 1774010000000
+      "createdAt": 1774011100000,
+      "updatedAt": 1774011100000
     },
     {
-      "id": "su_wx_ink_bar",
-      "name": "墨色气槽",
-      "template": "<div class=\"wx-ink\"><div class=\"wx-ink__meta\"><span class=\"wx-ink__left\"><i class=\"{{icon}}\"></i><span>{{name}}</span></span><b>{{value}}</b></div><div class=\"wx-ink__rail\"><div class=\"wx-ink__fill\" style=\"width:{{_percent}}%\"></div></div></div>",
-      "css": ".wx-ink{padding:8px 10px;border:1px solid #bca47a;border-radius:10px;background:linear-gradient(180deg,#f8edd6,#efe0bd);box-shadow:inset 0 1px 0 #fff9ec}.wx-ink__meta{display:flex;align-items:center;justify-content:space-between;color:#432d1b;font-size:12px;font-weight:700}.wx-ink__left{display:flex;align-items:center;gap:6px}.wx-ink__rail{height:8px;margin-top:8px;background:#d7c7a3;border-radius:999px;overflow:hidden}.wx-ink__fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#7f1f1f,#b23b2a 46%,#dd9f66 100%);box-shadow:0 0 10px rgba(173,55,36,.3)}",
-      "description": "高可读气槽，兼容气血/内力/体力。",
+      "id": "su_wx_ink_stamp",
+      "name": "墨印签",
+      "template": "<div class=\"wx-ink-stamp\"><i class=\"{{icon}}\"></i><span>{{name}}</span><b>{{value}}</b></div>",
+      "css": ".wx-ink-stamp{display:flex;align-items:center;gap:7px;min-height:42px;padding:7px 10px;border:1px solid #1c1d22;border-radius:999px;background:radial-gradient(circle at 20% 20%,#3a3d46 0%,#17181c 68%);color:#eef1f6;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 4px 10px rgba(0,0,0,.35)}.wx-ink-stamp span{font-size:12px;font-weight:700;opacity:.88}.wx-ink-stamp b{margin-left:auto;font-size:16px;font-weight:900}",
+      "description": "墨色印章风，用于标签和节奏点。",
       "builtin": false,
-      "createdAt": 1774010000100,
-      "updatedAt": 1774010000100
+      "createdAt": 1774011100100,
+      "updatedAt": 1774011100100
     },
     {
-      "id": "su_wx_realm_seal",
-      "name": "境界印记",
-      "template": "<div class=\"wx-seal\"><span class=\"wx-seal__tag\">境</span><span class=\"wx-seal__name\">{{name}}</span><span class=\"wx-seal__value\">{{value}}</span></div>",
-      "css": ".wx-seal{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #612020;border-radius:999px;background:linear-gradient(180deg,#451616,#2f0f0f);color:#f6dfbc;box-shadow:0 6px 14px rgba(41,13,13,.25)}.wx-seal__tag{width:24px;height:24px;display:grid;place-items:center;border-radius:999px;background:linear-gradient(180deg,#c44c36,#9f2f24);font-weight:800}.wx-seal__name{font-size:12px;font-weight:700;opacity:.92}.wx-seal__value{margin-left:auto;font-size:26px;line-height:1;font-weight:900}",
-      "description": "强视觉主轴，用于境界/称号。",
+      "id": "su_wx_sword_bar",
+      "name": "剑意槽",
+      "template": "<div class=\"wx-sword\"><div class=\"wx-sword__head\"><span class=\"wx-sword__left\"><i class=\"{{icon}}\"></i>{{name}}</span><b>{{value}}</b></div><div class=\"wx-sword__rail\"><div class=\"wx-sword__fill\" style=\"width:{{_percent}}%\"></div><svg viewBox=\"0 0 120 8\" class=\"wx-sword__svg\" preserveAspectRatio=\"none\"><path d=\"M0 4 L116 4 L120 0 L120 8 L116 4\"/></svg></div></div>",
+      "css": ".wx-sword{padding:8px 10px;border:1px solid #6a6f7f;border-radius:10px;background:linear-gradient(180deg,#e8ebf1,#d6dbe6);color:#232833}.wx-sword__head{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700}.wx-sword__left{display:flex;align-items:center;gap:6px}.wx-sword__rail{position:relative;height:10px;margin-top:8px;background:#b8c0cf;border-radius:999px;overflow:hidden}.wx-sword__fill{position:absolute;left:0;top:0;bottom:0;border-radius:inherit;background:linear-gradient(90deg,#341a1a,#8a2f2f 45%,#c76f3d)}.wx-sword__svg{position:absolute;inset:0;opacity:.32;fill:#f9f9ff}",
+      "description": "剑锋形态进度槽，包含内嵌SVG。",
       "builtin": false,
-      "createdAt": 1774010000200,
-      "updatedAt": 1774010000200
+      "createdAt": 1774011100200,
+      "updatedAt": 1774011100200
     },
     {
-      "id": "su_wx_fame_meter",
-      "name": "江湖声望尺",
-      "template": "<div class=\"wx-fame\"><i class=\"{{icon}}\"></i><span class=\"wx-fame__name\">{{name}}</span><div class=\"wx-fame__bar\"><div class=\"wx-fame__fill\" style=\"width:{{_percent}}%\"></div></div><strong>{{value}}</strong></div>",
-      "css": ".wx-fame{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #3c5658;border-radius:10px;background:linear-gradient(180deg,#1f3438,#1a2a2f);color:#d8ece8}.wx-fame__name{font-size:12px;font-weight:700;white-space:nowrap}.wx-fame__bar{flex:1;height:8px;border-radius:999px;background:#253e41;overflow:hidden}.wx-fame__fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#4f8e72,#8fcf7f 62%,#d4e79c)}.wx-fame strong{font-size:24px;line-height:1;font-weight:900;color:#ebf8df}",
-      "description": "进度信息主视觉，适合风闻/身位。",
+      "id": "su_wx_wine_gourd",
+      "name": "酒葫芦",
+      "template": "<div class=\"wx-wine\"><div class=\"wx-wine__icon\"><svg viewBox=\"0 0 24 24\" class=\"wx-wine__svg\"><path d=\"M9 3h6v4c0 1.5 1.2 2.5 2.2 3.4 1 .9 1.8 1.7 1.8 3.1 0 2.8-2.8 4.5-7 4.5s-7-1.7-7-4.5c0-1.4.8-2.2 1.8-3.1C7.8 9.5 9 8.5 9 7V3zM8 18.6c1.2 1 2.8 1.4 4.5 1.4s3.3-.4 4.5-1.4V21H8v-2.4z\"/></svg></div><div class=\"wx-wine__txt\"><small>{{name}}</small><strong>{{value}}</strong></div><div class=\"wx-wine__bubble\"></div></div>",
+      "css": ".wx-wine{position:relative;display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 10px;border:1px solid #7a5333;border-radius:14px;background:linear-gradient(160deg,#5f3922,#7e4a2b 55%,#9b5d33);color:#fff1d8;overflow:hidden}.wx-wine__icon{width:20px;height:20px;display:grid;place-items:center}.wx-wine__svg{width:18px;height:18px;fill:#ffd9ac}.wx-wine__txt small{display:block;font-size:11px;opacity:.86}.wx-wine__txt strong{font-size:18px;line-height:1;font-weight:900}.wx-wine__bubble{position:absolute;right:10px;top:10px;width:8px;height:8px;border-radius:999px;background:rgba(255,232,198,.8);animation:wx-float 1.8s ease-in-out infinite}@keyframes wx-float{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(-4px);opacity:1}}",
+      "description": "酒意组件，带轻量动态泡影。",
       "builtin": false,
-      "createdAt": 1774010000300,
-      "updatedAt": 1774010000300
+      "createdAt": 1774011100300,
+      "updatedAt": 1774011100300
     },
     {
-      "id": "su_wx_dual_flag",
-      "name": "阴阳状态旗",
-      "template": "<div class=\"wx-flag wx-flag--{{_boolClass}}\"><i class=\"{{icon}}\"></i><span class=\"wx-flag__name\">{{name}}</span><b>{{_boolText}}</b></div>",
-      "css": ".wx-flag{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;border:1px solid}.wx-flag__name{font-size:12px;font-weight:700}.wx-flag b{margin-left:auto;font-size:16px;font-weight:900}.wx-flag--true{background:linear-gradient(180deg,#402121,#2c1414);border-color:#7f3a3a;color:#ffd8d8}.wx-flag--false{background:linear-gradient(180deg,#1f3628,#16281e);border-color:#447255;color:#d7f5e2}",
-      "description": "布尔态分层明确，减少误读。",
+      "id": "su_wx_ink_meter",
+      "name": "墨韵尺",
+      "template": "<div class=\"wx-meter\"><span class=\"wx-meter__name\">{{name}}</span><div class=\"wx-meter__bar\"><div class=\"wx-meter__fill\" style=\"width:{{_percent}}%\"></div></div><strong>{{value}}</strong></div>",
+      "css": ".wx-meter{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 10px;border:1px solid #2d3038;border-radius:8px;background:linear-gradient(180deg,#252830,#1d1f25);color:#e8edf7}.wx-meter__name{font-size:12px;font-weight:700;white-space:nowrap}.wx-meter__bar{flex:1;height:8px;border-radius:999px;background:#0f1116;overflow:hidden}.wx-meter__fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#4a4f60,#8a93ab 55%,#d5dced)}.wx-meter strong{font-size:16px;line-height:1;font-weight:900}",
+      "description": "墨色进度标尺。",
       "builtin": false,
-      "createdAt": 1774010000400,
-      "updatedAt": 1774010000400
+      "createdAt": 1774011100400,
+      "updatedAt": 1774011100400
     },
     {
-      "id": "su_wx_weather_chip",
-      "name": "天象签",
-      "template": "<div class=\"wx-weather\"><i class=\"{{icon}}\"></i><span class=\"wx-weather__name\">{{name}}</span><em>{{value}}</em></div>",
-      "css": ".wx-weather{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid #6f88ae;background:linear-gradient(120deg,#2a3e59,#3f5f84 62%,#5f83ac);color:#ecf4ff;box-shadow:0 4px 10px rgba(30,44,63,.22)}.wx-weather__name{font-size:12px;font-weight:700;opacity:.88}.wx-weather em{margin-left:auto;font-style:italic;font-size:26px;line-height:1;font-weight:900;color:#f1f7ff}",
-      "description": "用于天气，突出语义与情绪。",
+      "id": "su_wx_dual_banner",
+      "name": "阴阳幡",
+      "template": "<div class=\"wx-flag wx-flag--{{_boolClass}}\"><i class=\"{{icon}}\"></i><span>{{name}}</span><b>{{_boolText}}</b></div>",
+      "css": ".wx-flag{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid}.wx-flag span{font-size:12px;font-weight:700}.wx-flag b{margin-left:auto;font-size:16px;font-weight:900}.wx-flag--true{background:linear-gradient(180deg,#3d1f24,#261217);border-color:#81414f;color:#ffd9df}.wx-flag--false{background:linear-gradient(180deg,#1f3227,#14211a);border-color:#3f6a50;color:#d8f3e2}",
+      "description": "布尔态高对比提示。",
       "builtin": false,
-      "createdAt": 1774010000500,
-      "updatedAt": 1774010000500
+      "createdAt": 1774011100500,
+      "updatedAt": 1774011100500
     },
     {
-      "id": "su_wx_plaque",
-      "name": "门派牌匾",
-      "template": "<div class=\"wx-plaque\"><small>{{name}}</small><strong>{{value}}</strong></div>",
-      "css": ".wx-plaque{display:flex;flex-direction:column;gap:4px;padding:8px 12px;border:1px solid #6f4b2b;border-radius:8px;background:linear-gradient(180deg,#3a2517,#2c1b11);color:#f2dfbf;box-shadow:inset 0 1px 0 rgba(255,224,176,.08)}.wx-plaque small{font-size:11px;opacity:.78;letter-spacing:.02em}.wx-plaque strong{font-size:30px;line-height:1;font-weight:900}",
-      "description": "文本信息大号展示，适合地域/兵器。",
+      "id": "su_wx_scroll_line",
+      "name": "墨卷行",
+      "template": "<div class=\"wx-scroll-line\"><i class=\"{{icon}}\"></i><span class=\"wx-scroll-line__name\">{{name}}</span><em>{{value}}</em></div>",
+      "css": ".wx-scroll-line{display:flex;align-items:center;gap:8px;min-height:42px;padding:8px 10px;border:1px dashed #7c6a4e;border-radius:8px;background:repeating-linear-gradient(-45deg,#f1e4c8,#f1e4c8 6px,#ead9b8 6px,#ead9b8 12px);color:#3e2e1f}.wx-scroll-line__name{font-size:12px;font-weight:700}.wx-scroll-line em{margin-left:auto;font-style:normal;font-size:16px;font-weight:800}",
+      "description": "卷轴条幅，用于描述型文本。",
       "builtin": false,
-      "createdAt": 1774010000600,
-      "updatedAt": 1774010000600
+      "createdAt": 1774011100600,
+      "updatedAt": 1774011100600
     },
     {
-      "id": "su_wx_compact_badge",
-      "name": "紧凑徽章",
-      "template": "<div class=\"wx-badge\"><span>{{name}}</span><b>{{value}}</b></div>",
-      "css": ".wx-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid #b59466;border-radius:999px;background:linear-gradient(180deg,#f3e8cd,#e8d9b2);color:#593c21}.wx-badge span{font-size:12px;font-weight:700}.wx-badge b{font-size:18px;line-height:1;font-weight:900}",
-      "description": "紧凑模式中的信息胶囊。",
+      "id": "su_wx_mist_chip",
+      "name": "竹雾签",
+      "template": "<div class=\"wx-mist\"><svg class=\"wx-mist__svg\" viewBox=\"0 0 60 24\"><path d=\"M2 18 C10 8, 20 8, 28 18 C36 24, 44 8, 58 16\"/></svg><span>{{name}}</span><b>{{value}}</b></div>",
+      "css": ".wx-mist{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #6f8b93;border-radius:999px;background:linear-gradient(120deg,#4a626c,#57757f 55%,#6f919a);color:#edf6f8}.wx-mist__svg{width:30px;height:14px;stroke:#e3f2f4;stroke-width:2;fill:none;opacity:.7}.wx-mist span{font-size:12px;font-weight:700}.wx-mist b{margin-left:auto;font-size:18px;font-weight:900}",
+      "description": "雾线SVG装饰。",
       "builtin": false,
-      "createdAt": 1774010000700,
-      "updatedAt": 1774010000700
+      "createdAt": 1774011100700,
+      "updatedAt": 1774011100700
+    },
+    {
+      "id": "su_wx_title_seal",
+      "name": "剑帖印",
+      "template": "<div class=\"wx-seal\"><svg viewBox=\"0 0 40 40\" class=\"wx-seal__svg\"><circle cx=\"20\" cy=\"20\" r=\"18\"/><path d=\"M12 24 L20 8 L28 24\"/></svg><div><small>{{name}}</small><strong>{{value}}</strong></div></div>",
+      "css": ".wx-seal{display:flex;align-items:center;gap:8px;min-height:42px;padding:7px 10px;border:1px solid #7f2f2f;border-radius:999px;background:linear-gradient(180deg,#541f1f,#3a1616);color:#f9e3cd;box-shadow:0 6px 12px rgba(46,17,17,.28)}.wx-seal__svg{width:24px;height:24px;stroke:#f4c89b;stroke-width:2;fill:none}.wx-seal small{display:block;font-size:11px;opacity:.8}.wx-seal strong{font-size:18px;line-height:1;font-weight:900}",
+      "description": "称号印记，含SVG剑纹。",
+      "builtin": false,
+      "createdAt": 1774011100800,
+      "updatedAt": 1774011100800
+    },
+    {
+      "id": "su_wx_json_chip",
+      "name": "策卷摘要",
+      "template": "<div class=\"wx-json\"><span>{{name}}</span><code>{{value}}</code></div>",
+      "css": ".wx-json{padding:8px 10px;border:1px solid #57606f;border-radius:8px;background:linear-gradient(180deg,#f4f6fa,#e8ecf4);color:#2a3241}.wx-json span{display:block;font-size:11px;font-weight:700;opacity:.85}.wx-json code{display:block;margin-top:4px;font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Consolas,monospace}",
+      "description": "复杂对象文本化摘要槽。",
+      "builtin": false,
+      "createdAt": 1774011100900,
+      "updatedAt": 1774011100900
     }
   ],
   "globalTheme": {
-    "css": ".omg-statusbar{--wx-ink:#2e1c11;--wx-gold:#b88b50;--wx-line:#9f7a45;background:radial-gradient(circle at 10% -5%,#fff6df 0%,#f3e4c2 38%,#e6d2ab 100%);border:1px solid var(--wx-line);border-radius:16px;padding:12px;color:var(--wx-ink);box-shadow:0 18px 28px rgba(53,34,15,.18),inset 0 1px 0 rgba(255,247,229,.7)}.omg-statusbar .omg-sb__tabs{margin-bottom:8px;padding:3px;border-radius:999px;background:rgba(98,66,31,.16)}.omg-statusbar .omg-sb__tab{border-radius:999px;border:1px solid transparent;font-weight:700;color:#5a3e22}.omg-statusbar .omg-sb__tab.omg-sb__tab--active{background:#2a1a11;border-color:#6f4e2a;color:#f9e7c2}.omg-statusbar .omg-sb__section{border:none;background:transparent}.omg-statusbar .omg-sb__section-header{padding:0 2px 8px;color:#6b4a28;opacity:.85}.omg-statusbar .omg-sb__section-title{font-weight:700;font-size:12px}.omg-statusbar .omg-sb__layout-root{display:grid;gap:10px}.omg-statusbar .omg-sb__layout-node{background:rgba(56,37,17,.06);border:1px solid rgba(117,84,49,.24);border-radius:12px;padding:8px}",
+    "css": ".omg-statusbar{--wx-bg:#efe6d3;--wx-ink:#1f222b;--wx-bamboo:#6e9b62;--wx-wine:#8e4d2b;--wx-sword:#717b8c;--wx-inkwash:#2b2f3a;background:radial-gradient(circle at 12% -6%,#f8f3e8 0%,#efe6d3 42%,#e4d6bb 100%);border:1px solid #9a8769;border-radius:16px;padding:12px;color:var(--wx-ink);box-shadow:0 16px 28px rgba(43,35,23,.2),inset 0 1px 0 rgba(255,255,255,.6)}.omg-statusbar:before{content:\"\";display:block;height:2px;margin-bottom:8px;background:linear-gradient(90deg,transparent,var(--wx-bamboo),var(--wx-wine),var(--wx-sword),transparent)}.omg-statusbar .omg-sb__tabs{margin-bottom:8px;padding:3px;border-radius:999px;background:rgba(41,35,29,.12)}.omg-statusbar .omg-sb__tab{border-radius:999px;border:1px solid transparent;font-weight:700;color:#4a3d2b;transition:all .2s ease;cursor:pointer}.omg-statusbar .omg-sb__tab:hover{background:rgba(255,255,255,.38)}.omg-statusbar .omg-sb__tab.omg-sb__tab--active{background:#1f222b;border-color:#4d5564;color:#f7ead0}.omg-statusbar .omg-sb__section{border:none;background:transparent}.omg-statusbar .omg-sb__section-header{padding:0 2px 8px;color:#5d4b34}.omg-statusbar .omg-sb__section-title{font-size:12px;font-weight:700}.omg-statusbar .omg-sb__layout-root{display:grid;gap:10px}.omg-statusbar .omg-sb__layout-node{background:rgba(60,50,37,.06);border:1px solid rgba(102,86,63,.24);border-radius:12px;padding:8px}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node{position:relative;overflow:hidden}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(1){background:linear-gradient(140deg,rgba(152,183,118,.18),rgba(110,155,98,.12));border-color:rgba(95,127,87,.4)}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(1):before{content:\"\";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(107,146,97,.12) 0,rgba(107,146,97,.12) 2px,transparent 2px,transparent 18px);pointer-events:none}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(2){background:radial-gradient(circle at 10% 0%,rgba(65,69,80,.18),rgba(34,38,48,.08) 55%,transparent 80%);border-color:rgba(53,58,70,.35)}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(3){background:linear-gradient(180deg,rgba(219,223,232,.34),rgba(198,205,219,.24));border-color:rgba(109,116,132,.4)}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(4),.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(6){background:repeating-linear-gradient(-45deg,rgba(231,214,181,.34),rgba(231,214,181,.34) 8px,rgba(221,202,166,.2) 8px,rgba(221,202,166,.2) 16px);border-color:rgba(124,106,78,.45)}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(5){background:linear-gradient(180deg,rgba(230,234,241,.3),rgba(211,218,231,.22));border-color:rgba(122,130,146,.45)}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(7){background:linear-gradient(180deg,rgba(244,246,250,.48),rgba(233,237,245,.35));border-color:rgba(105,112,125,.35)}@keyframes wx-layer-rise{0%{opacity:0;transform:translateY(8px) scale(.985)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes wx-sheen{0%{transform:translateX(-130%)}100%{transform:translateX(130%)}}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node{animation:wx-layer-rise .42s ease-out both}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(1){animation-delay:.02s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(2){animation-delay:.07s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(3){animation-delay:.12s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(4){animation-delay:.17s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(5){animation-delay:.22s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(6){animation-delay:.27s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(7){animation-delay:.32s}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:after{content:\"\";position:absolute;top:0;bottom:0;left:0;width:22%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.14),transparent);transform:translateX(-130%);pointer-events:none}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(3):after,.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:nth-child(5):after{animation:wx-sheen 3.6s linear infinite}.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node>*{position:relative;z-index:1}@media (prefers-reduced-motion: reduce){.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node,.omg-statusbar .omg-sb__layout-root>.omg-sb__layout-node>.omg-sb__layout-node:after{animation:none}}",
     "htmlTemplate": ""
   }
 }

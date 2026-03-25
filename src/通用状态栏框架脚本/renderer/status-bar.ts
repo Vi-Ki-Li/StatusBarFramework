@@ -28,6 +28,7 @@ let cachedCustomUnits: StoredStyleUnit[] = [];
 const injectedCssIds = new Set<string>();
 let $dynamicStyle: JQuery | null = null;
 let $globalThemeStyle: JQuery | null = null;
+const lastEntrySnapshots = new Map<string, string>();
 
 // ─── 定义数据加载 ───
 
@@ -173,6 +174,14 @@ function renderLayoutNode(node: LayoutNode, renderedEntries: Map<string, string>
   return `<div class="omg-sb__layout-node omg-sb__layout-node--${mode}"${style ? ` style="${style.replaceAll('"', '&quot;')}"` : ''}>${childrenHTML}</div>`;
 }
 
+function computeEntrySnapshot(scope: 'shared' | 'character', defId: string, value: unknown): string {
+  return `${scope}:${defId}:${JSON.stringify(value)}`;
+}
+
+function wrapRenderedEntry(html: string, changed: boolean): string {
+  return `<div class="omg-sb__entry${changed ? ' omg-sb__entry--changed' : ''}">${html}</div>`;
+}
+
 // ─── 构建完整 HTML ───
 
 function buildHTML(state: FrameworkState): string {
@@ -206,7 +215,12 @@ function buildHTML(state: FrameworkState): string {
       const overrideId = renderContext.styleOverrides[def.id];
       const unitId = overrideId || (def.uiType !== 'default' ? def.uiType : getDefaultStyleUnitId(def.dataType));
       const unit = findStyleUnit(unitId, cachedCustomUnits) ?? BUILTIN_STYLE_UNITS[0];
-      renderedByDefId.set(def.id, renderEntry(def, val, unit));
+      const snapshotKey = `${cat.scope}:${activeCharId ?? 'none'}:${def.id}`;
+      const nextSnapshot = computeEntrySnapshot(cat.scope, def.id, val);
+      const prevSnapshot = lastEntrySnapshots.get(snapshotKey);
+      const changed = prevSnapshot !== undefined && prevSnapshot !== nextSnapshot;
+      lastEntrySnapshots.set(snapshotKey, nextSnapshot);
+      renderedByDefId.set(def.id, wrapRenderedEntry(renderEntry(def, val, unit), changed));
     }
   }
 
@@ -393,6 +407,7 @@ export async function initRenderer(): Promise<void> {
 
   eventOn(tavern_events.CHAT_CHANGED, async () => {
     activeCharId = null;
+    lastEntrySnapshots.clear();
     await loadDefinitions();
     await renderStatusBar();
   });
@@ -414,6 +429,7 @@ export function destroyRenderer(): void {
   cachedEntries = [];
   cachedCustomUnits = [];
   activeCharId = null;
+  lastEntrySnapshots.clear();
   $globalThemeStyle?.remove();
   $globalThemeStyle = null;
 }

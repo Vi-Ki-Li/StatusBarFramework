@@ -2,12 +2,12 @@
   "version": 1,
   "layouts": [
     {
-      "id": "layout_wuxia_dashboard",
-      "name": "武侠总览-双仪表",
-      "createdAt": 1774010010000,
-      "updatedAt": 1774010010000,
+      "id": "layout_wx_bamboo_overview",
+      "name": "竹墨总览",
+      "createdAt": 1774011200000,
+      "updatedAt": 1774011200000,
       "root": {
-        "id": "ln_root_dash",
+        "id": "ln_wx_root_overview",
         "type": "container",
         "label": "根容器",
         "layoutMode": "flex-col",
@@ -15,122 +15,199 @@
         "padding": "0",
         "children": [
           {
-            "id": "ln_dash_hero",
+            "id": "ln_wx_world_row",
             "type": "container",
-            "label": "世界信息主行",
-            "layoutMode": "grid",
-            "gridCols": 2,
-            "gap": "10px",
+            "label": "世界层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
             "padding": "0",
             "children": [
               {
-                "id": "ln_item_world_region",
+                "id": "ln_time",
                 "type": "item",
-                "definitionId": "def_wx_world_region",
-                "label": "所在地域"
+                "definitionId": "def_wx_time",
+                "label": "时辰",
+                "customCss": "flex:1 1 210px;"
               },
               {
-                "id": "ln_item_world_weather",
+                "id": "ln_region",
                 "type": "item",
-                "definitionId": "def_wx_world_weather",
-                "label": "天象气候"
+                "definitionId": "def_wx_region",
+                "label": "地域",
+                "customCss": "flex:1 1 210px;"
               },
               {
-                "id": "ln_item_world_fame",
+                "id": "ln_weather",
                 "type": "item",
-                "definitionId": "def_wx_world_fame",
-                "label": "江湖风闻度"
+                "definitionId": "def_wx_weather",
+                "label": "天象",
+                "customCss": "flex:1 1 210px;"
               },
               {
-                "id": "ln_item_world_time",
+                "id": "ln_fame",
                 "type": "item",
-                "definitionId": "def_wx_world_time",
-                "label": "当前时辰"
+                "definitionId": "def_wx_fame",
+                "label": "风闻",
+                "customCss": "flex:1 1 210px;"
               }
             ]
           },
           {
-            "id": "ln_dash_identity",
+            "id": "ln_wx_identity_row",
             "type": "container",
-            "label": "角色身份行",
-            "layoutMode": "grid",
-            "gridCols": 2,
-            "gap": "10px",
+            "label": "身份层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
             "padding": "0",
             "children": [
               {
-                "id": "ln_item_char_realm",
+                "id": "ln_title",
                 "type": "item",
-                "definitionId": "def_wx_char_realm",
-                "label": "修为境界"
+                "definitionId": "def_wx_title",
+                "label": "称号",
+                "customCss": "flex:1 1 320px;"
               },
               {
-                "id": "ln_item_char_weapon",
+                "id": "ln_wine",
                 "type": "item",
-                "definitionId": "def_wx_char_weapon",
-                "label": "随身兵器"
-              },
-              {
-                "id": "ln_item_char_hp",
-                "type": "item",
-                "definitionId": "def_wx_char_hp",
-                "label": "气血"
-              },
-              {
-                "id": "ln_item_char_inner",
-                "type": "item",
-                "definitionId": "def_wx_char_inner",
-                "label": "内力"
+                "definitionId": "def_wx_wine",
+                "label": "酒意",
+                "customCss": "flex:1 1 220px;"
               }
             ]
           },
           {
-            "id": "ln_dash_combat",
+            "id": "ln_wx_role_stats_row",
             "type": "container",
-            "label": "战斗读条行",
-            "layoutMode": "grid",
-            "gridCols": 3,
-            "gap": "10px",
+            "label": "角色数值层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
             "padding": "0",
             "children": [
               {
-                "id": "ln_item_char_stamina",
+                "id": "ln_hp",
                 "type": "item",
-                "definitionId": "def_wx_char_stamina",
-                "label": "体力"
+                "definitionId": "def_wx_hp",
+                "label": "气血",
+                "customCss": "flex:1 1 260px;"
               },
               {
-                "id": "ln_item_fight_qinggong",
+                "id": "ln_inner",
                 "type": "item",
-                "definitionId": "def_wx_fight_qinggong",
-                "label": "轻功身位"
-              },
-              {
-                "id": "ln_item_fight_poisoned",
-                "type": "item",
-                "definitionId": "def_wx_fight_poisoned",
-                "label": "中毒状态"
-              },
-              {
-                "id": "ln_item_fight_mind",
-                "type": "item",
-                "definitionId": "def_wx_fight_mind",
-                "label": "心法状态"
+                "definitionId": "def_wx_inner",
+                "label": "内力",
+                "customCss": "flex:1 1 260px;"
               }
+            ]
+          },
+          {
+            "id": "ln_wx_combat_row",
+            "type": "container",
+            "label": "战斗层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_poisoned",
+                "type": "item",
+                "definitionId": "def_wx_poisoned",
+                "label": "中毒",
+                "customCss": "flex:1 1 240px;"
+              },
+              {
+                "id": "ln_stance",
+                "type": "item",
+                "definitionId": "def_wx_stance",
+                "label": "剑势",
+                "customCss": "flex:1 1 240px;"
+              }
+            ]
+          },
+          {
+            "id": "ln_wx_skill_meter_row",
+            "type": "container",
+            "label": "技能数值层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_skill_lv",
+                "type": "item",
+                "definitionId": "def_wx_skill_lv",
+                "label": "技能等级",
+                "customCss": "flex:1 1 280px;"
+              },
+              {
+                "id": "ln_skill_prof",
+                "type": "item",
+                "definitionId": "def_wx_skill_prof",
+                "label": "技能熟练",
+                "customCss": "flex:1 1 280px;"
+              }
+            ]
+          },
+          {
+            "id": "ln_wx_skill_text_row",
+            "type": "container",
+            "label": "技能描述层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_skill_effect",
+                "type": "item",
+                "definitionId": "def_wx_skill_effect",
+                "label": "技能效果",
+                "customCss": "flex:2 1 360px;"
+              },
+              {
+                "id": "ln_skill_main",
+                "type": "item",
+                "definitionId": "def_wx_skill_affix_main",
+                "label": "主词条",
+                "customCss": "flex:1 1 220px;"
+              },
+              {
+                "id": "ln_skill_sub",
+                "type": "item",
+                "definitionId": "def_wx_skill_affix_sub",
+                "label": "副词条",
+                "customCss": "flex:1 1 220px;"
+              }
+            ]
+          },
+          {
+            "id": "ln_wx_skill_blob_row",
+            "type": "container",
+            "label": "技能对象层",
+            "layoutMode": "flex-col",
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              { "id": "ln_skill_blob", "type": "item", "definitionId": "def_wx_skill_blob", "label": "技能JSON" }
             ]
           }
         ]
       }
     },
     {
-      "id": "layout_wuxia_compact",
-      "name": "武侠紧凑-战斗卡",
-      "createdAt": 1774010011000,
-      "updatedAt": 1774010011000,
+      "id": "layout_wx_duel_compact",
+      "name": "醉剑紧凑",
+      "createdAt": 1774011201000,
+      "updatedAt": 1774011201000,
       "root": {
-        "id": "ln_root_compact",
+        "id": "ln_wx_root_compact",
         "type": "container",
-        "label": "紧凑根容器",
+        "label": "紧凑根",
         "layoutMode": "flex-col",
         "gap": "6px",
         "padding": "0",
@@ -138,91 +215,132 @@
           {
             "id": "ln_compact_top",
             "type": "container",
-            "label": "顶部徽章行",
+            "label": "世界顶栏",
             "layoutMode": "flex-row",
+            "flexWrap": true,
             "gap": "8px",
             "padding": "0",
             "children": [
               {
-                "id": "ln_c_world_time",
+                "id": "ln_c_time",
                 "type": "item",
-                "definitionId": "def_wx_world_time",
-                "label": "时辰"
+                "definitionId": "def_wx_time",
+                "label": "时",
+                "customCss": "flex:1 1 170px;"
               },
               {
-                "id": "ln_c_char_realm",
+                "id": "ln_c_region",
                 "type": "item",
-                "definitionId": "def_wx_char_realm",
-                "label": "境界"
+                "definitionId": "def_wx_region",
+                "label": "地",
+                "customCss": "flex:1 1 170px;"
+              }
+            ]
+          },
+          {
+            "id": "ln_compact_identity",
+            "type": "container",
+            "label": "身份层",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_c_title",
+                "type": "item",
+                "definitionId": "def_wx_title",
+                "label": "号",
+                "customCss": "flex:1 1 220px;"
               },
               {
-                "id": "ln_c_world_fame",
+                "id": "ln_c_wine",
                 "type": "item",
-                "definitionId": "def_wx_world_fame",
-                "label": "风闻"
-              },
-              {
-                "id": "ln_c_weather",
-                "type": "item",
-                "definitionId": "def_wx_world_weather",
-                "label": "天气"
+                "definitionId": "def_wx_wine",
+                "label": "酒",
+                "customCss": "flex:1 1 150px;"
               }
             ]
           },
           {
             "id": "ln_compact_mid",
             "type": "container",
-            "label": "战斗核心条",
-            "layoutMode": "grid",
-            "gridCols": 2,
+            "label": "核心数值",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
             "gap": "8px",
             "padding": "0",
             "children": [
               {
                 "id": "ln_c_hp",
                 "type": "item",
-                "definitionId": "def_wx_char_hp",
-                "label": "气血"
+                "definitionId": "def_wx_hp",
+                "label": "血",
+                "customCss": "flex:1 1 260px;"
               },
               {
                 "id": "ln_c_inner",
                 "type": "item",
-                "definitionId": "def_wx_char_inner",
-                "label": "内力"
-              },
-              {
-                "id": "ln_c_stamina",
-                "type": "item",
-                "definitionId": "def_wx_char_stamina",
-                "label": "体力"
-              },
-              {
-                "id": "ln_c_qinggong",
-                "type": "item",
-                "definitionId": "def_wx_fight_qinggong",
-                "label": "身位"
+                "definitionId": "def_wx_inner",
+                "label": "力",
+                "customCss": "flex:1 1 260px;"
               }
             ]
           },
           {
-            "id": "ln_compact_bottom",
+            "id": "ln_compact_status",
             "type": "container",
-            "label": "状态行",
+            "label": "状态层",
             "layoutMode": "flex-row",
+            "flexWrap": true,
             "gap": "8px",
             "padding": "0",
             "children": [
               {
-                "id": "ln_c_poison",
+                "id": "ln_c_stance",
                 "type": "item",
-                "definitionId": "def_wx_fight_poisoned",
-                "label": "中毒"
+                "definitionId": "def_wx_stance",
+                "label": "势",
+                "customCss": "flex:1 1 180px;"
               },
               {
-                "id": "ln_c_mind",
+                "id": "ln_c_poison",
                 "type": "item",
-                "definitionId": "def_wx_fight_mind",
-                "label": "心法"
+                "definitionId": "def_wx_poisoned",
+                "label": "毒",
+                "customCss": "flex:1 1 180px;"
+              }
+            ]
+          },
+          {
+            "id": "ln_compact_skill",
+            "type": "container",
+            "label": "技能条",
+            "layoutMode": "flex-row",
+            "flexWrap": true,
+            "gap": "8px",
+            "padding": "0",
+            "children": [
+              {
+                "id": "ln_c_skill_lv",
+                "type": "item",
+                "definitionId": "def_wx_skill_lv",
+                "label": "级",
+                "customCss": "flex:1 1 200px;"
+              },
+              {
+                "id": "ln_c_skill_prof",
+                "type": "item",
+                "definitionId": "def_wx_skill_prof",
+                "label": "熟",
+                "customCss": "flex:1 1 200px;"
+              },
+              {
+                "id": "ln_c_skill_sub",
+                "type": "item",
+                "definitionId": "def_wx_skill_affix_sub",
+                "label": "副",
+                "customCss": "flex:1 1 200px;"
               }
             ]
           }

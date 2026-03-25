@@ -2,222 +2,295 @@
   "version": 1,
   "categories": [
     {
-      "id": "cat_wuxia_world",
-      "name": "江湖大势",
+      "id": "cat_wx_world",
+      "name": "江湖境",
       "scope": "shared",
       "order": 0,
-      "icon": "fa-solid fa-earth-asia"
+      "icon": "fa-solid fa-mountain-sun"
     },
     {
-      "id": "cat_wuxia_character",
-      "name": "角色面板",
+      "id": "cat_wx_persona",
+      "name": "剑者身",
       "scope": "character",
       "order": 1,
       "icon": "fa-solid fa-user-ninja"
     },
     {
-      "id": "cat_wuxia_combat",
-      "name": "战斗状态",
+      "id": "cat_wx_combat",
+      "name": "对阵势",
       "scope": "character",
       "order": 2,
-      "icon": "fa-solid fa-hand-fist"
+      "icon": "fa-solid fa-swords"
+    },
+    {
+      "id": "cat_wx_skill",
+      "name": "剑艺谱",
+      "scope": "character",
+      "order": 3,
+      "icon": "fa-solid fa-book-open"
     }
   ],
   "entries": [
     {
-      "id": "def_wx_world_time",
+      "id": "def_wx_time",
       "key": "世界.时辰",
-      "name": "当前时辰",
-      "categoryId": "cat_wuxia_world",
+      "name": "时辰",
+      "categoryId": "cat_wx_world",
       "icon": "fa-regular fa-clock",
       "dataType": "text",
       "validation": {
         "maxLength": 20
       },
-      "uiType": "su_wx_scroll_text",
+      "uiType": "su_wx_ink_stamp",
       "interactionType": "none",
-      "description": "当前世界时间节点，如卯时、子时、三更。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/世界.时辰\",\n    \"value\": \"戌时\"\n  }\n]",
+      "description": "剧情时间节点。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/shared/世界.时辰\", \"value\": \"子时三刻\" }]",
       "order": 0
     },
     {
-      "id": "def_wx_world_region",
+      "id": "def_wx_region",
       "key": "世界.地域",
-      "name": "所在地域",
-      "categoryId": "cat_wuxia_world",
+      "name": "地域",
+      "categoryId": "cat_wx_world",
       "icon": "fa-solid fa-map-location-dot",
       "dataType": "text",
       "validation": {
         "maxLength": 30
       },
-      "uiType": "su_wx_plaque",
+      "uiType": "su_wx_bamboo_plaque",
       "interactionType": "none",
-      "description": "当前剧情主要发生地。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/世界.地域\",\n    \"value\": \"燕云关\"\n  }\n]",
+      "description": "当前主要场景。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/shared/世界.地域\", \"value\": \"青竹渡\" }]",
       "order": 1
     },
     {
-      "id": "def_wx_world_weather",
-      "key": "世界.天气",
-      "name": "天象气候",
-      "categoryId": "cat_wuxia_world",
-      "icon": "fa-solid fa-cloud-moon-rain",
+      "id": "def_wx_weather",
+      "key": "世界.天象",
+      "name": "天象",
+      "categoryId": "cat_wx_world",
+      "icon": "fa-solid fa-cloud-moon",
       "dataType": "text",
       "validation": {
-        "maxLength": 30
+        "maxLength": 40
       },
-      "uiType": "su_wx_weather_chip",
+      "uiType": "su_wx_mist_chip",
       "interactionType": "none",
-      "description": "天气与天象，影响潜行、追踪、战斗氛围。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/世界.天气\",\n    \"value\": \"细雨夹雾\"\n  }\n]",
+      "description": "天气与氛围。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/shared/世界.天象\", \"value\": \"竹雨轻雾\" }]",
       "order": 2
     },
     {
-      "id": "def_wx_world_fame",
+      "id": "def_wx_fame",
       "key": "江湖.风闻度",
-      "name": "江湖风闻度",
-      "categoryId": "cat_wuxia_world",
+      "name": "风闻",
+      "categoryId": "cat_wx_world",
       "icon": "fa-solid fa-bullhorn",
       "dataType": "number",
       "validation": {
         "min": 0,
         "max": 100
       },
-      "uiType": "su_wx_fame_meter",
+      "uiType": "su_wx_ink_meter",
       "interactionType": "none",
-      "description": "主角事迹在江湖上的传播热度。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/shared/江湖.风闻度\",\n    \"value\": 42\n  }\n]",
+      "description": "江湖声名热度。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/shared/江湖.风闻度\", \"value\": 57 }]",
       "order": 3
     },
     {
-      "id": "def_wx_char_realm",
-      "key": "角色.境界",
-      "name": "修为境界",
-      "categoryId": "cat_wuxia_character",
-      "icon": "fa-solid fa-dragon",
+      "id": "def_wx_title",
+      "key": "角色.称号",
+      "name": "称号",
+      "categoryId": "cat_wx_persona",
+      "icon": "fa-solid fa-award",
       "dataType": "text",
       "validation": {
-        "maxLength": 24
+        "maxLength": 30
       },
-      "uiType": "su_wx_realm_seal",
+      "uiType": "su_wx_title_seal",
       "interactionType": "none",
-      "description": "例如后天、先天、宗师、大宗师。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.境界\",\n    \"value\": \"半步宗师\"\n  }\n]",
+      "description": "江湖称号。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/角色.称号\", \"value\": \"竹影剑客\" }]",
       "order": 4
     },
     {
-      "id": "def_wx_char_hp",
+      "id": "def_wx_hp",
       "key": "角色.气血",
       "name": "气血",
-      "categoryId": "cat_wuxia_character",
+      "categoryId": "cat_wx_persona",
       "icon": "fa-solid fa-heart-pulse",
       "dataType": "number",
       "validation": {
         "min": 0,
         "max": 100
       },
-      "uiType": "su_wx_ink_bar",
+      "uiType": "su_wx_sword_bar",
       "interactionType": "none",
-      "description": "生命状态，0 为濒死。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.气血\",\n    \"value\": 86\n  }\n]",
+      "description": "生命状态。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/角色.气血\", \"value\": 88 }]",
       "order": 5
     },
     {
-      "id": "def_wx_char_inner",
+      "id": "def_wx_inner",
       "key": "角色.内力",
       "name": "内力",
-      "categoryId": "cat_wuxia_character",
+      "categoryId": "cat_wx_persona",
       "icon": "fa-solid fa-yin-yang",
       "dataType": "number",
       "validation": {
         "min": 0,
         "max": 100
       },
-      "uiType": "su_wx_ink_bar",
+      "uiType": "su_wx_sword_bar",
       "interactionType": "none",
-      "description": "施展轻功、绝学和护体真气的核心资源。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.内力\",\n    \"value\": 63\n  }\n]",
+      "description": "真气储备。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/角色.内力\", \"value\": 64 }]",
       "order": 6
     },
     {
-      "id": "def_wx_char_stamina",
-      "key": "角色.体力",
-      "name": "体力",
-      "categoryId": "cat_wuxia_character",
-      "icon": "fa-solid fa-person-running",
+      "id": "def_wx_wine",
+      "key": "角色.酒意",
+      "name": "酒意",
+      "categoryId": "cat_wx_persona",
+      "icon": "fa-solid fa-wine-bottle",
       "dataType": "number",
       "validation": {
         "min": 0,
         "max": 100
       },
-      "uiType": "su_wx_ink_bar",
+      "uiType": "su_wx_wine_gourd",
       "interactionType": "none",
-      "description": "长途跋涉、连战后下降，休整可恢复。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.体力\",\n    \"value\": 55\n  }\n]",
+      "description": "醉意层级，影响招式判定。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/角色.酒意\", \"value\": 29 }]",
       "order": 7
     },
     {
-      "id": "def_wx_char_weapon",
-      "key": "角色.兵器",
-      "name": "随身兵器",
-      "categoryId": "cat_wuxia_character",
-      "icon": "fa-solid fa-sword",
+      "id": "def_wx_poisoned",
+      "key": "战斗.中毒",
+      "name": "中毒",
+      "categoryId": "cat_wx_combat",
+      "icon": "fa-solid fa-skull-crossbones",
+      "dataType": "boolean",
+      "validation": {},
+      "uiType": "su_wx_dual_banner",
+      "interactionType": "toggle",
+      "description": "毒伤状态。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/战斗.中毒\", \"value\": false }]",
+      "order": 8
+    },
+    {
+      "id": "def_wx_stance",
+      "key": "战斗.剑势",
+      "name": "剑势",
+      "categoryId": "cat_wx_combat",
+      "icon": "fa-solid fa-bolt",
       "dataType": "text",
       "validation": {
         "maxLength": 40
       },
-      "uiType": "su_wx_plaque",
+      "uiType": "su_wx_scroll_line",
       "interactionType": "none",
-      "description": "当前主要武器与状态。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/角色.兵器\",\n    \"value\": \"寒铁长刀（刃口微卷）\"\n  }\n]",
-      "order": 8
+      "description": "当前心法与剑势。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/战斗.剑势\", \"value\": \"墨浪三叠，未尽\" }]",
+      "order": 9
     },
     {
-      "id": "def_wx_fight_qinggong",
-      "key": "战斗.轻功位",
-      "name": "轻功身位",
-      "categoryId": "cat_wuxia_combat",
-      "icon": "fa-solid fa-wind",
+      "id": "def_wx_skill_lv",
+      "key": "技能.青竹剑法.等级",
+      "name": "青竹剑法等级",
+      "categoryId": "cat_wx_skill",
+      "icon": "fa-solid fa-ranking-star",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 20
+      },
+      "uiType": "su_wx_ink_meter",
+      "interactionType": "none",
+      "description": "复杂技能树的扁平化字段示例：等级。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/技能.青竹剑法.等级\", \"value\": 7 }]",
+      "order": 10
+    },
+    {
+      "id": "def_wx_skill_prof",
+      "key": "技能.青竹剑法.熟练度",
+      "name": "青竹剑法熟练度",
+      "categoryId": "cat_wx_skill",
+      "icon": "fa-solid fa-chart-line",
       "dataType": "number",
       "validation": {
         "min": 0,
         "max": 100
       },
-      "uiType": "su_wx_fame_meter",
+      "uiType": "su_wx_sword_bar",
       "interactionType": "none",
-      "description": "值越高代表越占据地形与节奏优势。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/战斗.轻功位\",\n    \"value\": 68\n  }\n]",
-      "order": 9
+      "description": "复杂技能树的扁平化字段示例：熟练度。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/技能.青竹剑法.熟练度\", \"value\": 76 }]",
+      "order": 11
     },
     {
-      "id": "def_wx_fight_poisoned",
-      "key": "战斗.中毒",
-      "name": "中毒状态",
-      "categoryId": "cat_wuxia_combat",
-      "icon": "fa-solid fa-skull-crossbones",
-      "dataType": "boolean",
-      "validation": {},
-      "uiType": "su_wx_dual_flag",
-      "interactionType": "toggle",
-      "description": "是否处于毒性发作状态。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/战斗.中毒\",\n    \"value\": false\n  }\n]",
-      "order": 10
-    },
-    {
-      "id": "def_wx_fight_mind",
-      "key": "战斗.心法状态",
-      "name": "心法状态",
-      "categoryId": "cat_wuxia_combat",
-      "icon": "fa-solid fa-fire-flame-curved",
+      "id": "def_wx_skill_effect",
+      "key": "技能.青竹剑法.效果",
+      "name": "青竹剑法效果",
+      "categoryId": "cat_wx_skill",
+      "icon": "fa-solid fa-sparkles",
       "dataType": "text",
       "validation": {
-        "maxLength": 40
+        "maxLength": 120
       },
-      "uiType": "su_wx_scroll_text",
+      "uiType": "su_wx_scroll_line",
       "interactionType": "none",
-      "description": "例如逆运真气、平稳运转、走火征兆。",
-      "updateSample": "[\n  {\n    \"op\": \"replace\",\n    \"path\": \"/characters/char_xxx/战斗.心法状态\",\n    \"value\": \"逆运三息，真气紊乱\"\n  }\n]",
-      "order": 11
+      "description": "复杂技能树示例：效果摘要（文本）。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/技能.青竹剑法.效果\", \"value\": \"第三式破甲+12%\" }]",
+      "order": 12
+    },
+    {
+      "id": "def_wx_skill_affix_main",
+      "key": "技能.青竹剑法.词条.主词条",
+      "name": "主词条",
+      "categoryId": "cat_wx_skill",
+      "icon": "fa-solid fa-feather",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 80
+      },
+      "uiType": "su_wx_ink_stamp",
+      "interactionType": "none",
+      "description": "复杂结构继续扁平：主词条。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/技能.青竹剑法.词条.主词条\", \"value\": \"竹影追魂\" }]",
+      "order": 13
+    },
+    {
+      "id": "def_wx_skill_affix_sub",
+      "key": "技能.青竹剑法.词条.副词条.破绽打击",
+      "name": "副词条-破绽打击",
+      "categoryId": "cat_wx_skill",
+      "icon": "fa-solid fa-circle-notch",
+      "dataType": "number",
+      "validation": {
+        "min": 0,
+        "max": 100
+      },
+      "uiType": "su_wx_ink_meter",
+      "interactionType": "none",
+      "description": "复杂结构继续扁平：副词条数值。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/技能.青竹剑法.词条.副词条.破绽打击\", \"value\": 18 }]",
+      "order": 14
+    },
+    {
+      "id": "def_wx_skill_blob",
+      "key": "技能.青竹剑法.详情JSON",
+      "name": "技能详情JSON",
+      "categoryId": "cat_wx_skill",
+      "icon": "fa-solid fa-code",
+      "dataType": "text",
+      "validation": {
+        "maxLength": 500
+      },
+      "uiType": "su_wx_json_chip",
+      "interactionType": "none",
+      "description": "对象/数组结构的文本化兜底字段。",
+      "updateSample": "[{ \"op\": \"replace\", \"path\": \"/characters/char_xxx/技能.青竹剑法.详情JSON\", \"value\": \"{\\\"affixes\\\":[{\\\"name\\\":\\\"破甲\\\",\\\"value\\\":12}],\\\"cooldown\\\":2}\" }]",
+      "order": 15
     }
   ]
 }
