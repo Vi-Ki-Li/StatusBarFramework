@@ -59,6 +59,7 @@ function buildOverviewContent(categories: CategoryDef[], entries: DefinitionEntr
   lines.push('你需要在回复末尾用 JSON Patch (RFC 6902) 格式更新状态数据。');
   lines.push(`必须使用 ${PATCH_TAG_OPEN}...${PATCH_TAG_CLOSE} 包裹补丁内容。`);
   lines.push('标签内部仅允许 JSON 数组，不要使用 Markdown 代码块。');
+  lines.push('示例仅用于格式参考，禁止照抄示例路径或示例值。');
   lines.push(`示例：${PATCH_TAG_OPEN}[{"op":"replace","path":"/shared/世界.时辰","value":"戌时"}]${PATCH_TAG_CLOSE}`);
   lines.push('角色 ID 规范: 必须使用 char_xxx（仅字母/数字/下划线）。');
   lines.push('当剧情出现新角色时，应创建新的 char_xxx 并持续复用；可在同一轮同时更新多个角色。');
