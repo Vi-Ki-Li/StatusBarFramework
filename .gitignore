@@ -11,3 +11,7 @@ pnpm-debug.log*
 
 auto-imports.d.ts
 components.d.ts
+
+# local workspace artifacts
+docs/.local-data/
+session-state/

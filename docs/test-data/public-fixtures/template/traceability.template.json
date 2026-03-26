@@ -1,0 +1,8 @@
+{
+  "fixtureId": "fx-statusbar-20260326-01",
+  "sourceClass": "sanitized",
+  "sourceDigest": "Derived from private reproduction notes without media or author metadata.",
+  "coverage": ["layout-collapse-animation", "tabs-visibility", "character-switch-smoothness"],
+  "knownRisks": ["No licensed material included.", "No reversible media fingerprint included."],
+  "evidenceRefs": ["session-state://phase-8.10/run-001", "session-state://phase-8.10/run-002"]
+}

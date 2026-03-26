@@ -1,0 +1,9 @@
+{
+  "fixtureId": "fx-statusbar-20260326-01",
+  "name": "minimal-repro-template",
+  "version": 1,
+  "type": "full-export",
+  "modules": ["definitions", "styles", "layouts", "themes", "narratives"],
+  "sanitized": true,
+  "notes": "Replace with sanitized scenario details only."
+}
