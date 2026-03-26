@@ -96,6 +96,14 @@
   transition: background 0.15s ease;
 }
 
+.omg-sb__section > .omg-sb__section-header {
+  list-style: none;
+}
+
+.omg-sb__section > .omg-sb__section-header::-webkit-details-marker {
+  display: none;
+}
+
 .omg-sb__section-header:hover {
   background: rgba(51, 65, 85, 0.3);
 }
@@ -143,8 +151,18 @@
   border-top-color: transparent;
 }
 
+.omg-sb__section:not([open]) .omg-sb__section-body {
+  max-height: 0;
+  opacity: 0;
+  border-top-color: transparent;
+}
+
 .omg-sb__section--collapsed {
   transform: translateY(-1px);
+}
+
+.omg-sb__section:not([open]) .omg-sb__section-chevron {
+  transform: rotate(-90deg);
 }
 
 /* ─── 布局渲染 ─── */
@@ -165,6 +183,84 @@
 
 .omg-sb__layout-item {
   min-width: 0;
+}
+
+.omg-sb__layout-group {
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.omg-sb__layout-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  background: rgba(30, 41, 59, 0.35);
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.omg-sb__layout-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #8ea5c6;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.omg-sb__layout-group-chevron {
+  margin-left: auto;
+  font-size: 10px;
+  color: #6f86a8;
+  transition: transform 0.22s ease;
+}
+
+.omg-sb__layout-group--collapsible .omg-sb__layout-group-header {
+  cursor: pointer;
+}
+
+.omg-sb__layout-group--collapsible > .omg-sb__layout-group-header {
+  list-style: none;
+}
+
+.omg-sb__layout-group--collapsible > .omg-sb__layout-group-header::-webkit-details-marker {
+  display: none;
+}
+
+.omg-sb__layout-group--collapsible .omg-sb__layout-group-header:hover {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+.omg-sb__layout-group-body {
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  max-height: 2000px;
+  opacity: 1;
+  transition:
+    max-height 0.24s ease,
+    opacity 0.18s ease;
+}
+
+.omg-sb__layout-group--collapsible:not([open]) .omg-sb__layout-group-body {
+  max-height: 0;
+  opacity: 0;
+}
+
+.omg-sb__layout-group--collapsed .omg-sb__layout-group-chevron {
+  transform: rotate(-90deg);
+}
+
+.omg-sb__layout-group--collapsible:not([open]) .omg-sb__layout-group-chevron {
+  transform: rotate(-90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .omg-sb__layout-group-header,
+  .omg-sb__layout-group-body,
+  .omg-sb__layout-group-chevron {
+    transition: none;
+  }
 }
 
 .omg-sb__entry {

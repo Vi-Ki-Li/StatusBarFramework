@@ -40,7 +40,7 @@
       </aside>
 
       <!-- v-if="currentLayout" 右侧 -->
-      <div class="omg-lc__main" v-if="currentLayout">
+      <div v-if="currentLayout" class="omg-lc__main">
         <!-- 布局名称 -->
         <div class="omg-lc__layout-header">
           <OmgInput v-model="currentLayout.name" label="布局名称" style="max-width: 300px" />
@@ -88,7 +88,7 @@
             </div>
 
             <!-- v-if="selectedNode" 属性面板 -->
-            <div class="omg-lc__props-panel" v-if="selectedNode">
+            <div v-if="selectedNode" class="omg-lc__props-panel">
               <div class="omg-lc__props-header">
                 <span class="omg-lc__props-label">属性</span>
                 <span class="omg-lc__props-type">{{ selectedNode.type === 'container' ? '容器' : '条目' }}</span>
@@ -100,6 +100,41 @@
                   <OmgSelect v-model="selectedNode.layoutMode" label="布局模式" :options="layoutModeOptions" />
                   <OmgInput v-model="selectedNode.gap" label="间距 (gap)" placeholder="8px" />
                   <OmgInput v-model="selectedNode.padding" label="内边距 (padding)" placeholder="0" />
+
+                  <label class="omg-lc__check-row">
+                    <input v-model="selectedNode.showLabel" type="checkbox" />
+                    <span>显示分类名（容器标题）</span>
+                  </label>
+
+                  <label class="omg-lc__check-row">
+                    <input v-model="selectedNode.collapsible" type="checkbox" />
+                    <span>允许折叠该分类</span>
+                  </label>
+
+                  <label class="omg-lc__check-row">
+                    <input v-model="selectedNode.autoSyncFromCategory" type="checkbox" />
+                    <span>动态绑定数据工作室分类（新增条目自动跟随）</span>
+                  </label>
+
+                  <label class="omg-lc__check-row">
+                    <input v-model="selectedNode.autoEqualizeItems" type="checkbox" />
+                    <span>子项自动等分宽度（仅 flex-row）</span>
+                  </label>
+
+                  <OmgSelect
+                    v-if="selectedNode.autoSyncFromCategory"
+                    v-model="selectedNode.bindCategoryId"
+                    label="绑定分类"
+                    :options="categoryOptions"
+                    placeholder="选择要动态同步的分类..."
+                  />
+
+                  <OmgSelect
+                    v-if="selectedNode.autoSyncFromCategory"
+                    v-model="selectedNode.categorySortStrategy"
+                    label="动态排序策略"
+                    :options="categorySortStrategyOptions"
+                  />
 
                   <template v-if="selectedNode.layoutMode === 'grid'">
                     <OmgInput v-model.number="selectedNode.gridCols" label="列数" type="number" placeholder="2" />
@@ -114,6 +149,21 @@
                   <div class="omg-lc__props-add">
                     <OmgButton icon="fa-solid fa-folder-plus" size="sm" variant="primary" @click="addContainer">
                       添加容器
+                    </OmgButton>
+                    <OmgSelect
+                      v-model="addCategoryId"
+                      label="按分类添加容器"
+                      :options="categoryOptions"
+                      placeholder="选择数据工作室分类..."
+                    />
+                    <OmgButton
+                      v-if="addCategoryId"
+                      icon="fa-solid fa-layer-group"
+                      size="sm"
+                      variant="primary"
+                      @click="addCategoryContainer"
+                    >
+                      添加分类容器
                     </OmgButton>
                     <OmgSelect
                       v-model="addItemDefId"
@@ -192,7 +242,12 @@
 
         <!-- 保存按钮 -->
         <div class="omg-lc__save-bar">
-          <OmgButton variant="primary" icon="fa-solid fa-floppy-disk" @click="saveCurrentLayout"> 保存布局 </OmgButton>
+          <label class="omg-lc__autosave-toggle">
+            <input v-model="autoSaveEnabled" type="checkbox" @change="handleAutoSaveToggle" />
+            <span>自动保存</span>
+          </label>
+          <span v-if="isDirty" class="omg-lc__dirty-hint">未保存修改</span>
+          <OmgButton variant="primary" icon="fa-solid fa-floppy-disk" @click="handleSaveClick"> 保存布局 </OmgButton>
         </div>
       </div>
 
@@ -212,10 +267,11 @@ import OmgEmpty from '../../components/base/OmgEmpty.vue';
 import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
-import type { DefinitionEntry } from '../../data/definitions';
-import { getAllEntries } from '../../data/definitions-store';
+import type { CategoryDef, DefinitionEntry } from '../../data/definitions';
+import { getAllCategories, getAllEntries } from '../../data/definitions-store';
 import type { LayoutConfig, LayoutNode } from '../../data/layouts-store';
 import * as layoutStore from '../../data/layouts-store';
+import { loadConfig, saveConfig } from '../../data/variables';
 import LayoutTreeNode from './LayoutTreeNode.vue';
 
 // ─── 状态 ───
@@ -227,7 +283,13 @@ const editMode = ref<'visual' | 'json'>('visual');
 const jsonText = ref('');
 const jsonError = ref('');
 const addItemDefId = ref('');
+const addCategoryId = ref('');
 const definitions = ref<DefinitionEntry[]>([]);
+const categories = ref<CategoryDef[]>([]);
+const isDirty = ref(false);
+const autoSaveEnabled = ref(true);
+let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
+let suppressChangeTracking = false;
 
 // ─── 计算属性 ───
 
@@ -239,6 +301,8 @@ const selectedNode = computed(() => {
 });
 
 const definitionOptions = computed(() => definitions.value.map(d => ({ value: d.id, label: `${d.name} (${d.key})` })));
+
+const categoryOptions = computed(() => categories.value.map(c => ({ value: c.id, label: c.name })));
 
 const layoutModeOptions = [
   { value: 'flex-row', label: '横向排列 (Flex Row)' },
@@ -264,6 +328,11 @@ const alignOptions = [
   { value: 'flex-end', label: '末尾' },
 ];
 
+const categorySortStrategyOptions = [
+  { value: 'category', label: '按分类原始顺序' },
+  { value: 'layout', label: '按布局手动顺序优先' },
+];
+
 const previewHtml = computed(() => {
   if (!currentLayout.value) return '';
   return renderPreviewNode(currentLayout.value.root);
@@ -272,9 +341,23 @@ const previewHtml = computed(() => {
 // ─── 方法 ───
 
 function selectLayout(id: string) {
+  if (isDirty.value && currentLayout.value) {
+    if (autoSaveEnabled.value) {
+      void saveCurrentLayout(true);
+    } else {
+      const shouldSave = confirm('当前布局有未保存修改，是否先保存再切换？');
+      if (shouldSave) {
+        void saveCurrentLayout();
+      }
+    }
+  }
+  suppressChangeTracking = true;
   selectedLayoutId.value = id;
   selectedNodeId.value = null;
   editMode.value = 'visual';
+  queueMicrotask(() => {
+    suppressChangeTracking = false;
+  });
 }
 
 function createLayout() {
@@ -287,15 +370,63 @@ async function deleteCurrentLayout() {
   if (!currentLayout.value) return;
   if (!confirm(`确定要删除布局「${currentLayout.value.name}」吗？`)) return;
   await layoutStore.deleteLayout(currentLayout.value.id);
+  suppressChangeTracking = true;
   layouts.value = layouts.value.filter(l => l.id !== selectedLayoutId.value);
   selectedLayoutId.value = layouts.value[0]?.id ?? null;
   selectedNodeId.value = null;
+  queueMicrotask(() => {
+    suppressChangeTracking = false;
+  });
 }
 
-async function saveCurrentLayout() {
+async function saveCurrentLayout(silent = false) {
   if (!currentLayout.value) return;
   await layoutStore.saveLayout(currentLayout.value);
-  toastr.success('布局已保存');
+  isDirty.value = false;
+  if (!silent) {
+    toastr.success('布局已保存');
+  }
+}
+
+function handleSaveClick() {
+  void saveCurrentLayout();
+}
+
+function resolveManagerAutoSave() {
+  const cfg = loadConfig();
+  return {
+    layoutComposer: cfg.managerAutoSave?.layoutComposer ?? true,
+    dataStudio: cfg.managerAutoSave?.dataStudio ?? true,
+    styleWorkshop: cfg.managerAutoSave?.styleWorkshop ?? true,
+    themeCombo: cfg.managerAutoSave?.themeCombo ?? true,
+    narrativeTemplate: cfg.managerAutoSave?.narrativeTemplate ?? true,
+  };
+}
+
+function handleAutoSaveToggle() {
+  const managerAutoSave = resolveManagerAutoSave();
+  saveConfig({
+    managerAutoSave: {
+      ...managerAutoSave,
+      layoutComposer: autoSaveEnabled.value,
+    },
+  });
+  toastr.success(autoSaveEnabled.value ? '已开启布局自动保存' : '已关闭布局自动保存');
+}
+
+function scheduleAutoSave() {
+  if (!currentLayout.value) return;
+  isDirty.value = true;
+  if (!autoSaveEnabled.value) return;
+  if (autoSaveTimer) {
+    clearTimeout(autoSaveTimer);
+  }
+  autoSaveTimer = setTimeout(() => {
+    autoSaveTimer = null;
+    if (isDirty.value) {
+      void saveCurrentLayout(true);
+    }
+  }, 900);
 }
 
 function addContainer() {
@@ -310,6 +441,34 @@ function addItem() {
   const def = definitions.value.find(d => d.id === addItemDefId.value);
   selectedNode.value.children.push(layoutStore.createItemNode(addItemDefId.value, def?.name));
   addItemDefId.value = '';
+}
+
+function addCategoryContainer() {
+  if (!selectedNode.value || selectedNode.value.type !== 'container' || !addCategoryId.value) return;
+  if (!selectedNode.value.children) selectedNode.value.children = [];
+
+  const category = categories.value.find(c => c.id === addCategoryId.value);
+  if (!category) return;
+
+  const categoryEntries = definitions.value.filter(d => d.categoryId === category.id);
+  if (categoryEntries.length === 0) {
+    toastr.warning(`分类「${category.name}」下没有可添加的条目`);
+    return;
+  }
+
+  const categoryNode = layoutStore.createContainerNode('flex-col', category.name);
+  categoryNode.showLabel = true;
+  categoryNode.collapsible = true;
+  categoryNode.autoSyncFromCategory = false;
+  categoryNode.bindCategoryId = category.id;
+  categoryNode.categorySortStrategy = 'category';
+  categoryNode.autoEqualizeItems = false;
+  categoryNode.gap = '0';
+  categoryNode.padding = '0';
+  categoryNode.children = categoryEntries.map(entry => layoutStore.createItemNode(entry.id, entry.name));
+
+  selectedNode.value.children.push(categoryNode);
+  addCategoryId.value = '';
 }
 
 function removeSelectedNode() {
@@ -354,12 +513,13 @@ function applyJson() {
   }
 }
 
-function renderPreviewNode(node: LayoutNode): string {
+function renderPreviewNode(node: LayoutNode, parentAutoEqualizeItems = false): string {
   if (node.type === 'item') {
     const def = definitions.value.find(d => d.id === node.definitionId);
     const label = node.label || def?.name || '未绑定';
     const icon = def?.icon || 'fa-solid fa-circle';
-    return `<div class="omg-lc__pv-item"><i class="${icon}"></i> ${label}</div>`;
+    const equalStyle = parentAutoEqualizeItems ? ' style="flex:1 1 0;min-width:0"' : '';
+    return `<div class="omg-lc__pv-item"${equalStyle}><i class="${icon}"></i> ${label}</div>`;
   }
 
   const styles: string[] = [];
@@ -379,9 +539,63 @@ function renderPreviewNode(node: LayoutNode): string {
   if (node.width) styles.push(`width:${node.width}`);
   if (node.height) styles.push(`height:${node.height}`);
 
-  const childrenHtml = (node.children ?? []).map(c => renderPreviewNode(c)).join('');
+  const autoEqualizeItems = node.layoutMode === 'flex-row' && Boolean(node.autoEqualizeItems);
+  const outerEqualStyle = parentAutoEqualizeItems ? 'flex:1 1 0;min-width:0;' : '';
+
+  const dynamicChildren =
+    node.autoSyncFromCategory && node.bindCategoryId
+      ? (() => {
+          const categoryEntries = definitions.value.filter(d => d.categoryId === node.bindCategoryId);
+          if (node.categorySortStrategy !== 'layout') {
+            return categoryEntries.map(d => ({
+              id: `pv_${d.id}`,
+              type: 'item' as const,
+              definitionId: d.id,
+              label: d.name,
+            }));
+          }
+
+          const fromLayout = (node.children ?? [])
+            .filter(c => c.type === 'item' && c.definitionId)
+            .map(c => c.definitionId as string);
+          const categoryMap = new Map(categoryEntries.map(entry => [entry.id, entry]));
+          const ordered: DefinitionEntry[] = [];
+
+          for (const defId of fromLayout) {
+            const entry = categoryMap.get(defId);
+            if (!entry) continue;
+            ordered.push(entry);
+            categoryMap.delete(defId);
+          }
+
+          for (const entry of categoryEntries) {
+            if (categoryMap.has(entry.id)) {
+              ordered.push(entry);
+            }
+          }
+
+          return ordered.map(d => ({ id: `pv_${d.id}`, type: 'item' as const, definitionId: d.id, label: d.name }));
+        })()
+      : null;
+  const childrenHtml = (dynamicChildren ?? node.children ?? [])
+    .map(c => renderPreviewNode(c, autoEqualizeItems))
+    .join('');
+  const showLabel = Boolean(node.showLabel);
+  const collapsible = Boolean(node.collapsible);
+  const labelText = node.label || '分组';
+
+  if (showLabel || collapsible) {
+    return `<div class="omg-lc__pv-container omg-lc__pv-group"${outerEqualStyle ? ` style="${outerEqualStyle}"` : ''}>
+      <div class="omg-lc__pv-group-header">
+        <span class="omg-lc__pv-group-title">${labelText}</span>
+        ${collapsible ? '<i class="fa-solid fa-chevron-down omg-lc__pv-group-chevron"></i>' : ''}
+      </div>
+      <div class="omg-lc__pv-group-body" style="${styles.join(';')}">${childrenHtml}</div>
+    </div>`;
+  }
+
   const label = node.label ? `<span class="omg-lc__pv-label">${node.label}</span>` : '';
-  return `<div class="omg-lc__pv-container" style="${styles.join(';')}">${label}${childrenHtml}</div>`;
+  return `<div class="omg-lc__pv-container" style="${outerEqualStyle}${styles.join(';')}">${label}${childrenHtml}</div>`;
 }
 
 // 导入/导出
@@ -427,11 +641,48 @@ async function handleImport() {
 // ─── 初始化 ───
 
 async function loadData() {
+  suppressChangeTracking = true;
   layouts.value = await layoutStore.getAllLayouts();
   definitions.value = await getAllEntries();
+  categories.value = await getAllCategories();
+  queueMicrotask(() => {
+    suppressChangeTracking = false;
+  });
 }
 
-onMounted(() => loadData());
+watch(
+  () => currentLayout.value?.root,
+  () => {
+    if (suppressChangeTracking) return;
+    if (!currentLayout.value) return;
+    scheduleAutoSave();
+  },
+  { deep: true },
+);
+
+watch(
+  () => currentLayout.value?.name,
+  () => {
+    if (suppressChangeTracking) return;
+    if (!currentLayout.value) return;
+    scheduleAutoSave();
+  },
+);
+
+onBeforeUnmount(() => {
+  if (autoSaveTimer) {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = null;
+  }
+  if (autoSaveEnabled.value && isDirty.value && currentLayout.value) {
+    void layoutStore.saveLayout(currentLayout.value);
+  }
+});
+
+onMounted(async () => {
+  autoSaveEnabled.value = resolveManagerAutoSave().layoutComposer;
+  await loadData();
+});
 </script>
 
 <style>
@@ -694,6 +945,18 @@ onMounted(() => loadData());
   border-top: 1px solid var(--omg-border);
 }
 
+.omg-lc__check-row {
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-xs);
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-secondary);
+}
+
+.omg-lc__check-row input {
+  margin: 0;
+}
+
 .omg-lc__css-textarea {
   width: 100%;
   padding: 6px 8px;
@@ -777,6 +1040,38 @@ onMounted(() => loadData());
   white-space: nowrap;
 }
 
+.omg-lc__pv-group {
+  border-style: solid;
+}
+
+.omg-lc__pv-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 6px;
+  border-bottom: 1px dashed var(--omg-border-hover);
+  background: var(--omg-bg-primary);
+}
+
+.omg-lc__pv-group-title {
+  font-size: 9px;
+  color: var(--omg-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.omg-lc__pv-group-chevron {
+  font-size: 9px;
+  color: var(--omg-text-tertiary);
+}
+
+.omg-lc__pv-group-body {
+  display: flex;
+  flex-direction: inherit;
+  gap: inherit;
+  padding-top: 4px;
+}
+
 /* ── JSON 编辑 ── */
 .omg-lc__json-editor {
   width: 100%;
@@ -813,8 +1108,27 @@ onMounted(() => loadData());
 /* ── 保存栏 ── */
 .omg-lc__save-bar {
   display: flex;
+  align-items: center;
+  gap: var(--omg-space-sm);
   justify-content: flex-end;
   padding-top: var(--omg-space-sm);
+}
+
+.omg-lc__dirty-hint {
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-tertiary);
+}
+
+.omg-lc__autosave-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-xs);
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-secondary);
+}
+
+.omg-lc__autosave-toggle input {
+  margin: 0;
 }
 
 /* ── 响应式 ── */

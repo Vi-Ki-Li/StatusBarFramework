@@ -57,6 +57,18 @@ export interface StorageItem {
   [key: string]: any;
 }
 
+function normalizeForIDB<T>(value: T): T {
+  try {
+    return structuredClone(value);
+  } catch {
+    try {
+      return JSON.parse(JSON.stringify(value)) as T;
+    } catch {
+      return value;
+    }
+  }
+}
+
 /** 获取单个记录 */
 export async function getItem<T extends StorageItem>(storeName: string, id: string): Promise<T | undefined> {
   const store = await getStore(storeName);
@@ -72,7 +84,7 @@ export async function getAllItems<T extends StorageItem>(storeName: string): Pro
 /** 写入或更新单个记录 */
 export async function putItem<T extends StorageItem>(storeName: string, item: T): Promise<void> {
   const store = await getStore(storeName, 'readwrite');
-  await promisify(store.put(item));
+  await promisify(store.put(normalizeForIDB(item)));
 }
 
 /** 删除单个记录 */
@@ -94,7 +106,7 @@ export async function putItems<T extends StorageItem>(storeName: string, items: 
   const store = tx.objectStore(storeName);
 
   for (const item of items) {
-    store.put(item);
+    store.put(normalizeForIDB(item));
   }
 
   return new Promise((resolve, reject) => {

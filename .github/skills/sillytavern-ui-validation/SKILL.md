@@ -1,8 +1,10 @@
 ---
 name: sillytavern-ui-validation
-description: 使用外部 Chrome 对本项目进行酒馆页面连接、五模块可用性验证、截图留证与结果归档。适用于 UI 回归、入口失效排查、热更新确认。
+description:
+  使用外部 Chrome 对本项目进行酒馆页面连接、五模块可用性验证、截图留证与结果归档。适用于 UI
+  回归、入口失效排查、热更新确认。
 user-invocable: true
-argument-hint: "[目标地址，可选，默认 http://localhost:8000] [验证范围，可选]"
+argument-hint: '[目标地址，可选，默认 http://localhost:8000] [验证范围，可选]'
 ---
 
 # SillyTavern UI Validation
@@ -39,8 +41,8 @@ pnpm watch
 
 `Server running at: 127.0.0.1:<动态端口>`
 
-则优先使用该**动态端口**（例如 `63066`），不要强行改回 `9222`。
-连通性检查应优先看 TCP 端口是否打开；`/json/version` 在该端口可能是 `404`，不等于不可用。
+则优先使用该**动态端口**（例如 `63066`），不要强行改回 `9222`。连通性检查应优先看 TCP 端口是否打开；`/json/version`
+在该端口可能是 `404`，不等于不可用。
 
 （现在看有可能动态端口有问题，最好固定 9222 启动）
 
@@ -107,8 +109,7 @@ Invoke-WebRequest -Uri 'http://127.0.0.1:9222/json/version' -UseBasicParsing
 
 - `01-home.png`
 - `02-after-open-attempt.png`
-- `03-module-probe.png`
-……
+- `03-module-probe.png` ……
 - `ui-test-results.json`
 
 ### 证据存储位置（强制）
@@ -162,6 +163,15 @@ Invoke-WebRequest -Uri 'http://127.0.0.1:9222/json/version' -UseBasicParsing
 - 对“无法进入后续模块”的情况，按“可达范围内全部完成 + 阻塞点单独标注”输出。
 - 阻塞结论同样仅基于截图，不得用“推测代码逻辑”代替。
 
+## 仓库 JSON 快速导入（复测提速）
+
+- 当你需要反复复现同一测试场景时，优先使用“快速导入”而非每次手工点导入。
+- 推荐顺序：
+  - 文件输入控件直传（`upload_file`）
+  - 临时静态服务 + 页面 `fetch`
+  - 直接写 IndexedDB（兜底）
+- 详细操作与脚本请复用：`../sillytavern-submodule-ux-validation/references/repo-json-fast-import.md`。
+
 ## 污染排查检查项
 
 - 禁止全局 reset（如 `*`, `*::before`, `*::after`）直接作用酒馆页面
@@ -172,6 +182,7 @@ Invoke-WebRequest -Uri 'http://127.0.0.1:9222/json/version' -UseBasicParsing
 
 ```md
 ### UI 验证结果
+
 - 页面是否可打开:
 - 管理器入口是否可见:
 - 五模块是否可见:

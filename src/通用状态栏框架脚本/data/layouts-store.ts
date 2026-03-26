@@ -16,6 +16,18 @@ export interface LayoutNode {
   id: string;
   type: 'container' | 'item';
   label?: string;
+  /** 是否在运行时显示容器标题 */
+  showLabel?: boolean;
+  /** 是否允许在运行时折叠容器 */
+  collapsible?: boolean;
+  /** 绑定的数据工作室分类 ID（容器） */
+  bindCategoryId?: string;
+  /** 是否按绑定分类动态同步条目（容器） */
+  autoSyncFromCategory?: boolean;
+  /** 动态绑定时的排序策略 */
+  categorySortStrategy?: 'category' | 'layout';
+  /** 是否让直接子条目自动等分宽度（flex-row 容器） */
+  autoEqualizeItems?: boolean;
   /** 容器布局模式 */
   layoutMode?: LayoutMode;
   /** 子节点 */

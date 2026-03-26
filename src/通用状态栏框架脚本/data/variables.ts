@@ -85,6 +85,14 @@ export interface SystemConfig {
   activeThemeId: string | null;
   /** 是否启用补丁标签隐藏正则 */
   patchHideRegexEnabled: boolean;
+  /** 管理器模块级自动保存开关 */
+  managerAutoSave: {
+    layoutComposer: boolean;
+    dataStudio: boolean;
+    styleWorkshop: boolean;
+    themeCombo: boolean;
+    narrativeTemplate: boolean;
+  };
 }
 
 /** 默认系统配置 */
@@ -94,13 +102,25 @@ const DEFAULT_CONFIG: SystemConfig = {
   narrativeKeepOnRollback: false,
   activeThemeId: null,
   patchHideRegexEnabled: true,
+  managerAutoSave: {
+    layoutComposer: true,
+    dataStudio: true,
+    styleWorkshop: true,
+    themeCombo: true,
+    narrativeTemplate: true,
+  },
 };
 
 /** 读取系统配置 */
 export function loadConfig(): SystemConfig {
   try {
     const vars = getVariables({ type: 'script' });
-    return { ...DEFAULT_CONFIG, ...vars };
+    const merged = { ...DEFAULT_CONFIG, ...vars } as SystemConfig;
+    merged.managerAutoSave = {
+      ...DEFAULT_CONFIG.managerAutoSave,
+      ...(vars?.managerAutoSave ?? {}),
+    };
+    return merged;
   } catch {
     return { ...DEFAULT_CONFIG };
   }
