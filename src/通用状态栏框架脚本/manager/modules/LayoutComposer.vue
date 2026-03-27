@@ -225,7 +225,13 @@
               </h4>
             </div>
             <div class="omg-lc__preview-container">
-              <div class="omg-lc__preview-area" v-html="previewHtml" />
+              <div
+                ref="previewAreaRef"
+                class="omg-lc__preview-area"
+                @click="handlePreviewClick"
+                @mousedown="handlePreviewMouseDown"
+                v-html="previewHtml"
+              />
             </div>
           </div>
         </template>
@@ -290,6 +296,8 @@ const isDirty = ref(false);
 const autoSaveEnabled = ref(true);
 let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
 let suppressChangeTracking = false;
+const previewAreaRef = ref<HTMLElement | null>(null);
+let stopResize: (() => void) | null = null;
 
 // ─── 计算属性 ───
 
@@ -514,12 +522,16 @@ function applyJson() {
 }
 
 function renderPreviewNode(node: LayoutNode, parentAutoEqualizeItems = false): string {
+  const isSelected = selectedNodeId.value === node.id;
+  const selectedClass = isSelected ? ' omg-lc__pv-node--selected' : '';
+  const resizeHandle = isSelected ? '<button class="omg-lc__pv-resize-handle" data-omg-resize="1" title="拖拽调整尺寸"></button>' : '';
+
   if (node.type === 'item') {
     const def = definitions.value.find(d => d.id === node.definitionId);
     const label = node.label || def?.name || '未绑定';
     const icon = def?.icon || 'fa-solid fa-circle';
     const equalStyle = parentAutoEqualizeItems ? ' style="flex:1 1 0;min-width:0"' : '';
-    return `<div class="omg-lc__pv-item"${equalStyle}><i class="${icon}"></i> ${label}</div>`;
+    return `<div class="omg-lc__pv-item omg-lc__pv-node${selectedClass}" data-node-id="${node.id}"${equalStyle}><i class="${icon}"></i> ${label}${resizeHandle}</div>`;
   }
 
   const styles: string[] = [];
@@ -538,6 +550,7 @@ function renderPreviewNode(node: LayoutNode, parentAutoEqualizeItems = false): s
   if (node.alignItems) styles.push(`align-items:${node.alignItems}`);
   if (node.width) styles.push(`width:${node.width}`);
   if (node.height) styles.push(`height:${node.height}`);
+  if (node.customCss) styles.push(node.customCss);
 
   const autoEqualizeItems = node.layoutMode === 'flex-row' && Boolean(node.autoEqualizeItems);
   const outerEqualStyle = parentAutoEqualizeItems ? 'flex:1 1 0;min-width:0;' : '';
@@ -585,17 +598,64 @@ function renderPreviewNode(node: LayoutNode, parentAutoEqualizeItems = false): s
   const labelText = node.label || '分组';
 
   if (showLabel || collapsible) {
-    return `<div class="omg-lc__pv-container omg-lc__pv-group"${outerEqualStyle ? ` style="${outerEqualStyle}"` : ''}>
+    return `<div class="omg-lc__pv-container omg-lc__pv-group omg-lc__pv-node${selectedClass}" data-node-id="${node.id}"${outerEqualStyle ? ` style="${outerEqualStyle}"` : ''}>
       <div class="omg-lc__pv-group-header">
         <span class="omg-lc__pv-group-title">${labelText}</span>
         ${collapsible ? '<i class="fa-solid fa-chevron-down omg-lc__pv-group-chevron"></i>' : ''}
       </div>
-      <div class="omg-lc__pv-group-body" style="${styles.join(';')}">${childrenHtml}</div>
+      <div class="omg-lc__pv-group-body" style="${styles.join(';')}">${childrenHtml}${resizeHandle}</div>
     </div>`;
   }
 
   const label = node.label ? `<span class="omg-lc__pv-label">${node.label}</span>` : '';
-  return `<div class="omg-lc__pv-container" style="${outerEqualStyle}${styles.join(';')}">${label}${childrenHtml}</div>`;
+  return `<div class="omg-lc__pv-container omg-lc__pv-node${selectedClass}" data-node-id="${node.id}" style="${outerEqualStyle}${styles.join(';')}">${label}${childrenHtml}${resizeHandle}</div>`;
+}
+
+function handlePreviewClick(event: MouseEvent) {
+  const target = event.target as HTMLElement | null;
+  if (!target) return;
+  const nodeEl = target.closest('[data-node-id]') as HTMLElement | null;
+  if (!nodeEl) return;
+  const nodeId = nodeEl.dataset.nodeId;
+  if (!nodeId) return;
+  selectedNodeId.value = nodeId;
+}
+
+function handlePreviewMouseDown(event: MouseEvent) {
+  const target = event.target as HTMLElement | null;
+  if (!target || !target.matches('[data-omg-resize]')) return;
+  event.preventDefault();
+  event.stopPropagation();
+
+  const nodeEl = target.closest('[data-node-id]') as HTMLElement | null;
+  const nodeId = nodeEl?.dataset.nodeId;
+  if (!nodeId || !currentLayout.value) return;
+
+  const node = layoutStore.findNode(currentLayout.value.root, nodeId);
+  if (!node || !nodeEl) return;
+  selectedNodeId.value = nodeId;
+
+  const rect = nodeEl.getBoundingClientRect();
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const startWidth = parseFloat(node.width || '') || rect.width;
+  const startHeight = parseFloat(node.height || '') || rect.height;
+
+  const onMove = (moveEvent: MouseEvent) => {
+    const nextWidth = Math.max(48, startWidth + (moveEvent.clientX - startX));
+    const nextHeight = Math.max(24, startHeight + (moveEvent.clientY - startY));
+    node.width = `${Math.round(nextWidth)}px`;
+    node.height = `${Math.round(nextHeight)}px`;
+  };
+  const onUp = () => {
+    window.removeEventListener('mousemove', onMove);
+    window.removeEventListener('mouseup', onUp);
+    stopResize = null;
+  };
+
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  stopResize = onUp;
 }
 
 // 导入/导出
@@ -670,6 +730,9 @@ watch(
 );
 
 onBeforeUnmount(() => {
+  if (stopResize) {
+    stopResize();
+  }
   if (autoSaveTimer) {
     clearTimeout(autoSaveTimer);
     autoSaveTimer = null;
@@ -1018,6 +1081,20 @@ onMounted(async () => {
   position: relative;
 }
 
+.omg-lc__pv-node {
+  cursor: pointer;
+  transition: box-shadow var(--omg-transition-fast), border-color var(--omg-transition-fast);
+}
+
+.omg-lc__pv-node:hover {
+  border-color: var(--omg-accent);
+}
+
+.omg-lc__pv-node--selected {
+  box-shadow: 0 0 0 2px var(--omg-accent-subtle) inset;
+  border-color: var(--omg-accent);
+}
+
 .omg-lc__pv-label {
   font-size: 9px;
   color: var(--omg-text-tertiary);
@@ -1038,6 +1115,19 @@ onMounted(async () => {
   border-radius: var(--omg-radius-sm);
   font-size: var(--omg-font-xs);
   white-space: nowrap;
+}
+
+.omg-lc__pv-resize-handle {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 10px;
+  height: 10px;
+  border: none;
+  border-radius: 2px;
+  background: var(--omg-accent);
+  opacity: 0.7;
+  cursor: nwse-resize;
 }
 
 .omg-lc__pv-group {

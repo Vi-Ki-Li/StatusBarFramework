@@ -43,6 +43,8 @@
             :key="unit.id"
             class="omg-sw__sidebar-item"
             :class="{ 'omg-sw__sidebar-item--active': mode === 'unit' && selectedUnitId === unit.id }"
+            draggable="true"
+            @dragstart="onStyleDragStart(unit.id, true)"
             @click="selectUnit(unit.id, true)"
           >
             <i class="fa-solid fa-cube omg-sw__sidebar-icon" />
@@ -62,6 +64,8 @@
             :key="unit.id"
             class="omg-sw__sidebar-item"
             :class="{ 'omg-sw__sidebar-item--active': mode === 'unit' && selectedUnitId === unit.id }"
+            draggable="true"
+            @dragstart="onStyleDragStart(unit.id, false)"
             @click="selectUnit(unit.id, false)"
           >
             <i class="fa-solid fa-cube omg-sw__sidebar-icon" />
@@ -190,7 +194,15 @@
               @click="editorTab = 'reference'"
             >
               <i class="fa-solid fa-book" />
-              占位符参考
+                占位符参考
+              </button>
+            <button
+              class="omg-sw__tab"
+              :class="{ 'omg-sw__tab--active': editorTab === 'visual' }"
+              @click="editorTab = 'visual'"
+            >
+              <i class="fa-solid fa-sliders" />
+              可视化配置
             </button>
           </div>
 
@@ -249,6 +261,78 @@
                 </div>
               </div>
             </div>
+            <div v-else class="omg-sw__visual">
+              <div class="omg-sw__visual-header">
+                <div class="omg-sw__visual-title">
+                  <i class="fa-solid fa-bullseye" />
+                  已选选择器：<code>{{ selectedSelector || '(未选择)' }}</code>
+                </div>
+                <span class="omg-sw__visual-hint">点击下方预览元素可自动选中对应类名</span>
+              </div>
+
+              <div class="omg-sw__visual-grid">
+                <div class="omg-input">
+                  <label class="omg-input__label">字体大小</label>
+                  <input
+                    v-model="visualEditor.fontSize"
+                    class="omg-sw__visual-input"
+                    type="text"
+                    placeholder="14px"
+                    @change="applyVisualEditor"
+                  />
+                </div>
+                <div class="omg-input">
+                  <label class="omg-input__label">文字颜色</label>
+                  <input
+                    v-model="visualEditor.color"
+                    class="omg-sw__visual-input"
+                    type="text"
+                    placeholder="#ffffff"
+                    @change="applyVisualEditor"
+                  />
+                </div>
+                <div class="omg-input">
+                  <label class="omg-input__label">背景色</label>
+                  <input
+                    v-model="visualEditor.background"
+                    class="omg-sw__visual-input"
+                    type="text"
+                    placeholder="rgba(255,255,255,.08)"
+                    @change="applyVisualEditor"
+                  />
+                </div>
+                <div class="omg-input">
+                  <label class="omg-input__label">边框圆角</label>
+                  <input
+                    v-model="visualEditor.borderRadius"
+                    class="omg-sw__visual-input"
+                    type="text"
+                    placeholder="8px"
+                    @change="applyVisualEditor"
+                  />
+                </div>
+                <div class="omg-input">
+                  <label class="omg-input__label">内边距</label>
+                  <input
+                    v-model="visualEditor.padding"
+                    class="omg-sw__visual-input"
+                    type="text"
+                    placeholder="6px 10px"
+                    @change="applyVisualEditor"
+                  />
+                </div>
+                <div class="omg-input">
+                  <label class="omg-input__label">间距（gap）</label>
+                  <input
+                    v-model="visualEditor.gap"
+                    class="omg-sw__visual-input"
+                    type="text"
+                    placeholder="8px"
+                    @change="applyVisualEditor"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- 实时预览 -->
@@ -261,8 +345,16 @@
               <OmgSelect v-model="previewDataType" :options="previewDataOptions" size="sm" style="width: 120px" />
             </div>
             <div class="omg-sw__preview-container">
-              <div class="omg-sw__preview-area" v-html="previewHtml" />
+              <div
+                ref="previewAreaRef"
+                class="omg-sw__preview-area"
+                @click="handlePreviewClick"
+                @dragover.prevent
+                @drop.prevent="handlePreviewDrop"
+                v-html="previewHtml"
+              />
             </div>
+            <div class="omg-sw__preview-drop-hint">可将左侧样式拖到此处，应用到数据条目的默认渲染样式</div>
           </div>
 
           <!-- CSS 安全检查 -->
@@ -311,8 +403,9 @@ import OmgEmpty from '../../components/base/OmgEmpty.vue';
 import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
+import type { DefinitionEntry } from '../../data/definitions';
 import { checkCssSafety } from '../../core/css-safety';
-import { getAllEntries } from '../../data/definitions-store';
+import { getAllEntries, saveEntry } from '../../data/definitions-store';
 import type { StoredStyleUnit } from '../../data/styles-store';
 import * as stylesStore from '../../data/styles-store';
 import { BUILTIN_STYLE_UNITS } from '../../renderer/style-units';
@@ -333,7 +426,7 @@ const editName = ref('');
 const editDescription = ref('');
 const editTemplate = ref('');
 const editCss = ref('');
-const editorTab = ref<'html' | 'css' | 'reference'>('html');
+const editorTab = ref<'html' | 'css' | 'reference' | 'visual'>('html');
 
 // 全局主题
 const globalCss = ref('');
@@ -350,6 +443,18 @@ const previewDataOptions = [
 
 // 定义条目 keys
 const definitionKeys = ref<string[]>([]);
+const definitionEntries = ref<DefinitionEntry[]>([]);
+const selectedSelector = ref('');
+const previewAreaRef = ref<HTMLElement | null>(null);
+const dragStyleUnit = ref<{ id: string; builtin: boolean } | null>(null);
+const visualEditor = reactive({
+  fontSize: '',
+  color: '',
+  background: '',
+  borderRadius: '',
+  padding: '',
+  gap: '',
+});
 
 // ─── 计算属性 ───
 
@@ -412,7 +517,110 @@ const computedPlaceholders = [
 // ─── 方法 ───
 
 function wrapPlaceholder(key: string): string {
-  return `\{\{${key}\}\}`;
+  return `{{${key}}}`;
+}
+
+function onStyleDragStart(unitId: string, builtin: boolean) {
+  dragStyleUnit.value = { id: unitId, builtin };
+}
+
+function parseCssRuleBlock(cssText: string, selector: string): Record<string, string> {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const reg = new RegExp(`${escaped}\\s*\\{([\\s\\S]*?)\\}`, 'm');
+  const match = reg.exec(cssText);
+  if (!match) return {};
+  const block = match[1];
+  const props: Record<string, string> = {};
+  for (const row of block.split(';')) {
+    const part = row.trim();
+    if (!part.includes(':')) continue;
+    const [k, ...rest] = part.split(':');
+    props[k.trim()] = rest.join(':').trim();
+  }
+  return props;
+}
+
+function setCssProperty(cssText: string, selector: string, key: string, value: string): string {
+  const trimmedValue = value.trim();
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const reg = new RegExp(`${escaped}\\s*\\{([\\s\\S]*?)\\}`, 'm');
+  const match = reg.exec(cssText);
+
+  if (!match) {
+    if (!trimmedValue) return cssText;
+    return `${cssText.trim()}\n\n${selector} {\n  ${key}: ${trimmedValue};\n}\n`.trim();
+  }
+
+  const full = match[0];
+  const body = match[1];
+  const lines = body
+    .split(';')
+    .map(line => line.trim())
+    .filter(Boolean);
+
+  const nextLines = lines.filter(line => !line.startsWith(`${key}:`));
+  if (trimmedValue) {
+    nextLines.push(`${key}: ${trimmedValue}`);
+  }
+
+  const nextBlock = `${selector} {\n  ${nextLines.join(';\n  ')}${nextLines.length > 0 ? ';' : ''}\n}`;
+  return cssText.replace(full, nextBlock);
+}
+
+function syncVisualEditorFromCss() {
+  if (!selectedSelector.value) return;
+  const props = parseCssRuleBlock(editCss.value, selectedSelector.value);
+  visualEditor.fontSize = props['font-size'] ?? '';
+  visualEditor.color = props.color ?? '';
+  visualEditor.background = props.background ?? '';
+  visualEditor.borderRadius = props['border-radius'] ?? '';
+  visualEditor.padding = props.padding ?? '';
+  visualEditor.gap = props.gap ?? '';
+}
+
+function applyVisualEditor() {
+  if (!selectedSelector.value || isBuiltin.value) return;
+  let nextCss = editCss.value;
+  nextCss = setCssProperty(nextCss, selectedSelector.value, 'font-size', visualEditor.fontSize);
+  nextCss = setCssProperty(nextCss, selectedSelector.value, 'color', visualEditor.color);
+  nextCss = setCssProperty(nextCss, selectedSelector.value, 'background', visualEditor.background);
+  nextCss = setCssProperty(nextCss, selectedSelector.value, 'border-radius', visualEditor.borderRadius);
+  nextCss = setCssProperty(nextCss, selectedSelector.value, 'padding', visualEditor.padding);
+  nextCss = setCssProperty(nextCss, selectedSelector.value, 'gap', visualEditor.gap);
+  editCss.value = nextCss;
+}
+
+function handlePreviewClick(event: MouseEvent) {
+  const root = previewAreaRef.value;
+  const target = event.target as HTMLElement | null;
+  if (!root || !target) return;
+  const selectedEl = target.closest('[class]') as HTMLElement | null;
+  if (!selectedEl || !root.contains(selectedEl)) return;
+
+  const className = selectedEl.className
+    .split(/\s+/)
+    .find(cls => cls.startsWith('omg-'));
+  if (!className) return;
+
+  selectedSelector.value = `.${className}`;
+  syncVisualEditorFromCss();
+  editorTab.value = 'visual';
+}
+
+async function handlePreviewDrop() {
+  if (!dragStyleUnit.value) return;
+  if (definitionEntries.value.length === 0) {
+    toastr.warning('当前没有可应用的条目定义');
+    return;
+  }
+
+  const target = definitionEntries.value.find(entry => entry.uiType === selectedUnitId.value) ?? definitionEntries.value[0];
+  if (!target) return;
+
+  target.uiType = dragStyleUnit.value.id;
+  await saveEntry(target);
+  toastr.success(`已将样式应用到条目「${target.name}」`);
+  dragStyleUnit.value = null;
 }
 
 function selectUnit(id: string, builtin: boolean) {
@@ -538,6 +746,7 @@ async function handleImport() {
 async function loadData() {
   customUnits.value = await stylesStore.getAllStyleUnits();
   const entries = await getAllEntries();
+  definitionEntries.value = entries;
   definitionKeys.value = entries.map(e => e.key).filter(Boolean);
 }
 
@@ -815,6 +1024,65 @@ onMounted(() => loadData());
   max-height: 300px;
 }
 
+.omg-sw__visual {
+  width: 100%;
+  padding: var(--omg-space-md);
+  background: var(--omg-bg-secondary);
+  border: 1px solid var(--omg-border);
+  border-radius: var(--omg-radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--omg-space-md);
+}
+
+.omg-sw__visual-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--omg-space-xs);
+}
+
+.omg-sw__visual-title {
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-xs);
+}
+
+.omg-sw__visual-title code {
+  font-family: var(--omg-font-mono);
+  color: var(--omg-accent);
+}
+
+.omg-sw__visual-hint {
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-tertiary);
+}
+
+.omg-sw__visual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--omg-space-sm);
+}
+
+.omg-sw__visual-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: var(--omg-radius-sm);
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-primary);
+  color: var(--omg-text-primary);
+  font-size: var(--omg-font-xs);
+}
+
+.omg-sw__visual-input:focus {
+  outline: none;
+  border-color: var(--omg-border-focus);
+  box-shadow: 0 0 0 2px var(--omg-accent-subtle);
+}
+
 .omg-sw__ref-section {
   margin-bottom: var(--omg-space-lg);
 }
@@ -902,6 +1170,11 @@ onMounted(() => loadData());
 .omg-sw__preview-area {
   color: var(--omg-text-primary);
   font-size: var(--omg-font-sm);
+}
+
+.omg-sw__preview-drop-hint {
+  font-size: var(--omg-font-xs);
+  color: var(--omg-text-tertiary);
 }
 
 /* ── 安全检查 ── */
