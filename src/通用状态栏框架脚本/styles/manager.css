@@ -116,9 +116,33 @@
 /* ── 内容区 ── */
 .omg-manager__body {
   flex: 1;
-  overflow-y: auto;
+  overflow: auto;
   padding: var(--omg-space-xl);
   min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .omg-manager__sidebar {
+    width: 64px;
+    padding: var(--omg-space-xs);
+  }
+
+  .omg-manager__sidebar-label {
+    display: none;
+  }
+
+  .omg-manager__sidebar-item {
+    justify-content: center;
+    padding: var(--omg-space-sm);
+  }
+
+  .omg-manager__sidebar-icon {
+    width: auto;
+  }
+
+  .omg-manager__body {
+    padding: var(--omg-space-md);
+  }
 }
 
 @media (max-width: 1100px) {

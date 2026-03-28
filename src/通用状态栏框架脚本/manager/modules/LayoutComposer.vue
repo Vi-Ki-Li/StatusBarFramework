@@ -524,7 +524,9 @@ function applyJson() {
 function renderPreviewNode(node: LayoutNode, parentAutoEqualizeItems = false): string {
   const isSelected = selectedNodeId.value === node.id;
   const selectedClass = isSelected ? ' omg-lc__pv-node--selected' : '';
-  const resizeHandle = isSelected ? '<button class="omg-lc__pv-resize-handle" data-omg-resize="1" title="拖拽调整尺寸"></button>' : '';
+  const resizeHandle = isSelected
+    ? '<button class="omg-lc__pv-resize-handle" data-omg-resize="1" title="拖拽调整尺寸"></button>'
+    : '';
 
   if (node.type === 'item') {
     const def = definitions.value.find(d => d.id === node.definitionId);
@@ -911,12 +913,14 @@ onMounted(async () => {
   display: flex;
   gap: var(--omg-space-md);
   flex: 1;
+  min-width: 0;
   min-height: 200px;
 }
 
 /* ── 结构树面板 ── */
 .omg-lc__tree-panel {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   background: var(--omg-bg-secondary);
@@ -945,7 +949,8 @@ onMounted(async () => {
 
 /* ── 属性面板 ── */
 .omg-lc__props-panel {
-  width: 260px;
+  width: clamp(220px, 30vw, 260px);
+  min-width: 220px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -1083,7 +1088,9 @@ onMounted(async () => {
 
 .omg-lc__pv-node {
   cursor: pointer;
-  transition: box-shadow var(--omg-transition-fast), border-color var(--omg-transition-fast);
+  transition:
+    box-shadow var(--omg-transition-fast),
+    border-color var(--omg-transition-fast);
 }
 
 .omg-lc__pv-node:hover {
@@ -1239,6 +1246,7 @@ onMounted(async () => {
 
   .omg-lc__props-panel {
     width: 100%;
+    min-width: 0;
   }
 }
 </style>
