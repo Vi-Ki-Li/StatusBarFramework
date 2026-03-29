@@ -20,7 +20,19 @@
 
     <div class="omg-dc__content">
       <!-- 左侧：数据源选择 -->
-      <aside class="omg-dc__sidebar">
+      <aside class="omg-dc__sidebar" :class="{ 'omg-dc__sidebar--collapsed': sidebarCollapsed }">
+        <div class="omg-dc__sidebar-header">
+          <span class="omg-dc__sidebar-header-label">数据源</span>
+          <button
+            class="omg-dc__sidebar-toggle"
+            type="button"
+            :title="sidebarCollapsed ? '展开侧栏' : '收缩侧栏'"
+            :aria-expanded="!sidebarCollapsed"
+            @click="sidebarCollapsed = !sidebarCollapsed"
+          >
+            <i :class="sidebarCollapsed ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'" />
+          </button>
+        </div>
         <!-- 共享数据 -->
         <button
           class="omg-dc__source-item"
@@ -209,6 +221,7 @@ const originalJson = ref('');
 const source = ref<'shared' | 'character'>('shared');
 const selectedCharId = ref<CharId | null>(null);
 const showAddCharDialog = ref(false);
+const sidebarCollapsed = ref(false);
 const newCharName = ref('');
 const newCharId = ref('');
 const newEntryKey = ref('');
@@ -535,11 +548,12 @@ onMounted(async () => {
   gap: var(--omg-space-lg);
   flex: 1;
   min-height: 0;
+  align-items: stretch;
 }
 
 /* ── 左侧栏 ── */
 .omg-dc__sidebar {
-  width: 230px;
+  width: var(--omg-module-sidebar-width, 220px);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -548,6 +562,45 @@ onMounted(async () => {
   padding: var(--omg-space-xs);
   overflow-y: auto;
   gap: 2px;
+  transition:
+    width var(--omg-transition-normal),
+    padding var(--omg-transition-normal);
+}
+
+.omg-dc__sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--omg-space-xs);
+  padding: var(--omg-space-xs) var(--omg-space-sm);
+}
+
+.omg-dc__sidebar-header-label {
+  font-size: var(--omg-font-xs);
+  font-weight: var(--omg-font-weight-semibold);
+  color: var(--omg-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.omg-dc__sidebar-toggle {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-primary);
+  color: var(--omg-text-tertiary);
+  border-radius: var(--omg-radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--omg-transition-fast);
+}
+
+.omg-dc__sidebar-toggle:hover {
+  color: var(--omg-accent);
+  border-color: var(--omg-accent);
+  background: var(--omg-accent-subtle);
 }
 
 .omg-dc__source-item {
@@ -596,7 +649,7 @@ onMounted(async () => {
 .omg-dc__sidebar-divider {
   height: 1px;
   background: var(--omg-border);
-  margin: var(--omg-space-xs) var(--omg-space-sm);
+  margin: var(--omg-space-xs) var(--omg-module-divider-inset, 14px);
 }
 
 .omg-dc__sidebar-section-title {
@@ -625,9 +678,11 @@ onMounted(async () => {
 }
 
 .omg-dc__char-id {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--omg-text-tertiary);
   font-family: var(--omg-font-mono);
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .omg-dc__present-toggle,
@@ -677,6 +732,34 @@ onMounted(async () => {
   border-top: 1px solid var(--omg-border);
 }
 
+.omg-dc__sidebar--collapsed {
+  width: var(--omg-module-sidebar-collapsed-width, 56px);
+  padding: var(--omg-space-xs) 4px;
+}
+
+.omg-dc__sidebar--collapsed .omg-dc__sidebar-header-label,
+.omg-dc__sidebar--collapsed .omg-dc__sidebar-section-title,
+.omg-dc__sidebar--collapsed .omg-dc__char-name,
+.omg-dc__sidebar--collapsed .omg-dc__char-id,
+.omg-dc__sidebar--collapsed .omg-dc__source-count,
+.omg-dc__sidebar--collapsed .omg-dc__sidebar-empty,
+.omg-dc__sidebar--collapsed .omg-dc__sidebar-actions {
+  display: none;
+}
+
+.omg-dc__sidebar--collapsed .omg-dc__source-item,
+.omg-dc__sidebar--collapsed .omg-dc__char-row {
+  justify-content: center;
+}
+
+.omg-dc__sidebar--collapsed .omg-dc__source-item {
+  padding: var(--omg-space-sm) 0;
+}
+
+.omg-dc__sidebar--collapsed .omg-dc__sidebar-divider {
+  margin: var(--omg-space-xs) 8px;
+}
+
 /* ── 右侧主区域 ── */
 .omg-dc__main {
   flex: 1;
@@ -684,11 +767,16 @@ onMounted(async () => {
   flex-direction: column;
   gap: var(--omg-space-md);
   min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 /* ── 分组 ── */
 .omg-dc__group {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
   background: var(--omg-bg-secondary);
   border-radius: var(--omg-radius-lg);
   overflow: hidden;
@@ -723,12 +811,19 @@ onMounted(async () => {
 
 .omg-dc__group-body {
   padding: var(--omg-space-xs);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: min(46vh, 420px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* ── 条目行 ── */
 .omg-dc__entry-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--omg-space-sm);
   padding: var(--omg-space-xs) var(--omg-space-sm);
   border-radius: var(--omg-radius-sm);
@@ -748,18 +843,22 @@ onMounted(async () => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  flex-shrink: 0;
+  flex: 0 1 120px;
 }
 
 .omg-dc__entry-def {
   font-size: var(--omg-font-xs);
   color: var(--omg-text-tertiary);
   min-width: 60px;
-  flex-shrink: 0;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 0 1 120px;
 }
 
 .omg-dc__entry-value {
-  flex: 1;
+  flex: 1 1 260px;
   min-width: 80px;
   padding: 3px 8px;
   font-size: var(--omg-font-sm);
@@ -827,12 +926,13 @@ onMounted(async () => {
 
 .omg-dc__add-entry-form {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--omg-space-sm);
   align-items: center;
 }
 
 .omg-dc__add-input {
-  flex: 1;
+  flex: 1 1 220px;
   padding: 6px 10px;
   font-size: var(--omg-font-sm);
   font-family: var(--omg-font-family);
@@ -855,6 +955,67 @@ onMounted(async () => {
 }
 
 /* ── 响应式 ── */
+@media (max-width: 1080px) {
+  .omg-dc__content {
+    flex-direction: column;
+    gap: var(--omg-space-md);
+  }
+
+  .omg-dc__sidebar {
+    width: 100%;
+    max-height: 220px;
+  }
+
+  .omg-dc__sidebar--collapsed {
+    width: 100%;
+    padding: var(--omg-space-xs);
+  }
+
+  .omg-dc__sidebar--collapsed .omg-dc__sidebar-header-label,
+  .omg-dc__sidebar--collapsed .omg-dc__sidebar-section-title,
+  .omg-dc__sidebar--collapsed .omg-dc__char-name,
+  .omg-dc__sidebar--collapsed .omg-dc__char-id,
+  .omg-dc__sidebar--collapsed .omg-dc__source-count,
+  .omg-dc__sidebar--collapsed .omg-dc__sidebar-empty,
+  .omg-dc__sidebar--collapsed .omg-dc__sidebar-actions {
+    display: revert;
+  }
+
+  .omg-dc__sidebar--collapsed .omg-dc__source-item,
+  .omg-dc__sidebar--collapsed .omg-dc__char-row {
+    justify-content: flex-start;
+  }
+
+  .omg-dc__entry-row {
+    align-items: flex-start;
+  }
+
+  .omg-dc__entry-key,
+  .omg-dc__entry-def {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+
+  .omg-dc__entry-value {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .omg-dc__entry-type,
+  .omg-dc__entry-delete {
+    margin-top: 2px;
+  }
+
+  .omg-dc__add-input {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .omg-dc__group-body {
+    max-height: min(40vh, 340px);
+  }
+}
+
 @media (max-width: 768px) {
   .omg-dc__content {
     flex-direction: column;
@@ -862,6 +1023,7 @@ onMounted(async () => {
 
   .omg-dc__sidebar {
     width: 100%;
+    max-height: 200px;
   }
 }
 </style>

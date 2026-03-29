@@ -21,11 +21,23 @@
 
     <div class="omg-ds__content">
       <!-- 左侧：分类列表 -->
-      <aside class="omg-ds__categories">
+      <aside class="omg-ds__categories" :class="{ 'omg-ds__categories--collapsed': sidebarCollapsed }">
         <div class="omg-ds__categories-header">
           <span class="omg-ds__categories-title">分类</span>
-          <OmgButton icon="fa-solid fa-plus" size="sm" variant="ghost" icon-only @click="showCategoryDialog = true" />
+          <div class="omg-ds__categories-header-actions">
+            <OmgButton icon="fa-solid fa-plus" size="sm" variant="ghost" icon-only @click="showCategoryDialog = true" />
+            <button
+              class="omg-ds__sidebar-toggle"
+              type="button"
+              :title="sidebarCollapsed ? '展开侧栏' : '收缩侧栏'"
+              :aria-expanded="!sidebarCollapsed"
+              @click="sidebarCollapsed = !sidebarCollapsed"
+            >
+              <i :class="sidebarCollapsed ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'" />
+            </button>
+          </div>
         </div>
+        <div class="omg-ds__sidebar-divider" />
         <div class="omg-ds__category-list">
           <button
             v-for="cat in categories"
@@ -258,6 +270,7 @@ const selectedCategoryId = ref<string | null>(null);
 const selectedEntryId = ref<string | null>(null);
 const showCategoryDialog = ref(false);
 const editingCategory = ref<CategoryDef | null>(null);
+const sidebarCollapsed = ref(false);
 
 const categoryForm = ref<{ name: string; icon: string; scope: CategoryScope }>({
   name: '',
@@ -498,13 +511,14 @@ onMounted(() => loadData());
 
 /* ── 左侧分类 ── */
 .omg-ds__categories {
-  width: 220px;
+  width: var(--omg-module-sidebar-width, 220px);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   background: var(--omg-bg-secondary);
   border-radius: var(--omg-radius-lg);
   overflow: hidden;
+  transition: width var(--omg-transition-normal);
 }
 
 .omg-ds__categories-header {
@@ -512,7 +526,38 @@ onMounted(() => loadData());
   align-items: center;
   justify-content: space-between;
   padding: var(--omg-space-sm) var(--omg-space-md);
-  border-bottom: 1px solid var(--omg-border);
+}
+
+.omg-ds__categories-header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--omg-space-xs);
+}
+
+.omg-ds__sidebar-toggle {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-primary);
+  color: var(--omg-text-tertiary);
+  border-radius: var(--omg-radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--omg-transition-fast);
+}
+
+.omg-ds__sidebar-toggle:hover {
+  color: var(--omg-accent);
+  border-color: var(--omg-accent);
+  background: var(--omg-accent-subtle);
+}
+
+.omg-ds__sidebar-divider {
+  height: 1px;
+  background: var(--omg-border);
+  margin: 0 var(--omg-module-divider-inset, 14px);
 }
 
 .omg-ds__categories-title {
@@ -543,6 +588,22 @@ onMounted(() => loadData());
   font-size: var(--omg-font-sm);
   text-align: left;
   transition: all var(--omg-transition-fast);
+}
+
+.omg-ds__categories--collapsed {
+  width: var(--omg-module-sidebar-collapsed-width, 56px);
+}
+
+.omg-ds__categories--collapsed .omg-ds__categories-title,
+.omg-ds__categories--collapsed .omg-ds__category-name,
+.omg-ds__categories--collapsed .omg-ds__category-badge,
+.omg-ds__categories--collapsed .omg-ds__category-scope {
+  display: none;
+}
+
+.omg-ds__categories--collapsed .omg-ds__category-item {
+  justify-content: center;
+  padding: var(--omg-space-sm) 0;
 }
 
 .omg-ds__category-item:hover {
@@ -811,6 +872,22 @@ onMounted(() => loadData());
 
   .omg-ds__categories {
     width: 100%;
+  }
+
+  .omg-ds__categories--collapsed {
+    width: 100%;
+  }
+
+  .omg-ds__categories--collapsed .omg-ds__categories-title,
+  .omg-ds__categories--collapsed .omg-ds__category-name,
+  .omg-ds__categories--collapsed .omg-ds__category-badge,
+  .omg-ds__categories--collapsed .omg-ds__category-scope {
+    display: revert;
+  }
+
+  .omg-ds__categories--collapsed .omg-ds__category-item {
+    justify-content: flex-start;
+    padding: var(--omg-space-sm) var(--omg-space-md);
   }
 
   .omg-ds__category-list {

@@ -19,7 +19,20 @@
 
     <div class="omg-sw__content">
       <!-- 左侧：样式单元列表 -->
-      <aside class="omg-sw__sidebar">
+      <aside class="omg-sw__sidebar" :class="{ 'omg-sw__sidebar--collapsed': sidebarCollapsed }">
+        <div class="omg-sw__sidebar-header">
+          <span class="omg-sw__sidebar-header-label">样式导航</span>
+          <button
+            class="omg-sw__sidebar-toggle"
+            type="button"
+            :title="sidebarCollapsed ? '展开侧栏' : '收缩侧栏'"
+            :aria-expanded="!sidebarCollapsed"
+            @click="sidebarCollapsed = !sidebarCollapsed"
+          >
+            <i :class="sidebarCollapsed ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'" />
+          </button>
+        </div>
+        <div class="omg-sw__sidebar-divider" />
         <!-- 全局主题 -->
         <button
           class="omg-sw__sidebar-item omg-sw__sidebar-item--theme"
@@ -194,8 +207,8 @@
               @click="editorTab = 'reference'"
             >
               <i class="fa-solid fa-book" />
-                占位符参考
-              </button>
+              占位符参考
+            </button>
             <button
               class="omg-sw__tab"
               :class="{ 'omg-sw__tab--active': editorTab === 'visual' }"
@@ -403,8 +416,8 @@ import OmgEmpty from '../../components/base/OmgEmpty.vue';
 import OmgHelpTip from '../../components/base/OmgHelpTip.vue';
 import OmgInput from '../../components/base/OmgInput.vue';
 import OmgSelect from '../../components/base/OmgSelect.vue';
-import type { DefinitionEntry } from '../../data/definitions';
 import { checkCssSafety } from '../../core/css-safety';
+import type { DefinitionEntry } from '../../data/definitions';
 import { getAllEntries, saveEntry } from '../../data/definitions-store';
 import type { StoredStyleUnit } from '../../data/styles-store';
 import * as stylesStore from '../../data/styles-store';
@@ -420,6 +433,7 @@ const selectedUnitId = ref<string | null>(null);
 const isBuiltin = ref(false);
 const customUnits = ref<StoredStyleUnit[]>([]);
 const builtinUnits = BUILTIN_STYLE_UNITS;
+const sidebarCollapsed = ref(false);
 
 // 编辑状态
 const editName = ref('');
@@ -597,9 +611,7 @@ function handlePreviewClick(event: MouseEvent) {
   const selectedEl = target.closest('[class]') as HTMLElement | null;
   if (!selectedEl || !root.contains(selectedEl)) return;
 
-  const className = selectedEl.className
-    .split(/\s+/)
-    .find(cls => cls.startsWith('omg-'));
+  const className = selectedEl.className.split(/\s+/).find(cls => cls.startsWith('omg-'));
   if (!className) return;
 
   selectedSelector.value = `.${className}`;
@@ -614,7 +626,8 @@ async function handlePreviewDrop() {
     return;
   }
 
-  const target = definitionEntries.value.find(entry => entry.uiType === selectedUnitId.value) ?? definitionEntries.value[0];
+  const target =
+    definitionEntries.value.find(entry => entry.uiType === selectedUnitId.value) ?? definitionEntries.value[0];
   if (!target) return;
 
   target.uiType = dragStyleUnit.value.id;
@@ -798,7 +811,7 @@ onMounted(() => loadData());
 
 /* ── 左侧栏 ── */
 .omg-sw__sidebar {
-  width: 200px;
+  width: var(--omg-module-sidebar-width, 220px);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -807,6 +820,45 @@ onMounted(() => loadData());
   padding: var(--omg-space-xs);
   overflow-y: auto;
   gap: 2px;
+  transition:
+    width var(--omg-transition-normal),
+    padding var(--omg-transition-normal);
+}
+
+.omg-sw__sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--omg-space-xs);
+  padding: var(--omg-space-xs) var(--omg-space-sm);
+}
+
+.omg-sw__sidebar-header-label {
+  font-size: var(--omg-font-xs);
+  font-weight: var(--omg-font-weight-semibold);
+  color: var(--omg-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.omg-sw__sidebar-toggle {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-primary);
+  color: var(--omg-text-tertiary);
+  border-radius: var(--omg-radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--omg-transition-fast);
+}
+
+.omg-sw__sidebar-toggle:hover {
+  color: var(--omg-accent);
+  border-color: var(--omg-accent);
+  background: var(--omg-accent-subtle);
 }
 
 .omg-sw__sidebar-item {
@@ -859,7 +911,7 @@ onMounted(() => loadData());
 .omg-sw__sidebar-divider {
   height: 1px;
   background: var(--omg-border);
-  margin: var(--omg-space-xs) var(--omg-space-sm);
+  margin: var(--omg-space-xs) var(--omg-module-divider-inset, 14px);
 }
 
 .omg-sw__sidebar-section {
@@ -885,6 +937,33 @@ onMounted(() => loadData());
   text-align: center;
   font-size: var(--omg-font-xs);
   color: var(--omg-text-tertiary);
+}
+
+.omg-sw__sidebar--collapsed {
+  width: var(--omg-module-sidebar-collapsed-width, 56px);
+  padding: var(--omg-space-xs) 4px;
+}
+
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-header-label,
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-section-title,
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-badge,
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-empty,
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-item span {
+  display: none;
+}
+
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-item {
+  justify-content: center;
+  padding: var(--omg-space-sm) 0;
+}
+
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-item--theme {
+  border-radius: var(--omg-radius-md);
+  border-bottom: none;
+}
+
+.omg-sw__sidebar--collapsed .omg-sw__sidebar-divider {
+  margin: var(--omg-space-xs) 8px;
 }
 
 /* ── 右侧主区域 ── */
@@ -1236,6 +1315,24 @@ onMounted(() => loadData());
     flex-direction: row;
     flex-wrap: wrap;
     max-height: 120px;
+  }
+
+  .omg-sw__sidebar--collapsed {
+    width: 100%;
+    padding: var(--omg-space-xs);
+  }
+
+  .omg-sw__sidebar--collapsed .omg-sw__sidebar-header-label,
+  .omg-sw__sidebar--collapsed .omg-sw__sidebar-section-title,
+  .omg-sw__sidebar--collapsed .omg-sw__sidebar-badge,
+  .omg-sw__sidebar--collapsed .omg-sw__sidebar-empty,
+  .omg-sw__sidebar--collapsed .omg-sw__sidebar-item span {
+    display: revert;
+  }
+
+  .omg-sw__sidebar--collapsed .omg-sw__sidebar-item {
+    justify-content: flex-start;
+    padding: var(--omg-space-sm) var(--omg-space-md);
   }
 
   .omg-sw__sidebar-divider {

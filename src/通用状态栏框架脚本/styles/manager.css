@@ -17,6 +17,9 @@
   width: min(96vw, 1180px);
   height: min(90vh, 860px);
   min-height: min(640px, 90vh);
+  --omg-module-sidebar-width: 220px;
+  --omg-module-sidebar-collapsed-width: 56px;
+  --omg-module-divider-inset: 14px;
   background: var(--omg-bg-primary);
   border-radius: var(--omg-radius-xl);
   box-shadow: var(--omg-shadow-xl);
@@ -119,6 +122,46 @@
   overflow: auto;
   padding: var(--omg-space-xl);
   min-width: 0;
+}
+
+/* ── Overlay Scrollbars 主题 ── */
+.omg-root .os-scrollbar {
+  --os-size: 9px;
+  --os-padding-perpendicular: 2px;
+  --os-padding-axis: 2px;
+  --os-handle-border-radius: 999px;
+  --os-handle-bg: rgba(120, 135, 155, 0.42);
+  --os-handle-bg-hover: rgba(120, 135, 155, 0.68);
+  --os-handle-bg-active: rgba(120, 135, 155, 0.82);
+}
+
+.omg-root .os-scrollbar-track {
+  background: transparent;
+}
+
+.omg-root .os-scrollbar-handle {
+  transition:
+    background-color var(--omg-transition-fast),
+    opacity var(--omg-transition-normal);
+}
+
+.omg-root[data-omg-theme='light'] .os-scrollbar {
+  --os-handle-bg: rgba(92, 106, 126, 0.32);
+  --os-handle-bg-hover: rgba(92, 106, 126, 0.58);
+  --os-handle-bg-active: rgba(92, 106, 126, 0.72);
+}
+
+.omg-root[data-omg-theme='dark'] .os-scrollbar {
+  --os-handle-bg: rgba(166, 179, 196, 0.34);
+  --os-handle-bg-hover: rgba(166, 179, 196, 0.58);
+  --os-handle-bg-active: rgba(166, 179, 196, 0.76);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .omg-root .os-scrollbar {
+    --os-size: 6px;
+    --os-handle-bg: rgba(120, 135, 155, 0.28);
+  }
 }
 
 @media (max-width: 1024px) {

@@ -19,11 +19,20 @@
 
     <div class="omg-lc__content">
       <!-- 左侧：布局列表 -->
-      <aside class="omg-lc__sidebar">
-        <div class="omg-lc__sidebar-section-title">
-          <i class="fa-solid fa-layer-group" />
-          布局方案
+      <aside class="omg-lc__sidebar" :class="{ 'omg-lc__sidebar--collapsed': sidebarCollapsed }">
+        <div class="omg-lc__sidebar-header">
+          <span class="omg-lc__sidebar-header-label">布局方案</span>
+          <button
+            class="omg-lc__sidebar-toggle"
+            type="button"
+            :title="sidebarCollapsed ? '展开侧栏' : '收缩侧栏'"
+            :aria-expanded="!sidebarCollapsed"
+            @click="sidebarCollapsed = !sidebarCollapsed"
+          >
+            <i :class="sidebarCollapsed ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'" />
+          </button>
         </div>
+        <div class="omg-lc__sidebar-divider" />
         <button
           v-for="layout in layouts"
           :key="layout.id"
@@ -294,6 +303,7 @@ const definitions = ref<DefinitionEntry[]>([]);
 const categories = ref<CategoryDef[]>([]);
 const isDirty = ref(false);
 const autoSaveEnabled = ref(true);
+const sidebarCollapsed = ref(false);
 let autoSaveTimer: ReturnType<typeof setTimeout> | null = null;
 let suppressChangeTracking = false;
 const previewAreaRef = ref<HTMLElement | null>(null);
@@ -795,7 +805,7 @@ onMounted(async () => {
 
 /* ── 左侧栏 ── */
 .omg-lc__sidebar {
-  width: 180px;
+  width: var(--omg-module-sidebar-width, 220px);
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -804,6 +814,51 @@ onMounted(async () => {
   padding: var(--omg-space-xs);
   overflow-y: auto;
   gap: 2px;
+  transition:
+    width var(--omg-transition-normal),
+    padding var(--omg-transition-normal);
+}
+
+.omg-lc__sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--omg-space-xs);
+  padding: var(--omg-space-xs) var(--omg-space-sm);
+}
+
+.omg-lc__sidebar-header-label {
+  font-size: var(--omg-font-xs);
+  font-weight: var(--omg-font-weight-semibold);
+  color: var(--omg-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.omg-lc__sidebar-toggle {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--omg-border);
+  background: var(--omg-bg-primary);
+  color: var(--omg-text-tertiary);
+  border-radius: var(--omg-radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--omg-transition-fast);
+}
+
+.omg-lc__sidebar-toggle:hover {
+  color: var(--omg-accent);
+  border-color: var(--omg-accent);
+  background: var(--omg-accent-subtle);
+}
+
+.omg-lc__sidebar-divider {
+  height: 1px;
+  background: var(--omg-border);
+  margin: 0 var(--omg-module-divider-inset, 14px);
 }
 
 .omg-lc__sidebar-section-title {
@@ -856,6 +911,26 @@ onMounted(async () => {
   text-align: center;
   font-size: var(--omg-font-xs);
   color: var(--omg-text-tertiary);
+}
+
+.omg-lc__sidebar--collapsed {
+  width: var(--omg-module-sidebar-collapsed-width, 56px);
+  padding: var(--omg-space-xs) 4px;
+}
+
+.omg-lc__sidebar--collapsed .omg-lc__sidebar-header-label,
+.omg-lc__sidebar--collapsed .omg-lc__sidebar-empty,
+.omg-lc__sidebar--collapsed .omg-lc__sidebar-section-title {
+  display: none;
+}
+
+.omg-lc__sidebar--collapsed .omg-lc__sidebar-item {
+  justify-content: center;
+  padding: var(--omg-space-sm) 0;
+}
+
+.omg-lc__sidebar--collapsed .omg-lc__sidebar-divider {
+  margin: var(--omg-space-xs) 8px;
 }
 
 /* ── 右侧主区域 ── */
@@ -1238,6 +1313,22 @@ onMounted(async () => {
     width: 100%;
     flex-direction: row;
     flex-wrap: wrap;
+  }
+
+  .omg-lc__sidebar--collapsed {
+    width: 100%;
+    padding: var(--omg-space-xs);
+  }
+
+  .omg-lc__sidebar--collapsed .omg-lc__sidebar-header-label,
+  .omg-lc__sidebar--collapsed .omg-lc__sidebar-empty,
+  .omg-lc__sidebar--collapsed .omg-lc__sidebar-section-title {
+    display: revert;
+  }
+
+  .omg-lc__sidebar--collapsed .omg-lc__sidebar-item {
+    justify-content: flex-start;
+    padding: var(--omg-space-sm) var(--omg-space-md);
   }
 
   .omg-lc__editor-split {
